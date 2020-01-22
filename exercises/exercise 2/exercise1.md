@@ -27,4 +27,6 @@
 > according to technopedia, message passing is the process of sending a signal to a process. An example can be sending messages between physical nodes, where > both the sender and receiver both need a send - and receive function to communicate both ways.
 
 ### List some advantages of using lock-based synchronization primitives over message passing.
-> *Your answer here*
+> lock-based - making own locking protocols, so that the shared resource, using mutex or semaphores etc. hard, but possible to costumize a lot more, possibly a lot faster
+message passing- hide locking protocols inside message queues
+advantages: easier to controll own protocols, and control how the resource is sheared. 
