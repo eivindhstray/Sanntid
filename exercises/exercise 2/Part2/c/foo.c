@@ -3,20 +3,28 @@
 
 int i = 0;
 
+pthread_mutex_t lock;
+
 // Note the return type: void*
 void* incrementingThreadFunction(){
+    pthread_mutex_lock(&lock);
     // TODO: increment i 1_000_000 times
     for(int j = 0; j<1000000; j++){
         i++;
     }
+    printf("thread1");
+    pthread_mutex_unlock(&lock);
     return NULL;
 }
 
 void* decrementingThreadFunction(){
+    pthread_mutex_lock(&lock);
     // TODO: decrement i 1_000_000 times
     for(int j = 0; j<1000000; j++){
         i--;
     }
+    printf("thread2");
+    pthread_mutex_unlock(&lock);
     return NULL;
 }
 
@@ -25,6 +33,7 @@ int main(){
     // TODO: declare incrementingThread and decrementingThread (hint: google pthread_create)
     pthread_t incrementingThread;
     pthread_t decrementingThread;
+
 
     pthread_create(&incrementingThread, NULL, incrementingThreadFunction, NULL);
     pthread_create(&decrementingThread, NULL, decrementingThreadFunction, NULL);
