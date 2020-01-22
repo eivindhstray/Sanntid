@@ -1,7 +1,7 @@
 # Python 3.3.3 and 2.7.6
 # python fo.py
-
 from threading import Thread
+
 
 # Potentially useful thing:
 #   In Python you "import" a global variable, instead of "export"ing it when you declare it
@@ -10,15 +10,20 @@ i = 0
 
 def incrementingFunction():
     global i
+    for j in range (1000000):
+        i+=1
     # TODO: increment i 1_000_000 times
 
 def decrementingFunction():
     global i
+    for j in range (1000000):
+        i-=1
     # TODO: decrement i 1_000_000 times
 
 
 
 def main():
+    # TODO: Something is missing here (needed to print i)
     global i
 
     incrementing = Thread(target = incrementingFunction, args = (),)
@@ -26,6 +31,9 @@ def main():
     
     # TODO: Start both threads
     
+    incrementing.start()
+    decrementing.start()
+
     incrementing.join()
     decrementing.join()
     

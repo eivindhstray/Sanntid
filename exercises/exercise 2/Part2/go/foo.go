@@ -5,51 +5,37 @@ package main
 import (
     . "fmt"
     "runtime"
+    "time"
 )
 
-// Control signals
-const (
-	GetNumber = iota
-	Exit
-)
+var i = 0
 
-func number_server(add_number <-chan int, control <-chan int, number chan<- int) {
-	var i = 0
-
-	// This for-select pattern is one you will become familiar with if you're using go "correctly".
-	for {
-		select {
-			// TODO: receive different messages and handle them correctly
-			// You will at least need to update the number and handle control signals.
-		}
-	}
+func incrementing() {
+    for j := 1;  j<=1000000; j++ {
+        i++
+}
 }
 
-func incrementing(add_number chan<-int, finished chan<- bool) {
-	for j := 0; j<1000000; j++ {
-		add_number <- 1
-	}
-	//TODO: signal that the goroutine is finished
+func decrementing() {
+    for j := 1;  j<=1000000; j++ {
+        i--
 }
-
-func decrementing(add_number chan<- int, finished chan<- bool) {
-	for j := 0; j<1000000; j++ {
-		add_number <- -1
-	}
-	//TODO: signal that the goroutine is finished
 }
 
 func main() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
+    runtime.GOMAXPROCS(runtime.NumCPU())    // I guess this is a hint to what GOMAXPROCS does...
+	                                    // Try doing the exercise both with and without it!
 
-	// TODO: Construct the required channels
-	// Think about wether the receptions of the number should be unbuffered, or buffered with a fixed queue size.
-
-	// TODO: Spawn the required goroutines
-
-	// TODO: block on finished from both "worker" goroutines
-
-	control<-GetNumber
-	Println("The magic number is:", <- number)
-	control<-Exit
+    // TODO: Spawn both functions as goroutines
+    
+    go decrementing()
+    go incrementing()
+    // We have no way to wait for the completion of a goroutine (without additional syncronization of some sort)
+    // We'll come back to using channels in Exercise 2. For now: Sleep.
+    time.Sleep(100*time.Millisecond)
+    Println("The magic number is:", i)
 }
+
+
+
+//
