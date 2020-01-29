@@ -8,12 +8,12 @@ import (
 
 func main() {
 
-	s, err := net.ResolveUDPAddr("udp", ":30000")
+	s, err := net.ResolveUDPAddr("udp", "10.100.23.147:20005")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	c, err := net.ListenUDP("udp", s)
+	c, err := net.DialUDP("udp", nil, s)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -23,6 +23,7 @@ func main() {
 
 	for {
 		buffer := make([]byte, 1024)
+		_, err = c.Write([]byte("udp hello"))
 		n, _, err := c.ReadFromUDP(buffer)
 		if err != nil {
 			fmt.Println("error2", err)
