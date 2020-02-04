@@ -1,0 +1,35 @@
+@startuml
+
+class Elevator{
+    elevator_send_state(master_ip,state)
+    elevator_receive_state(master_ip)
+}
+class Master{
+    master_distribute_state(all_elevators)
+    master_receive()
+    master_IAmAlive(backup_ip)
+}
+class Network{
+    network_send_message(ip, message)
+}
+
+class Backup{
+    backup_boot_master()
+    backup_send_state(all_elevators)
+    backup_receive_state(master_ip)
+}
+
+class Queue{
+    queue[floor, direction]
+    queue_remove_order(floor,direction)
+    queue_add_order(floor,direction)
+}
+
+Elevator <-> Network
+Network <-> Master
+Network <-> Backup
+
+
+
+
+@enduml
