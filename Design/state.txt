@@ -1,1 +1,18 @@
-// this is how a state is organized
+// this is how a state is organized as a json string
+
+
+{
+"state_id" : "1",
+"elevators" : {"elevator1" : { "floor" : "1",
+                               "direction" : "UP",
+                               "pending" : [{"2","UP"}{"3","DOWN"}]
+                              },
+              {"elevator2" : { "floor" : "2",
+                               "direction" : "STOP}
+                               "pending" : []},
+             ...
+             }
+
+"queue" : {...}
+
+}
