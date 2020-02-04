@@ -1,4 +1,9 @@
 // this is how a state is organized as a json string
+// this message is distributed to each elevator, such that
+// all elevators know which elevator should serve an order.
+// when an update is received, information is either put in queue,
+// active or removed from one of these.
+
 
 
 {
@@ -14,5 +19,10 @@
              }
 
 "queue" : {...}
+"active" : {...} //all orders = active + queue
+"lights_outside" : {"1UP" : "1", "2DN":"0", "2UP":1", ... , "4DN":"0"}
+//lights outside should be handled by ALL elevators to make sure
+//lights are all consistent and valid.
+//lights are not illuminated before it is read from this file
 
 }
