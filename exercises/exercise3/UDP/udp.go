@@ -8,7 +8,7 @@ import (
 
 func main() {
 
-	s, err := net.ResolveUDPAddr("udp", "10.100.23.147:20005")
+	s, err := net.ResolveUDPAddr("udp", ":20128")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -19,11 +19,17 @@ func main() {
 		return
 	}
 
-	// fmt.Printf("The UDP server is %s \n", c.RemoteAddr().String())
+	fmt.Printf("The UDP server is %s \n", c.RemoteAddr().String())
 
 	for {
+
+		_, err := c.Write([]byte("hei"))
+
 		buffer := make([]byte, 1024)
 		_, err = c.Write([]byte("udp hello"))
+		if err != nil {
+			fmt.Println(err)
+		}
 		n, _, err := c.ReadFromUDP(buffer)
 		if err != nil {
 			fmt.Println("error2", err)
