@@ -1,0 +1,51 @@
+@startuml
+
+class Network{
+
+}
+
+class node{
+  node_send_action(action,address)
+  node_receive_state()
+
+}
+
+class IO{
+  (...)
+}
+
+class Lights{
+  lights_on(inside/outside, floor)
+  lights_off(inside/outside, floor)
+}
+
+enum state{
+  {IDLE,RUNNING,EMERGENCY}
+}
+
+class Door{
+  door_open()
+  door_close()
+}
+
+class State{
+  {IDLE,RUNNING,EMERGENCY}
+
+}
+
+Network <--> node
+
+node <--> State
+
+IO <--> Door
+
+IO <--> Lights
+
+State <-->Lights
+
+State <--> Door
+
+
+
+
+@enduml
