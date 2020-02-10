@@ -5,9 +5,10 @@ HW --> ELEVATOR : Knapp er trykket
 ELEVATOR --> NETWORK : Gjør klar melding om hva som har skjedd
 NETWORK --> MASTER : Fortell at det har skjedd, oppdater hoveddokument
 MASTER --> BACKUP : oppdatert tilstand
-MASTER --> NETWORK : Marker heis på jobb og fordel info på ALLE heiser
-NETWORK --> ELEVATOR : Fortell hva som skal skje
-ELEVATOR --> HW : Skru på lys og begynn eventuell handling
+BACKUP --> MASTER : mottatt
+MASTER --> NETWORK : fordel info på ALLE heiser
+NETWORK --> ELEVATOR : distribuer tilstand
+ELEVATOR --> HW : Skru på lys og begynn eventuell handling basert på kostnad
 MASTER -->BACKUP : I am alive
 ELEVATOR --> NETWORK : Fortell at jeg fortsatt er i operasjon
 NETWORK --> MASTER : Fortell at heis i fortsatt er i operasjon
