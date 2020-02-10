@@ -19,7 +19,7 @@ class Network{
 }
 
 class Backup{
-    backup_boot_master()
+    backup_boot_node(int address)
     backup_send_state(all_elevators)
     backup_receive_state(master_ip)
 }
