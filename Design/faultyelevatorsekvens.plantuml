@@ -12,7 +12,8 @@ ELEVATOR --> NETWORK : Fortell at jeg fortsatt er i operasjon
 NETWORK --> MASTER : Fortell at jeg forsatt er i operasjon
 MASTER --> NETWORK : alle heiser rapporter status
 NETWORK --> ELEVATOR : rapporter status
-MASTER --> MASTER : heis i svarte ikke, flytt alle aktive operasjoner fra heis i til
+MASTER --> MASTER : heis i svarte ikke, flytt alle aktive operasjoner til heisen til inaktiv
 MASTER --> BACKUP : oppdatert tilstand
-
+MASTER --> NETWORK : oppdatert tilstand
+NETWORK --> ELEVATOR : oppdatert tilstand
 @enduml
