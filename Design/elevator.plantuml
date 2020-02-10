@@ -7,7 +7,6 @@ class Network{
 class node{
   node_send_action(action,address)
   node_receive_state()
-
 }
 
 class IO{

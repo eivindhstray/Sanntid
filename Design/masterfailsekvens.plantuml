@@ -16,10 +16,4 @@ NETWORK --> MASTER : wake up
 MASTER --> NETWORK : jeg har startet og er nå backup
 NETWORK --> BACKUP : master fungerer, er nå registrert som node. Backup er master og første node er backup
 
-
-
-
-
-
-
 @enduml
