@@ -15,6 +15,8 @@ class IO{
 }
 
 class Lights{
+    bool inside/outside
+    int floor
   lights_on(inside/outside, floor)
   lights_off(inside/outside, floor)
 }
@@ -34,6 +36,8 @@ class State{
 }
 
 class Motor {
+    bool d
+    int v
     set_motor_dir(bool d)
     set_motor_voltage(int v)
     
