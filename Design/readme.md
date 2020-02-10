@@ -18,5 +18,5 @@ Sett fra nodenes perspektiv vil den eneste endringen være adressen ved et maste
 ## NETWORK
 > Network er en generell modul som alle noder har. Disse har alle tilgang til et dokument, som er hoveddokumentet distribuert av master. Kun master kan endre på dette dokumentet, og alle andre noder sender inn handlinger til master via sin network-node. I alle diagrammer er alle kommunikative handlinger implisitt via network.
 
-##Threads
+## Threads
 > Hver node antas i forkant av utviklingen å ha behov for 3 tråder. En for nettverkshåndtering, en for vaktbikkje og en for selve heishåndteringen. I flere av nodene kan vaktbikkje sløyfes, men bør være der i tilfelle overtagelse av masterrollen.
