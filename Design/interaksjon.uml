@@ -1,12 +1,16 @@
 @startuml
 
-class Elevator{
-    elevator_send_state(master_ip,state)
+class Elevator  {
+    queue active_queue
+    elevator_send_action(master_ip,state)
     elevator_receive_state(master_ip)
+    elevator_execute_order(queue destination)
+    active_queue_remove(queue order)
+    active_queue_add(queue order)
 }
 class Master{
     master_distribute_state(all_elevators)
-    master_receive()
+    master_receive_action()
     master_IAmAlive(backup_ip)
 }
 class Network{
@@ -19,15 +23,16 @@ class Backup{
     backup_receive_state(master_ip)
 }
 
-class Queue{
-    queue[floor, direction]
-    queue_remove_order(floor,direction)
-    queue_add_order(floor,direction)
+
+
+enum queue {
+    {{1,2,3,4,5,6,...,n},{UP,DOWN}}
 }
 
-Elevator <-> Network
+Elevator  <-> Network: 1..n
 Network <-> Master
 Network <-> Backup
+Queue <-> Master
 
 
 

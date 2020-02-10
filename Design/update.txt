@@ -1,1 +1,11 @@
 //this is how an update is organized
+
+
+{"elevator_id": "1",
+ "action": {
+            "buttons":{"1UP"},
+            "executed":{"2DOWN"} ,
+            }
+"status": "OK",
+"active": {"2DOWN", "1UP"}
+}
