@@ -14,3 +14,6 @@
 > Master sitter på enhver tid på all informasjon, og oppdaterer backup. Dersom master svikter vil backup ved hjelp av en timer registrere at den ikke får livstegn fra master. Da vil backup ta over som master, og gjevnlig forsøke å vekke master tilbake til live. Når tidligere master er på nett igjen fungerer den som backup. Alle heiser har samme programvare, slik at master kan gå fra 1 til 2 til 3 og nedover.
 Sett fra nodenes perspektiv vil den eneste endringen være adressen ved et master-bytte.
 > På denne måten vil en svikt hvor som helst i systemet ikke kunne ta ned hele driften fordi to noder til enhver tid sitter på en oversikt som kan gjenopptas av en backup ved eventuell svikt.
+
+## NETWORK
+> Network er en generell modul som alle noder har. Disse har alle tilgang til et dokument, som er hoveddokumentet distribuert av master. Kun master kan endre på dette dokumentet, og alle andre noder sender inn handlinger til master via sin network-node. I alle diagrammer er alle kommunikative handlinger implisitt via network.
