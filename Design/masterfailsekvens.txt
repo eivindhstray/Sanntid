@@ -1,0 +1,25 @@
+@startuml
+
+MASTER --> NETWORK : IAmAlive, destinasjon BACKUP
+NETWORK --> BACKUP : IAmAlive, avsender MASTER
+BACKUP --> BACKUP : timeout, send purring til MASTER
+BACKUP --> NETWORK : purring til master
+NETWORK --> MASTER : purring til master
+BACKUP --> BACKUP : Ingen svar
+BACKUP --> BACKUP : Tar over som master
+BACKUP --> NETWORK : Alle noder, jeg er master
+NETWORK --> ELEVATOR : adresse "x.x.x.x" er master
+ELEVATOR --> NETWORK : desinasjon BACKUP, forstått
+NETWORK --> BACKUP : forstått fra adresse "x.x.x.x" id "x"
+BACKUP --> NETWORK : desinasjon master, wake up
+NETWORK --> MASTER : wake up
+MASTER --> NETWORK : jeg har startet og er nå backup
+NETWORK --> BACKUP : master fungerer, er nå registrert som node. Backup er master og første node er backup
+
+
+
+
+
+
+
+@enduml
