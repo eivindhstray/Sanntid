@@ -8,6 +8,7 @@
 
 {
 "state_id" : "1",
+"master_address": "x.x.x.x",
 "elevators" : {"elevator1" : { "floor" : "1",
                                "direction" : "UP",
                                "pending" : [{"2","UP"}{"3","DOWN"}]
