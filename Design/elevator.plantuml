@@ -7,6 +7,7 @@ class Network{
 class node{
   node_send_action(action,address)
   node_receive_state()
+
 }
 
 class IO{
@@ -19,7 +20,7 @@ class Lights{
 }
 
 enum state{
-  {IDLE,RUNNING,EMERGENCY}
+  {IDLE,ARRIVED,RUNNING,EMERGENCY}
 }
 
 class Door{
@@ -28,8 +29,14 @@ class Door{
 }
 
 class State{
-  {IDLE,RUNNING,EMERGENCY}
+  {IDLE,ARRIVED,RUNNING,EMERGENCY}
 
+}
+
+class Motor {
+    set_motor_dir(bool d)
+    set_motor_voltage(int v)
+    
 }
 
 Network <--> node
@@ -44,7 +51,8 @@ State <-->Lights
 
 State <--> Door
 
+State <--> Motor
 
-
+Motor <--> IO
 
 @enduml
