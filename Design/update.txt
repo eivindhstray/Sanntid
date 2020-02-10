@@ -5,6 +5,7 @@
  "action": {
             "buttons":{"1UP"},
             "executed":{"2DOWN"} ,
+            "floor": {"2DOWN"}
             }
 "status": "OK",
 "active": {"2DOWN", "1UP"}
