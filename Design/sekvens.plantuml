@@ -11,6 +11,12 @@ ELEVATOR --> HW : Skru på lys og begynn eventuell handling
 MASTER -->BACKUP : I am alive
 ELEVATOR --> NETWORK : Fortell at jeg fortsatt er i operasjon
 NETWORK --> MASTER : Fortell at heis i fortsatt er i operasjon
+ELEVATOR --> NETWORK : Fortell at jeg fortsatt opererer
+NETWORK --> MASTER : Fortell at heis fortsatt opererer
+MASTER --> MASTER : Oppdater tilstand
+MASTER --> NETWORK : Til alle noder oppdatert tilstand
+NETWORK --> ELEVATOR : Oppdatert tilstand
+NETWORK --> BACKUP : Oppdatert tilstand
 HW --> ELEVATOR : En ordre er betjent
 ELEVATOR --> NETWORK : Fortell at ordren er utført
 NETWORK --> MASTER : Fortell at ordren er utført
