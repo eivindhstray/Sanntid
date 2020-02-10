@@ -1,22 +1,18 @@
 @startuml
 
-
 HW --> ELEVATOR : Knapp er trykket
 ELEVATOR --> NETWORK : Gjør klar melding om hva som har skjedd
 NETWORK --> MASTER : Fortell at det har skjedd, oppdater hoveddokument
+MASTER --> BACKUP : oppdatert tilstand
 MASTER --> NETWORK : Marker heis på jobb og fordel info på ALLE heiser
 NETWORK --> ELEVATOR : Fortell hva som skal skje
 ELEVATOR --> HW : Skru på lys og begynn eventuell handling
 MASTER -->BACKUP : I am alive
 ELEVATOR --> NETWORK : Fortell at jeg fortsatt er i operasjon
-NETWORK --> MASTER : Fortell at heis i fortsatt er i operasjon
-HW --> ELEVATOR : En ordre er betjent
-ELEVATOR --> NETWORK : Fortell at ordren er utført
-NETWORK --> MASTER : Fortell at ordren er utført
-MASTER --> MASTER : Slett ordre
-
-
-
-
+NETWORK --> MASTER : Fortell at jeg forsatt er i operasjon
+MASTER --> NETWORK : alle heiser rapporter status
+NETWORK --> ELEVATOR : rapporter status
+MASTER --> MASTER : heis i svarte ikke, flytt alle aktive operasjoner fra heis i til
+MASTER --> BACKUP : oppdatert tilstand
 
 @enduml

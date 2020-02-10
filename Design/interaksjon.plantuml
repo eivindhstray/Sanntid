@@ -10,8 +10,9 @@ class Elevator  {
 }
 class Master{
     master_distribute_state(all_elevators)
-    master_receive_action()
+    master_receive_message()
     master_IAmAlive(backup_ip)
+    master_checkpoint()
 }
 class Network{
     network_send_message(ip, message)
@@ -32,7 +33,7 @@ enum queue {
 Elevator  <-> Network: 1..n
 Network <-> Master
 Network <-> Backup
-Queue <-> Master
+
 
 
 
