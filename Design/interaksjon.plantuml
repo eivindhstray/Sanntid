@@ -24,17 +24,28 @@ class Backup{
     backup_receive_state(master_ip)
 }
 
+class State{
+    .json
+}
+
+class Timer{
+    timer_start()
+    timer_timeout()
+}
 
 
 enum queue {
     {{1,2,3,4,5,6,...,n},{UP,DOWN}}
 }
 
-Elevator  <-> Network: 1..n
+Elevator  <-> Network: 1..n-2
 Network <-> Master
 Network <-> Backup
-
-
+Backup <--> Elevator : 1
+Master <--> Elevator : 1
+Master <--> State
+Backup <--> State
+Timer<--> Network
 
 
 
