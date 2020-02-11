@@ -50,7 +50,7 @@ direction_get()
 network <-> FSM
 
 cost -> FSM
-buttons -> Queue
+buttons -> network
 
 FSM <-> lights
 FSM <-> door
