@@ -33,6 +33,7 @@ func main() {
 
 		case a := <-drv_floors:
 			fmt.Printf("%+v\n", a)
+			elevio.SetFloorIndicator(a)
 			if a == numFloors-1 {
 				d = elevio.MD_Down
 			} else if a == 0 {
