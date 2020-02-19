@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"./elevio"
+	"./queue"
 )
 
 func main() {
@@ -25,20 +26,31 @@ func main() {
 	go elevio.PollObstructionSwitch(drv_obstr)
 	go elevio.PollStopButton(drv_stop)
 
+	for i := 0; i < queue.N_FLOORS; i++ {
+		for j := 0; j < 2; j++ {
+			queue.Delete_order(i, j)
+		}
+	}
+
 	for {
 		select {
 		case a := <-drv_buttons:
 			fmt.Printf("%+v\n", a)
 			elevio.SetButtonLamp(a.Button, a.Floor, true)
+			queue.Add_order(a.Floor, int(a.Button))
+			dir := queue.Direction_to_travel(a.Floor)
+			d = elevio.MotorDirection(dir)
+			fmt.Printf("%+v\n", d)
+			elevio.SetMotorDirection(d)
 
 		case a := <-drv_floors:
 			fmt.Printf("%+v\n", a)
 			elevio.SetFloorIndicator(a)
-			if a == numFloors-1 {
-				d = elevio.MD_Down
-			} else if a == 0 {
-				d = elevio.MD_Up
-			}
+			queue.Delete_order(a, 0)
+			queue.Delete_order(a, 1)
+			dir := queue.Direction_to_travel(a)
+			d = elevio.MotorDirection(dir)
+			fmt.Printf("%+v\n", d)
 			elevio.SetMotorDirection(d)
 
 		case a := <-drv_obstr:
