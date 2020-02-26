@@ -2,6 +2,8 @@ package queue
 
 import (
 	"fmt"
+
+	"./elevio"
 )
 
 type Direction int
@@ -9,6 +11,14 @@ type Direction int
 const N_FLOORS = 4
 
 var queue [N_FLOORS][2]int
+
+func get_motor_direction() int {
+	return elevio.MotorDirection
+}
+
+func set_motor_direction(value int) {
+	elevio.SetMotorDirection(value)
+}
 
 func Add_order(floor int, dir int) {
 
