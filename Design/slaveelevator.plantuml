@@ -1,0 +1,64 @@
+@startuml
+
+enum states{
+{idle, running, emergency, door, lights}
+}
+
+class FSM{
+switch(case)
+}
+
+class Queue{
+queue_enter()
+queue_exit()
+queue_update_order()
+}
+
+class lights{
+light_on()
+light_off()
+}
+
+class cost{
+cost_determine_cost()
+}
+
+class network{
+network_transmit()
+network_recieve()
+}
+
+class emergency{
+emergency_stop()
+}
+
+class door{
+door_open()
+door_close()
+}
+
+class buttons{
+buttons()
+}
+
+class motor_driver{
+direction_set()
+direction_get()
+
+}
+
+network <-> FSM
+
+cost -> FSM
+buttons -> network
+
+FSM <-> lights
+FSM <-> door
+FSM <-> emergency
+FSM <-> motor_driver
+Queue -> cost
+network -> Queue
+states -> FSM
+
+
+@enduml
