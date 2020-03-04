@@ -18,9 +18,19 @@ procedure exercise7 is
     protected body Transaction_Manager is
         entry Finished when Finished_Gate_Open or Finished'Count = N is
         begin
+
             ------------------------------------------
             -- PART 3: Complete the exit protocol here
             ------------------------------------------
+          if Finished'Count = N-1 Then
+            Finished_Gate_Open := True;
+            Should_Commit := not Aborted;
+          end if;
+
+          if Finished'Count = 0 Then
+            Finished_Gate_Open := False;
+            Aborted := False;
+          end if;
         end Finished;
 
         procedure Signal_Abort is
@@ -32,18 +42,27 @@ procedure exercise7 is
         begin
             return Should_Commit;
         end Commit;
-        
+
     end Transaction_Manager;
 
 
 
-    
+
     function Unreliable_Slow_Add (x : Integer) return Integer is
     Error_Rate : Constant := 0.15;  -- (between 0 and 1)
+  -- kan evt deklarere endel ting her slik som:
+  -- rand_int : Float := Random (Gen);
+    -------------------------------------------
+    -- PART 1: Create the transaction work here
+    -------------------------------------------
     begin
-        -------------------------------------------
-        -- PART 1: Create the transaction work here
-        -------------------------------------------
+      if Random (Gen) > Error_Rate Then --success
+        delay Duration(5);
+        return x + 10;
+      else -- failure
+        delay Duration(0.5);
+        raise Count_Failed;
+      end if;
     end Unreliable_Slow_Add;
 
 
@@ -62,22 +81,30 @@ procedure exercise7 is
             Round_Num := Round_Num + 1;
 
             ---------------------------------------
-            -- PART 2: Do the transaction work here             
+            -- PART 2: Do the transaction work here
             ---------------------------------------
-            
-            if Manager.Commit = True then
-                Put_Line ("  Worker" & Integer'Image(Initial) & " comitting" & Integer'Image(Num));
-            else
-                Put_Line ("  Worker" & Integer'Image(Initial) &
-                             " reverting from" & Integer'Image(Num) &
-                             " to" & Integer'Image(Prev));
+          begin
+            Num := Unreliable_Slow_Add (Prev);
+          exception
+              When Count_Failed =>
+              Manager.Signal_Abort;
+          end;
+          Manager.Finished;
+
+          if Manager.Commit = True then
+              Put_Line ("  Worker" & Integer'Image(Initial) & " comitting" & Integer'Image(Num));
+          else
+              Put_Line ("  Worker" & Integer'Image(Initial) &
+                           " reverting from" & Integer'Image(Num) &
+                           " to" & Integer'Image(Prev));
                 -------------------------------------------
                 -- PART 2: Roll back to previous value here
                 -------------------------------------------
-            end if;
+              Num := Prev;
+          end if;
 
-            Prev := Num;
-            delay 0.5;
+          Prev := Num;
+          delay 0.5;
 
         end loop;
     end Transaction_Worker;
@@ -91,4 +118,3 @@ procedure exercise7 is
 begin
     Reset(Gen); -- Seed the random number generator
 end exercise7;
-
