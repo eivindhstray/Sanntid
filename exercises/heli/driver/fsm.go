@@ -7,6 +7,9 @@ import (
 	"./elevio"
 )
 
+//seems like there is a bug related to cab calls. The elevator sometimes go
+//out of bounds
+
 func fsmFloor(newFloor int) {
 	for i := 0; i < 2; i++ {
 		if queueCheckCurrentFloorSameDir(newFloor, elevatorGetDir()) {
