@@ -142,6 +142,9 @@ func queueCheckBelow(currentFloor int) bool {
 				return true
 			}
 		}
+		if currentFloor == 0{
+			return false
+		}
 	}
 	return false
 }
@@ -151,6 +154,9 @@ func queueCheckAbove(currentFloor int) bool {
 		for button := 0; button < N_BUTTON_TYPES; button++ {
 			if queue[floor][button] == true {
 				return true
+			}
+			if currentFloor == N_FLOORS-1{
+				return false
 			}
 		}
 	}
