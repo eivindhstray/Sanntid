@@ -1,12 +1,39 @@
-package main
+package elevator
 
 import (
 	"fmt"
 	"strings"
 
-	"./elevio"
+	"../elevio"
+	"../variables"
 	
 )
+
+//queue
+type OrderType int
+
+type Direction int
+
+
+var queue [variables.N_FLOORS][variables.N_BUTTON_TYPES]bool
+
+const (
+	HallUp   OrderType = 0
+	HallDown           = 1
+	Cab                = 2
+)
+
+type Order struct {
+	orderT OrderType
+	floor  int
+}
+
+var OrderToButtonTypesMap = map[OrderType]elevio.ButtonType{
+	HallUp:   elevio.BT_HallUp,
+	HallDown: elevio.BT_HallDown,
+	Cab:      elevio.BT_Cab,
+}
+
 
 
 
@@ -22,9 +49,9 @@ func queuePop(floor int, buttonType int) {
 	queue[floor][buttonType] = false
 }
 
-func queueInit() {
-	for floor := 0; floor < N_FLOORS; floor++ {
-		for button := 0; button < N_BUTTON_TYPES; button++ {
+func QueueInit() {
+	for floor := 0; floor < variables.N_FLOORS; floor++ {
+		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
 			queuePop(floor, button)
 		}
 	}
@@ -96,10 +123,10 @@ func queueCheckCurrentFloorSameDir(currentFloor int, currentDirection ElevDir) b
 
 func queuePrint() {
 	fmt.Println("\n	HallUp	HallDn	Cab")
-	fmt.Println("-" + strings.Repeat("|-------|", N_BUTTON_TYPES))
-	for floor := N_FLOORS - 1; floor > -1; floor-- {
+	fmt.Println("-" + strings.Repeat("|-------|", variables.N_BUTTON_TYPES))
+	for floor := variables.N_FLOORS - 1; floor > -1; floor-- {
 		fmt.Print(floor)
-		for button := 0; button < N_BUTTON_TYPES; button++ {
+		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
 			i := queue[floor][button]
 			if i {
 				fmt.Print("| ", "true ", " |")
@@ -109,7 +136,7 @@ func queuePrint() {
 		}
 		fmt.Println()
 	}
-	fmt.Print("-"+strings.Repeat("-------", N_BUTTON_TYPES), "\n\n")
+	fmt.Print("-"+strings.Repeat("-------", variables.N_BUTTON_TYPES), "\n\n")
 }
 
 func queueCheckBelow(currentFloor int) bool {
@@ -117,7 +144,7 @@ func queueCheckBelow(currentFloor int) bool {
 		return false
 	}
 	for floor := 0; floor < currentFloor; floor++ {
-		for button := 0; button < N_BUTTON_TYPES; button++ {
+		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
 			if queue[floor][button] == true {
 				return true
 			}
@@ -128,11 +155,11 @@ func queueCheckBelow(currentFloor int) bool {
 }
 
 func queueCheckAbove(currentFloor int) bool {
-	if currentFloor == N_FLOORS-1{
+	if currentFloor == variables.N_FLOORS-1{
 		return false
 	}
-	for floor := currentFloor; floor < N_FLOORS; floor++ {
-		for button := 0; button < N_BUTTON_TYPES; button++ {
+	for floor := currentFloor; floor < variables.N_FLOORS; floor++ {
+		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
 			if queue[floor][button] == true {
 				return true
 			}

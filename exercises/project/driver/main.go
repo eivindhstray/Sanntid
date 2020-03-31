@@ -3,16 +3,17 @@ package main
 import (
 	"fmt"
 
-
+	"./elevator"
 	"./elevio"
+	"./variables"
 )
 
 func main() {
 
-	elevio.Init("localhost:15657", N_FLOORS)
+	elevio.Init("localhost:15657", variables.N_FLOORS)
 
-	elevatorInit()
-	queueInit()
+	elevator.ElevatorInit()
+	elevator.QueueInit()
 	fmt.Println("Initialized")
 
 	// Channels
@@ -26,14 +27,14 @@ func main() {
 	go elevio.PollObstructionSwitch(drvObstr)
 	go elevio.PollStopButton(drvStop)
 
-	go fsmPollButtonRequest(drvButtons)
+	go elevator.FsmPollButtonRequest(drvButtons)
 
 	for {
 		select {
 		case a := <-drvFloors:
-			fsmFloor(a)
+			elevator.FsmFloor(a)
 		case a := <-drvStop:
-			fsmStop(a)
+			elevator.FsmStop(a)
 
 		}
 	}

@@ -1,15 +1,29 @@
-package main
+package elevator
 
 import (
 	"fmt"
-	"./elevio"
+	"../elevio"
+	"../variables"
 )
-
 
 type ElevDir int
 
 
-func elevatorInit() {
+var elevator Elevator
+
+const (
+	Up   ElevDir = 1
+	Down         = -1
+	Stop         = 0
+)
+
+type Elevator struct {
+	currentFloor int
+	dir          ElevDir
+}
+
+
+func ElevatorInit() {
 	if elevio.GetFloor() == -1 {
 		elevatorSetDir(Down)
 	}
@@ -25,7 +39,7 @@ func elevatorSetNewFloor(newFloor int) {
 
 	elevatorSetFloor(newFloor)
 	switch newFloor {
-	case N_FLOORS - 1:
+	case variables.N_FLOORS - 1:
 		elevatorSetDir(Down)
 		break
 	case 0:
@@ -35,8 +49,8 @@ func elevatorSetNewFloor(newFloor int) {
 }
 
 func elevatorLightsMatchQueue() {
-	for floor := 0; floor < N_FLOORS; floor++ {
-		for button := 0; button < N_BUTTON_TYPES; button++ {
+	for floor := 0; floor < variables.N_FLOORS; floor++ {
+		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
 			if queue[floor][button] == true {
 				elevio.SetButtonLamp(elevio.ButtonType(button), floor, true)
 			} else {
