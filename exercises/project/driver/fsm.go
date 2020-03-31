@@ -1,11 +1,10 @@
-package fsm
+package main
 
 import (
 	"fmt"
 	"time"
 
-	"../elevator"
-	"../elevio"
+	"./elevio"
 )
 
 //seems like there is a bug related to cab calls. The elevator sometimes go

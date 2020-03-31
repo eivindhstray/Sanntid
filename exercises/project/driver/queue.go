@@ -1,11 +1,11 @@
-package queue
+package main
 
 import (
 	"fmt"
 	"strings"
 
-	"../elevio"
-	"../elevator"
+	"./elevio"
+	
 )
 
 type Direction int

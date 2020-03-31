@@ -1,8 +1,8 @@
-package elevator
+package main
 
 import (
 	"fmt"
-	"../elevio"
+	"./elevio"
 )
 
 
