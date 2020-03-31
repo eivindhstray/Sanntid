@@ -1,4 +1,4 @@
-package main
+package costAlgorithm
 
 const N_ELEVATORS = 3
 

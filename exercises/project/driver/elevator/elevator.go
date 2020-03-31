@@ -1,10 +1,10 @@
-package main
+package elevator
 
 import (
 	"fmt"
-
-	"./elevio"
+	"../elevio"
 )
+
 
 type ElevDir int
 
