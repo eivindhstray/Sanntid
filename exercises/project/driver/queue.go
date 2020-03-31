@@ -137,27 +137,28 @@ func queuePrint() {
 }
 
 func queueCheckBelow(currentFloor int) bool {
+	if currentFloor == 0{
+		return false
+	}
 	for floor := 0; floor < currentFloor; floor++ {
 		for button := 0; button < N_BUTTON_TYPES; button++ {
 			if queue[floor][button] == true {
 				return true
 			}
 		}
-		if currentFloor == 0{
-			return false
-		}
+		
 	}
 	return false
 }
 
 func queueCheckAbove(currentFloor int) bool {
+	if currentFloor == N_FLOORS-1{
+		return false
+	}
 	for floor := currentFloor; floor < N_FLOORS; floor++ {
 		for button := 0; button < N_BUTTON_TYPES; button++ {
 			if queue[floor][button] == true {
 				return true
-			}
-			if currentFloor == N_FLOORS-1{
-				return false
 			}
 		}
 	}
