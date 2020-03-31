@@ -25,6 +25,7 @@ func elevatorInit() {
 	if elevio.GetFloor() == -1 {
 		elevatorSetDir(Down)
 	}
+	//Busy wait
 	for elevio.GetFloor() == -1 {
 	}
 	elevatorSetDir(Stop)
