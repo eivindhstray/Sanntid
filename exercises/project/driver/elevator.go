@@ -8,18 +8,6 @@ import (
 
 type ElevDir int
 
-const (
-	Up   ElevDir = 1
-	Down         = -1
-	Stop         = 0
-)
-
-type Elevator struct {
-	currentFloor int
-	dir          ElevDir
-}
-
-var elevator Elevator
 
 func elevatorInit() {
 	if elevio.GetFloor() == -1 {
