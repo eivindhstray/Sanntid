@@ -17,6 +17,7 @@ func FsmFloor(newFloor int) {
 			elevatorSetMotorDir(Stop)
 			fsmDoorState()
 			queueRemoveOrder(newFloor, elevatorGetDir())
+			backupSync()
 			elevatorLightsMatchQueue()
 		}
 
@@ -42,32 +43,31 @@ func fsmOnButtonRequest(a elevio.ButtonEvent) {
 
 	queueRecieveOrder(a)
 	elevatorLightsMatchQueue()
+	backupSync()
 
 	if elevatorGetDir() == Stop {
 		elevatorSetDir(queueReturnElevDir(elevatorGetFloor(), elevatorGetDir()))
 	}
 }
 
-
-func FsmMessageReceived(msg ElevatorMessage){
+func FsmMessageReceived(msg ElevatorMessage) {
 	//sync the new message with queue
 	msgType := msg.MessageType
-	button := int(msg.Button) 
+	button := int(msg.Button)
 	floor := msg.Floor
-	if msgType == "ORDER"{
-		queueSet(floor,int(button))
-	}else if msgType == "FINISHED"{
-		queuePop(floor,int(button))
-	}else{
+	if msgType == "ORDER" {
+		queueSet(floor, int(button))
+	} else if msgType == "FINISHED" {
+		queuePop(floor, int(button))
+	} else {
 		fmt.Print("invalid message")
 	}
 
 }
 
-func FsmMessageTransmit(msgType string, floor int, button int){
-	
-}
+func FsmMessageTransmit(msgType string, floor int, button int) {
 
+}
 
 func fsmDoorState() {
 	fmt.Print("Door state")

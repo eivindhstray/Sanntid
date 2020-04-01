@@ -36,8 +36,8 @@ var OrderToButtonTypesMap = map[OrderType]elevio.ButtonType{
 
 type ElevatorMessage struct {
 	MessageType string
-	Button int //1 = hallup 2 = halldown 3 = cab
-	Floor int
+	Button      int //1 = hallup 2 = halldown 3 = cab
+	Floor       int
 }
 
 func queueSet(floor int, buttonType int) {

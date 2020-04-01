@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"flag"
+	"fmt"
 	"os"
 	"time"
 
@@ -19,6 +19,7 @@ func main() {
 
 	elevator.ElevatorInit()
 	elevator.QueueInit()
+	elevator.backupInit()
 	fmt.Println("Initialized")
 
 	var id string
@@ -41,8 +42,6 @@ func main() {
 	go peers.Transmitter(15647, id, peerTxEnable)
 	go peers.Receiver(15647, peerUpdateCh)
 
-
-
 	// Channels
 	drvButtons := make(chan elevio.ButtonEvent)
 	drvFloors := make(chan int)
@@ -58,8 +57,8 @@ func main() {
 	go elevio.PollStopButton(drvStop)
 	go elevator.FsmPollButtonRequest(drvButtons)
 
-	go bcast.Receiver(15647,elevRx)
-	go bcast.Transmitter(15647,elevTx)
+	go bcast.Receiver(15647, elevRx)
+	go bcast.Transmitter(15647, elevTx)
 
 	for {
 		select {
@@ -67,14 +66,14 @@ func main() {
 			elevator.FsmFloor(a)
 		case a := <-drvStop:
 			elevator.FsmStop(a)
-		case p:= <-elevRx:
+		case p := <-elevRx:
 			elevator.FsmMessageReceived(p)
-		case s:= <- drvButtons:
-			msg := elevator.ElevatorMessage{"ORDER",int(s.Button),s.Floor}
+		case s := <-drvButtons:
+			msg := elevator.ElevatorMessage{"ORDER", int(s.Button), s.Floor}
 			elevTx <- msg
-			time.Sleep(1*time.Second)
+			time.Sleep(1 * time.Second)
 		//case s:= <- drvFloors:
-			//msg := elevator.ElevatorMessage{"FINISHED", s,0}
+		//msg := elevator.ElevatorMessage{"FINISHED", s,0}
 
 		case f := <-peerUpdateCh:
 			fmt.Printf("Peer update:\n")
