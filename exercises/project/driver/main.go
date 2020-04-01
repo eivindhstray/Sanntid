@@ -6,6 +6,7 @@ import (
 	"./elevator"
 	"./elevio"
 	"./variables"
+	"./network/bcast"
 )
 
 func main() {
@@ -21,11 +22,14 @@ func main() {
 	drvFloors := make(chan int)
 	drvObstr := make(chan bool)
 	drvStop := make(chan bool)
+	elevTx := make(chan variables.ElevatorMessage)
+	elevRx := make(chan variables.ElevatorMessage)
 
 	go elevio.PollButtons(drvButtons)
 	go elevio.PollFloorSensor(drvFloors)
 	go elevio.PollObstructionSwitch(drvObstr)
 	go elevio.PollStopButton(drvStop)
+	
 
 	go elevator.FsmPollButtonRequest(drvButtons)
 
