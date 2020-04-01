@@ -10,12 +10,14 @@ import (
 	"./elevio"
 	"./network/bcast"
 	"./variables"
+	"./network/peers"
+	"./network/localip"
 )
 
 func main() {
 
-	elevio.Init("localhost:15657", variables.N_FLOORS)
-	network.NetworkInit()
+	elevio.Init("localhost:15658", variables.N_FLOORS)
+	
 
 	elevator.ElevatorInit()
 	elevator.QueueInit()
@@ -59,7 +61,7 @@ func main() {
 	go elevator.FsmPollButtonRequest(drvButtons)
 
 	go bcast.Receiver(15647,elevRx)
-	go bcast.Transmitter(15647,elevTx)
+	go bcast.Transmitter(15648,elevTx)
 
 	for {
 		select {
@@ -73,6 +75,8 @@ func main() {
 			msg := elevator.ElevatorMessage{"ORDER",int(s.Button),s.Floor}
 			elevTx <- msg
 			time.Sleep(1*time.Second)
+			fmt.Printf("New message:\n")
+		
 		//case s:= <- drvFloors:
 			//msg := elevator.ElevatorMessage{"FINISHED", s,0}
 

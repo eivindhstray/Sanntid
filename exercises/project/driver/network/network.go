@@ -13,11 +13,11 @@ const (
 	broadcastTime   = 100 * time.Millisecond
 )
 
-func networkInit() {
+/*func networkInit() {
 	sendNewOrder := make(chan string)
 	sendRemoveOrder := make(chan string)
 
 	recieveNewOrder := make(chan string)
 	recieveRemoveOrder := make(chan string)
 
-}
+}*/
