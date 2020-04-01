@@ -12,6 +12,7 @@ import (
 func main() {
 
 	elevio.Init("localhost:15657", variables.N_FLOORS)
+	network.NetworkInit()
 
 	elevator.ElevatorInit()
 	elevator.QueueInit()
