@@ -49,11 +49,11 @@ func fsmOnButtonRequest(a elevio.ButtonEvent) {
 	}
 }
 
-func FsmMessageReveived(a ElevatorMessage){
+func FsmMessageReveived(msg ElevatorMessage){
 	//sync the new message with queue
-	msgType := a.MessageType
-	button := int(a.Button) 
-	floor := a.Floor
+	msgType := msg.MessageType
+	button := int(msg.Button) 
+	floor := msg.Floor
 	if msgType == "ORDER"{
 		queueSet(floor,button)
 	}else if msgType == "FINISHED"{
@@ -61,6 +61,11 @@ func FsmMessageReveived(a ElevatorMessage){
 	}else{
 		fmt.Print("invalid message")
 	}
+
+}
+
+func FsmMessageTransmit(msgType string, floor int, button int){
+	msg := ElevatorMessage{msgType,OrderType(button),floor}
 
 }
 

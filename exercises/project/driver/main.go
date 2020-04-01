@@ -31,15 +31,19 @@ func main() {
 	go elevio.PollStopButton(drvStop)
 	go elevator.FsmPollButtonRequest(drvButtons)
 	go bcast.Receiver(15647,elevRx)
-
+	go bcast.Transmitter(15647,elevTx)
 	for {
 		select {
 		case a := <-drvFloors:
 			elevator.FsmFloor(a)
 		case a := <-drvStop:
 			elevator.FsmStop(a)
-		case a:= <-elevRx:
-			elevator.FsmMessageReceived(a)
+		case p:= <-elevRx:
+			elevator.FsmMessageReceived(p)
+		case s:= <- drvButtons:
+			elevator.FsmMessageTransmit("ORDER",s.Floor, s.Button)
+		case s:= <- drvFloors:
+			elevator.FsmMessageTransmit("FINISHED",s.Floor,s.Button)
 		}
 	}
 
