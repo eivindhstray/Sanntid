@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"flag"
+	"os"
+	"time"
 
 	"./elevator"
 	"./elevio"
@@ -17,6 +20,28 @@ func main() {
 	elevator.ElevatorInit()
 	elevator.QueueInit()
 	fmt.Println("Initialized")
+
+	var id string
+	flag.StringVar(&id, "id", "", "id of this peer")
+	flag.Parse()
+
+	if id == "" {
+		localIP, err := localip.LocalIP()
+		if err != nil {
+			fmt.Println(err)
+			localIP = "DISCONNECTED"
+		}
+		id = fmt.Sprintf("peer-%s-%d", localIP, os.Getpid())
+	}
+
+	peerUpdateCh := make(chan peers.PeerUpdate)
+	// We can disable/enable the transmitter after it has been started.
+	// This could be used to signal that we are somehow "unavailable".
+	peerTxEnable := make(chan bool)
+	go peers.Transmitter(15647, id, peerTxEnable)
+	go peers.Receiver(15647, peerUpdateCh)
+
+
 
 	// Channels
 	drvButtons := make(chan elevio.ButtonEvent)
@@ -44,11 +69,18 @@ func main() {
 			elevator.FsmStop(a)
 		case p:= <-elevRx:
 			elevator.FsmMessageReceived(p)
-		//case s:= <- drvButtons:
-			//msg := elevator.ElevatorMessage{"ORDER",int(s.Button),s.Floor}
+		case s:= <- drvButtons:
+			msg := elevator.ElevatorMessage{"ORDER",int(s.Button),s.Floor}
+			elevTx <- msg
+			time.Sleep(1*time.Second)
 		//case s:= <- drvFloors:
 			//msg := elevator.ElevatorMessage{"FINISHED", s,0}
 
+		case f := <-peerUpdateCh:
+			fmt.Printf("Peer update:\n")
+			fmt.Printf("  Peers:    %q\n", f.Peers)
+			fmt.Printf("  New:      %q\n", f.New)
+			fmt.Printf("  Lost:     %q\n", f.Lost)
 		}
 	}
 
