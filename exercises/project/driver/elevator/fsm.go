@@ -62,6 +62,7 @@ func FsmMessageReceived(msg ElevatorMessage) {
 	} else {
 		fmt.Print("invalid message")
 	}
+	elevatorLightsMatchQueue()
 
 }
 

@@ -16,12 +16,12 @@ import (
 
 func main() {
 
-	elevio.Init("localhost:15658", variables.N_FLOORS)
+	elevio.Init("localhost:15657", variables.N_FLOORS)
 	
 
 	elevator.ElevatorInit()
 	elevator.QueueInit()
-	elevator.backupInit()
+	//elevator.backupInit()
 	fmt.Println("Initialized")
 
 	var id string
@@ -58,7 +58,7 @@ func main() {
 	go elevio.PollObstructionSwitch(drvObstr)
 	go elevio.PollStopButton(drvStop)
 	go elevator.FsmPollButtonRequest(drvButtons)
-	go bcast.Receiver(15647,elevRx)
+	go bcast.Receiver(15648,elevRx)
 	go bcast.Transmitter(15648,elevTx)
 
 
@@ -75,7 +75,7 @@ func main() {
 			msg := elevator.ElevatorMessage{"ORDER", int(s.Button), s.Floor}
 			elevTx <- msg
 			time.Sleep(1*time.Second)
-			fmt.Printf("New message sent:\n")
+			fmt.Printf("New message sent\n")
 		
 
 		//case s:= <- drvFloors:
