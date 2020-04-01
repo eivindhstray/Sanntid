@@ -70,11 +70,12 @@ func main() {
 			elevator.FsmStop(a)
 		case p := <-elevRx:
 			elevator.FsmMessageReceived(p)
+			fmt.Printf("Received message")
 		case s := <-drvButtons:
 			msg := elevator.ElevatorMessage{"ORDER", int(s.Button), s.Floor}
 			elevTx <- msg
 			time.Sleep(1*time.Second)
-			fmt.Printf("New message:\n")
+			fmt.Printf("New message sent:\n")
 		
 
 		//case s:= <- drvFloors:
