@@ -22,7 +22,7 @@ func FsmFloor(newFloor int) {
 		}
 
 		elevatorSetDir(queueReturnElevDir(newFloor, elevatorGetDir()))
-		// Print eleator stuff here
+		queuePrint()
 	}
 }
 
@@ -66,9 +66,9 @@ func FsmMessageReceived(msg ElevatorMessage) {
 
 }
 
-func FsmMessageTransmit(msgType string, floor int, button int) {
-
-}
+//func FsmMessageTransmit(msgType string, floor int, button int) {
+//
+//}
 
 func fsmDoorState() {
 	fmt.Print("Door state")
