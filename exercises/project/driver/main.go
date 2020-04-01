@@ -22,8 +22,8 @@ func main() {
 	drvFloors := make(chan int)
 	drvObstr := make(chan bool)
 	drvStop := make(chan bool)
-	elevTx := make(chan queue.ElevatorMessage)
-	elevRx := make(chan queue.ElevatorMessage)
+	elevTx := make(chan elevator.ElevatorMessage)
+	elevRx := make(chan elevator.ElevatorMessage)
 
 	go elevio.PollButtons(drvButtons)
 	go elevio.PollFloorSensor(drvFloors)
@@ -40,10 +40,10 @@ func main() {
 			elevator.FsmStop(a)
 		case p:= <-elevRx:
 			elevator.FsmMessageReceived(p)
-		case s:= <- drvButtons:
-			elevator.FsmMessageTransmit("ORDER",s.Floor, s.Button)
-		case s:= <- drvFloors:
-			elevator.FsmMessageTransmit("FINISHED",s.Floor,s.Button)
+		//case s:= <- drvButtons:
+			//msg := elevator.ElevatorMessage{"ORDER",int(s.Button),s.Floor}
+		//case s:= <- drvFloors:
+			//msg := elevator.ElevatorMessage{"FINISHED", s,0}
 		}
 	}
 
