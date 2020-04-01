@@ -1,12 +1,14 @@
 package bcast
 
 import (
-	"../conn"
 	"encoding/json"
 	"fmt"
 	"net"
 	"reflect"
 	"strings"
+	"time"
+
+	"../conn"
 )
 
 
@@ -115,4 +117,3 @@ func checkArgs(chans ...interface{}) {
 		}
 	}
 }
-

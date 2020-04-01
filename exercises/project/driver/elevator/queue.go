@@ -6,14 +6,12 @@ import (
 
 	"../elevio"
 	"../variables"
-	
 )
 
 //queue
 type OrderType int
 
 type Direction int
-
 
 var queue [variables.N_FLOORS][variables.N_BUTTON_TYPES]bool
 
@@ -34,17 +32,18 @@ var OrderToButtonTypesMap = map[OrderType]elevio.ButtonType{
 	Cab:      elevio.BT_Cab,
 }
 
-
 //message
 
-type ElevatorMessage struct{
+type ElevatorMessage struct {
 	MessageType string
+<<<<<<< HEAD
 	Button int //1 = hallup 2 = halldown 3 = cab
 	Floor int
+=======
+	Button      OrderType //1 = hallup 2 = halldown 3 = cab
+	Floor       int
+>>>>>>> c0c292c39adbefe5e15283f72078d182ea4dffff
 }
-
-
-
 
 func queueSet(floor int, buttonType int) {
 	queue[floor][buttonType] = true
@@ -131,7 +130,7 @@ func queueCheckCurrentFloorSameDir(currentFloor int, currentDirection ElevDir) b
 }
 
 func queuePrint() {
-	fmt.Println("\n	HallUp	HallDn	Cab")
+	fmt.Println("\n   HallUp   HallDn    Cab  ")
 	fmt.Println("-" + strings.Repeat("|-------|", variables.N_BUTTON_TYPES))
 	for floor := variables.N_FLOORS - 1; floor > -1; floor-- {
 		fmt.Print(floor)
@@ -140,16 +139,16 @@ func queuePrint() {
 			if i {
 				fmt.Print("| ", "true ", " |")
 			} else {
-				fmt.Print("| ", "_______ ", "|")
+				fmt.Print("| ", "_____", " |")
 			}
 		}
 		fmt.Println()
 	}
-	fmt.Print("-"+strings.Repeat("-------", variables.N_BUTTON_TYPES), "\n\n")
+	fmt.Print("-"+strings.Repeat("---------", variables.N_BUTTON_TYPES), "\n\n")
 }
 
 func queueCheckBelow(currentFloor int) bool {
-	if currentFloor == 0{
+	if currentFloor == 0 {
 		return false
 	}
 	for floor := 0; floor < currentFloor; floor++ {
@@ -158,13 +157,13 @@ func queueCheckBelow(currentFloor int) bool {
 				return true
 			}
 		}
-		
+
 	}
 	return false
 }
 
 func queueCheckAbove(currentFloor int) bool {
-	if currentFloor == variables.N_FLOORS-1{
+	if currentFloor == variables.N_FLOORS-1 {
 		return false
 	}
 	for floor := currentFloor; floor < variables.N_FLOORS; floor++ {
