@@ -8,11 +8,5 @@ const DOOROPENTIME = 2
 
 
 
-//message
-
-type ElevatorMessage struct{
-	Message string
-	Iter int
-}
 
 
