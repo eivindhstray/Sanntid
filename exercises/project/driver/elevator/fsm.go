@@ -6,7 +6,6 @@ import (
 
 	"../elevio"
 	"../variables"
-	
 )
 
 //seems like there is a bug related to cab calls. The elevator sometimes go
@@ -49,16 +48,16 @@ func fsmOnButtonRequest(a elevio.ButtonEvent) {
 	}
 }
 
-func FsmMessageReveived(a ElevatorMessage){
+func FsmMessageReveived(a ElevatorMessage) {
 	//sync the new message with queue
 	msgType := a.MessageType
-	button := int(a.Button) 
+	button := int(a.Button)
 	floor := a.Floor
-	if msgType == "ORDER"{
-		queueSet(floor,button)
-	}else if msgType == "FINISHED"{
-		queuePop(floor,button)
-	}else{
+	if msgType == "ORDER" {
+		queueSet(floor, button)
+	} else if msgType == "FINISHED" {
+		queuePop(floor, button)
+	} else {
 		fmt.Print("invalid message")
 	}
 

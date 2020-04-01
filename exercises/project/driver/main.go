@@ -5,8 +5,8 @@ import (
 
 	"./elevator"
 	"./elevio"
-	"./variables"
 	"./network/bcast"
+	"./variables"
 )
 
 func main() {
@@ -22,15 +22,15 @@ func main() {
 	drvFloors := make(chan int)
 	drvObstr := make(chan bool)
 	drvStop := make(chan bool)
-	elevTx := make(chan queue.ElevatorMessage)
-	elevRx := make(chan queue.ElevatorMessage)
+	//elevTx := make(chan elevator.ElevatorMessage)
+	elevRx := make(chan elevator.ElevatorMessage)
 
 	go elevio.PollButtons(drvButtons)
 	go elevio.PollFloorSensor(drvFloors)
 	go elevio.PollObstructionSwitch(drvObstr)
 	go elevio.PollStopButton(drvStop)
 	go elevator.FsmPollButtonRequest(drvButtons)
-	go bcast.Receiver(15647,elevRx)
+	go bcast.Receiver(15647, elevRx)
 
 	for {
 		select {
@@ -38,8 +38,8 @@ func main() {
 			elevator.FsmFloor(a)
 		case a := <-drvStop:
 			elevator.FsmStop(a)
-		case a:= <-elevRx:
-			elevator.FsmMessageReceived(a)
+		case a := <-elevRx:
+			elevator.FsmMessageReveived(a)
 		}
 	}
 

@@ -1,12 +1,14 @@
 package bcast
 
 import (
-	"../conn"
 	"encoding/json"
 	"fmt"
 	"net"
 	"reflect"
 	"strings"
+	"time"
+
+	"../conn"
 )
 
 const _pollRate = 20 * time.Millisecond
@@ -115,4 +117,3 @@ func checkArgs(chans ...interface{}) {
 		}
 	}
 }
-
