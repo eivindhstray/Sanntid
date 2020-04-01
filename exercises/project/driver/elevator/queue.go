@@ -38,7 +38,7 @@ type ElevatorMessage struct {
 	MessageType string
 	Button int //1 = hallup 2 = halldown 3 = cab
 	Floor int
-
+}
 
 func queueSet(floor int, buttonType int) {
 	queue[floor][buttonType] = true
