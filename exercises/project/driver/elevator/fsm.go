@@ -48,6 +48,18 @@ func fsmOnButtonRequest(a elevio.ButtonEvent) {
 	}
 }
 
+<<<<<<< HEAD
+func FsmMessageReceived(msg ElevatorMessage){
+	//sync the new message with queue
+	msgType := msg.MessageType
+	button := int(msg.Button) 
+	floor := msg.Floor
+	if msgType == "ORDER"{
+		queueSet(floor,int(button))
+	}else if msgType == "FINISHED"{
+		queuePop(floor,int(button))
+	}else{
+=======
 func FsmMessageReveived(a ElevatorMessage) {
 	//sync the new message with queue
 	msgType := a.MessageType
@@ -58,10 +70,16 @@ func FsmMessageReveived(a ElevatorMessage) {
 	} else if msgType == "FINISHED" {
 		queuePop(floor, button)
 	} else {
+>>>>>>> c0c292c39adbefe5e15283f72078d182ea4dffff
 		fmt.Print("invalid message")
 	}
 
 }
+
+func FsmMessageTransmit(msgType string, floor int, button int){
+	
+}
+
 
 func fsmDoorState() {
 	fmt.Print("Door state")

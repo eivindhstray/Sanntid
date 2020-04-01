@@ -11,7 +11,7 @@ import (
 	"../conn"
 )
 
-const _pollRate = 20 * time.Millisecond
+
 
 // Encodes received values from `chans` into type-tagged JSON, then broadcasts
 // it on `port`
