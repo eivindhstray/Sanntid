@@ -68,6 +68,8 @@ func main() {
 			elevator.FsmFloor(a)
 			msg := elevator.ElevatorMessage{"FLOOR", a, a}
 			elevTx <- msg
+			elevTx <- msg
+			elevTx <- msg
 			fmt.Printf("New Floor Sent\n")
 		case a := <-drvStop:
 			elevator.FsmStop(a)

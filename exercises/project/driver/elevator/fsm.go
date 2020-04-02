@@ -44,7 +44,7 @@ func fsmOnButtonRequest(a elevio.ButtonEvent) {
 
 	queueRecieveOrder(a)
 	elevatorLightsMatchQueue()
-	backupSync()
+	//backupSync()
 
 	if elevatorGetDir() == Stop {
 		elevatorSetDir(queueReturnElevDir(elevatorGetFloor(), elevatorGetDir()))
