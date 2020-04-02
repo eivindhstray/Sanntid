@@ -53,12 +53,11 @@ func fsmOnButtonRequest(a elevio.ButtonEvent) {
 func FsmMessageReceived(msg ElevatorMessage) {
 	//sync the new message with queue
 	msgType := msg.MessageType
-	button := int(msg.Button)
-	floor := msg.Floor
+	button := msg.Button
+	floor := msg.Floor 
 	if msgType == "ORDER" {
-		queueSet(floor, int(button))
-	} else if msgType == "FINISHED" {
-		queuePop(floor, int(button))
+		event := elevio.ButtonEvent{floor,elevio.ButtonType(button)}
+		fsmOnButtonRequest(event)
 	} else {
 		fmt.Print("invalid message")
 	}
