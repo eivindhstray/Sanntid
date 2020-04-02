@@ -66,11 +66,15 @@ func main() {
 		select {
 		case a := <-drvFloors:
 			elevator.FsmFloor(a)
+			msg:= elevator.ElevatorMessage{"FLOOR",a,a}
+			elevTx<-msg
+			time.Sleep(1*time.Second)
+			fmt.Printf("New Floor Sent\n")
 		case a := <-drvStop:
 			elevator.FsmStop(a)
 		case p := <-elevRx:
 			elevator.FsmMessageReceived(p)
-			fmt.Printf("Received message")
+			fmt.Printf("New ButtonPress Sent\n")
 		case s := <-drvButtons:
 			msg := elevator.ElevatorMessage{"ORDER", int(s.Button), s.Floor}
 			elevTx <- msg

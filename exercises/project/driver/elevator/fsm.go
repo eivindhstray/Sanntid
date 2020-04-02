@@ -58,6 +58,8 @@ func FsmMessageReceived(msg ElevatorMessage) {
 	if msgType == "ORDER" {
 		event := elevio.ButtonEvent{floor,elevio.ButtonType(button)}
 		fsmOnButtonRequest(event)
+	}else if msgType == "FLOOR"{
+		FsmFloor(floor)
 	} else {
 		fmt.Print("invalid message")
 	}
