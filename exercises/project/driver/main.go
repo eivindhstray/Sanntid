@@ -18,7 +18,6 @@ func main() {
 	cmd := os.Args[1]
 	fmt.Println(cmd)
 	elevio.Init("localhost:"+cmd, variables.N_FLOORS)
-
 	//go run main.go portnr
 
 	elevator.ElevatorInit()

@@ -22,7 +22,8 @@ func FsmFloor(newFloor int) {
 		}
 
 		elevatorSetDir(queueReturnElevDir(newFloor, elevatorGetDir()))
-		queuePrint()
+		fmt.Println(elevatorGetDir())
+		//queuePrint()
 	}
 }
 
@@ -54,11 +55,11 @@ func FsmMessageReceived(msg ElevatorMessage) {
 	//sync the new message with queue
 	msgType := msg.MessageType
 	button := msg.Button
-	floor := msg.Floor 
+	floor := msg.Floor
 	if msgType == "ORDER" {
-		event := elevio.ButtonEvent{floor,elevio.ButtonType(button)}
+		event := elevio.ButtonEvent{floor, elevio.ButtonType(button)}
 		fsmOnButtonRequest(event)
-	}else if msgType == "FLOOR"{
+	} else if msgType == "FLOOR" {
 		FsmFloor(floor)
 	} else {
 		fmt.Print("invalid message")
