@@ -5,19 +5,21 @@ import (
 	"fmt"
 	"os"
 
-
 	"./elevator"
 	"./elevio"
 	"./network/bcast"
-	"./variables"
-	"./network/peers"
 	"./network/localip"
+	"./network/peers"
+	"./variables"
 )
 
 func main() {
 
-	elevio.Init("localhost:15657", variables.N_FLOORS)
-	
+	cmd := os.Args[1]
+	fmt.Println(cmd)
+	elevio.Init("localhost:"+cmd, variables.N_FLOORS)
+
+	//go run main.go portnr
 
 	elevator.ElevatorInit()
 	elevator.QueueInit()
@@ -58,16 +60,15 @@ func main() {
 	//go elevio.PollObstructionSwitch(drvObstr)
 	go elevio.PollStopButton(drvStop)
 	go elevator.FsmPollButtonRequest(drvButtons)
-	go bcast.Receiver(15648,elevRx)
-	go bcast.Transmitter(15648,elevTx)
-
+	go bcast.Receiver(15648, elevRx)
+	go bcast.Transmitter(15648, elevTx)
 
 	for {
 		select {
 		case a := <-drvFloors:
 			elevator.FsmFloor(a)
-			msg:= elevator.ElevatorMessage{"FLOOR",a,a}
-			elevTx<-msg
+			msg := elevator.ElevatorMessage{"FLOOR", a, a}
+			elevTx <- msg
 			fmt.Printf("New Floor Sent\n")
 		case a := <-drvStop:
 			elevator.FsmStop(a)
@@ -78,7 +79,6 @@ func main() {
 			msg := elevator.ElevatorMessage{"ORDER", int(s.Button), s.Floor}
 			elevTx <- msg
 			fmt.Printf("New message sent\n")
-		
 
 		//case s:= <- drvFloors:
 		//msg := elevator.ElevatorMessage{"FINISHED", s,0}
