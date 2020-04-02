@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"time"
+
 
 	"./elevator"
 	"./elevio"
@@ -47,7 +47,7 @@ func main() {
 	// Channels
 	drvButtons := make(chan elevio.ButtonEvent)
 	drvFloors := make(chan int)
-	drvObstr := make(chan bool)
+	//drvObstr := make(chan bool)
 	drvStop := make(chan bool)
 
 	elevTx := make(chan elevator.ElevatorMessage)
@@ -55,7 +55,7 @@ func main() {
 
 	go elevio.PollButtons(drvButtons)
 	go elevio.PollFloorSensor(drvFloors)
-	go elevio.PollObstructionSwitch(drvObstr)
+	//go elevio.PollObstructionSwitch(drvObstr)
 	go elevio.PollStopButton(drvStop)
 	go elevator.FsmPollButtonRequest(drvButtons)
 	go bcast.Receiver(15648,elevRx)
@@ -68,7 +68,6 @@ func main() {
 			elevator.FsmFloor(a)
 			msg:= elevator.ElevatorMessage{"FLOOR",a,a}
 			elevTx<-msg
-			time.Sleep(1*time.Second)
 			fmt.Printf("New Floor Sent\n")
 		case a := <-drvStop:
 			elevator.FsmStop(a)
@@ -78,7 +77,6 @@ func main() {
 		case s := <-drvButtons:
 			msg := elevator.ElevatorMessage{"ORDER", int(s.Button), s.Floor}
 			elevTx <- msg
-			time.Sleep(1*time.Second)
 			fmt.Printf("New message sent\n")
 		
 
