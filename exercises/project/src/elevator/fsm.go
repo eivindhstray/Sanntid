@@ -39,16 +39,17 @@ func fsmOnButtonRequest(a elevio.ButtonEvent) {
 
 	if a.Floor == elevatorGetFloor() && elevatorGetDir() == Stop {
 		fsmDoorState()
-		return
+		elevatorSetDir(queueReturnElevDir(elevatorGetFloor(), elevatorGetDir()))
+
 	}
 
 	queueRecieveOrder(a)
 	elevatorLightsMatchQueue()
 	//backupSync()
 
-	if elevatorGetDir() == Stop {
+	/*if elevatorGetDir() == Stop {
 		elevatorSetDir(queueReturnElevDir(elevatorGetFloor(), elevatorGetDir()))
-	}
+	}*/
 }
 
 func FsmMessageReceivedHandler(msg ElevatorMessage) {
