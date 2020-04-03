@@ -93,13 +93,13 @@ func queueReturnElevDir(currentFloor int, currentDirection ElevDir) ElevDir {
 	case Up:
 		if queueCheckAbove(currentFloor) == true {
 			return currentDirection
-		} else if queueCheckBelow(currentFloor) == true {
+		} else if queueCheckBelow(currentFloor) == true && queueCheckAbove(currentFloor) == false {
 			return Down
 		}
 	case Down:
 		if queueCheckBelow(currentFloor) == true {
 			return currentDirection
-		} else if queueCheckAbove(currentFloor) == true {
+		} else if queueCheckAbove(currentFloor)== true && queueCheckBelow(currentFloor) == false {
 			return Up
 		}
 	case Stop:
@@ -146,7 +146,7 @@ func queueCheckBelow(currentFloor int) bool {
 	if currentFloor == 0 {
 		return false
 	}
-	for floor := 0; floor < currentFloor; floor++ {
+	for floor := 0; floor-1 < currentFloor; floor++ {
 		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
 			if queue[floor][button] == true {
 				return true
@@ -161,7 +161,7 @@ func queueCheckAbove(currentFloor int) bool {
 	if currentFloor == variables.N_FLOORS-1 {
 		return false
 	}
-	for floor := currentFloor; floor < variables.N_FLOORS; floor++ {
+	for floor := currentFloor+1; floor < variables.N_FLOORS; floor++ {
 		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
 			if queue[floor][button] == true {
 				return true

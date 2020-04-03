@@ -36,20 +36,19 @@ func FsmPollButtonRequest(drvButtons chan elevio.ButtonEvent) {
 func fsmOnButtonRequest(a elevio.ButtonEvent) {
 	fmt.Print("New order recieved")
 	fmt.Printf("%+v\n", a)
-
-	if a.Floor == elevatorGetFloor() && elevatorGetDir() == Stop {
-		fsmDoorState()
-		elevatorSetDir(queueReturnElevDir(elevatorGetFloor(), elevatorGetDir()))
-
-	}
-
 	queueRecieveOrder(a)
 	elevatorLightsMatchQueue()
 	//backupSync()
 
-	/*if elevatorGetDir() == Stop {
+	if elevatorGetDir() == Stop {
+		if a.Floor == elevatorGetFloor() && elevatorGetDir() == Stop {
+			fsmDoorState()
+			FsmFloor(elevatorGetFloor())
+		}
+	
 		elevatorSetDir(queueReturnElevDir(elevatorGetFloor(), elevatorGetDir()))
-	}*/
+
+	}
 }
 
 func FsmMessageReceivedHandler(msg ElevatorMessage) {
