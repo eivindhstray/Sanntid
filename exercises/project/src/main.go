@@ -70,11 +70,13 @@ func main() {
 			elevTx <- msg
 			elevTx <- msg
 			elevTx <- msg
+			elevTx <- msg
+			elevTx <- msg
 			fmt.Printf("New Floor Sent\n")
 		case a := <-drvStop:
 			elevator.FsmStop(a)
 		case p := <-elevRx:
-			elevator.FsmMessageReceived(p)
+			elevator.FsmMessageReceivedHandler(p)
 			fmt.Printf("New ButtonPress Sent\n")
 		case s := <-drvButtons:
 			msg := elevator.ElevatorMessage{"ORDER", int(s.Button), s.Floor}

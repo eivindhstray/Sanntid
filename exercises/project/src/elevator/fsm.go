@@ -51,7 +51,7 @@ func fsmOnButtonRequest(a elevio.ButtonEvent) {
 	}
 }
 
-func FsmMessageReceived(msg ElevatorMessage) {
+func FsmMessageReceivedHandler(msg ElevatorMessage) {
 	//sync the new message with queue
 	msgType := msg.MessageType
 	button := msg.Button
