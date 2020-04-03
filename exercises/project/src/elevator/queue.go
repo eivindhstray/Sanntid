@@ -78,13 +78,20 @@ func queueRemoveOrder(floor int, currentDirection ElevDir) {
 	switch currentDirection {
 	case Up:
 		queuePop(floor, int(HallUp))
+		if queueCheckAbove(floor) == false {
+			queuePop(floor, int(HallDown))
+		}
 		break
 	case Down:
 		queuePop(floor, int(HallDown))
+		if queueCheckBelow(floor) == false {
+			queuePop(floor, int(HallUp))
+		}
 		break
 	case Stop:
 		queuePop(floor, int(HallUp))
 		queuePop(floor, int(HallDown))
+		break
 	}
 }
 
@@ -99,7 +106,7 @@ func queueReturnElevDir(currentFloor int, currentDirection ElevDir) ElevDir {
 	case Down:
 		if queueCheckBelow(currentFloor) == true {
 			return currentDirection
-		} else if queueCheckAbove(currentFloor)== true && queueCheckBelow(currentFloor) == false {
+		} else if queueCheckAbove(currentFloor) == true && queueCheckBelow(currentFloor) == false {
 			return Up
 		}
 	case Stop:
@@ -112,8 +119,10 @@ func queueReturnElevDir(currentFloor int, currentDirection ElevDir) ElevDir {
 	return Stop
 }
 
-// Returns true if the there exist an order on current floor with same direction
+// Returns true if the there exist an order on current floor with same direction or no
+//direction beyond current floor
 func queueCheckCurrentFloorSameDir(currentFloor int, currentDirection ElevDir) bool {
+	//Check current floor same direction
 	if queue[currentFloor][Cab] {
 		return true
 	} else if (currentDirection == Up || currentDirection == Stop) && queue[currentFloor][HallUp] {
@@ -121,6 +130,15 @@ func queueCheckCurrentFloorSameDir(currentFloor int, currentDirection ElevDir) b
 	} else if (currentDirection == Down || currentDirection == Stop) && queue[currentFloor][HallDown] {
 		return true
 	}
+
+	//Check current floor noe orders beyond
+	if currentDirection == Up && queueCheckAbove(currentFloor) == false {
+		return true
+	}
+	if currentDirection == Down && queueCheckBelow(currentFloor) == false {
+		return true
+	}
+
 	return false
 }
 
@@ -146,7 +164,7 @@ func queueCheckBelow(currentFloor int) bool {
 	if currentFloor == 0 {
 		return false
 	}
-	for floor := 0; floor-1 < currentFloor; floor++ {
+	for floor := currentFloor - 1; floor > -1; floor-- {
 		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
 			if queue[floor][button] == true {
 				return true
@@ -161,7 +179,7 @@ func queueCheckAbove(currentFloor int) bool {
 	if currentFloor == variables.N_FLOORS-1 {
 		return false
 	}
-	for floor := currentFloor+1; floor < variables.N_FLOORS; floor++ {
+	for floor := currentFloor + 1; floor < variables.N_FLOORS; floor++ {
 		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
 			if queue[floor][button] == true {
 				return true

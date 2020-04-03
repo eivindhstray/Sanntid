@@ -2,12 +2,13 @@ package elevator
 
 import (
 	"fmt"
+	"time"
+
 	"../elevio"
 	"../variables"
 )
 
 type ElevDir int
-
 
 var elevator Elevator
 
@@ -20,8 +21,9 @@ const (
 type Elevator struct {
 	currentFloor int
 	dir          ElevDir
+	doorTimer    *time.Timer
+	DoorState    bool
 }
-
 
 func ElevatorInit() {
 	if elevio.GetFloor() == -1 {
@@ -59,6 +61,29 @@ func elevatorLightsMatchQueue() {
 		}
 	}
 }
+
+/*
+func elevatorEnterDoorState() {
+	fmt.Println("Entering door state")
+	elevio.SetDoorOpenLamp(true)
+	elevator.DoorState = true
+
+	elevator.doorTimer.Stop()
+	select {
+		case <- elevator.doorTimer
+	default:
+	}
+	elevator.doorTimer.Reset(variables.DOOROPENTIME * time.Second)
+}
+
+func elevatorExitDoorState() {
+	defer fmt.Println("Exiting door state")
+	defer elevio.SetDoorOpenLamp(false)
+	elevatorEnterDoorState()
+	//<-elevator.doorTimer.c
+	elevator.DoorState = false
+}
+*/
 
 func elevatorSetDir(newDirection ElevDir) {
 	elevator.dir = newDirection

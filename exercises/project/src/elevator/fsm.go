@@ -12,19 +12,18 @@ import (
 //out of bounds
 
 func FsmFloor(newFloor int) {
-	for i := 0; i < 2; i++ {
-		if queueCheckCurrentFloorSameDir(newFloor, elevatorGetDir()) {
-			elevatorSetMotorDir(Stop)
-			fsmDoorState()
-			queueRemoveOrder(newFloor, elevatorGetDir())
-			backupSync()
-			elevatorLightsMatchQueue()
-		}
 
-		elevatorSetDir(queueReturnElevDir(newFloor, elevatorGetDir()))
-		fmt.Println(elevatorGetDir())
-		//queuePrint()
+	elevatorSetNewFloor(newFloor)
+	if queueCheckCurrentFloorSameDir(newFloor, elevator.dir) {
+		elevatorSetMotorDir(Stop)
+		fsmDoorState()
+		//elevatorExitDoorState()
+		queueRemoveOrder(newFloor, elevator.dir)
+		elevatorLightsMatchQueue()
+
 	}
+	elevatorSetDir(queueReturnElevDir(newFloor, elevator.dir))
+
 }
 
 func FsmPollButtonRequest(drvButtons chan elevio.ButtonEvent) {
@@ -45,7 +44,7 @@ func fsmOnButtonRequest(a elevio.ButtonEvent) {
 			fsmDoorState()
 			FsmFloor(elevatorGetFloor())
 		}
-	
+
 		elevatorSetDir(queueReturnElevDir(elevatorGetFloor(), elevatorGetDir()))
 
 	}
