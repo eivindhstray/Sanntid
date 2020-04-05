@@ -64,33 +64,29 @@ func main() {
 
 	for {
 		select {
-		case a := <-drvFloors:
-			elevator.FsmFloor(a)
-			msg := elevator.ElevatorMessage{"FLOOR", a, a}
+		case atFloor := <-drvFloors:
+			elevator.FsmFloor(atFloor)
+			msg := elevator.ElevatorMessage{"FLOOR", atFloor, atFloor}
 			elevTx <- msg
 			elevTx <- msg
 			elevTx <- msg
 			elevTx <- msg
 			elevTx <- msg
 			fmt.Printf("New Floor Sent\n")
-		case a := <-drvStop:
-			elevator.FsmStop(a)
-		case p := <-elevRx:
-			elevator.FsmMessageReceivedHandler(p)
+		case stop := <-drvStop:
+			elevator.FsmStop(stop)
+		case messageReceived := <-elevRx:
+			elevator.FsmMessageReceivedHandler(messageReceived)
 			fmt.Printf("New ButtonPress Sent\n")
-		case s := <-drvButtons:
-			msg := elevator.ElevatorMessage{"ORDER", int(s.Button), s.Floor}
+		case buttonCall := <-drvButtons:
+			msg := elevator.ElevatorMessage{"ORDER", int(buttonCall.Button), buttonCall.Floor}
 			elevTx <- msg
 			fmt.Printf("New message sent\n")
-
-		//case s:= <- drvFloors:
-		//msg := elevator.ElevatorMessage{"FINISHED", s,0}
-
-		case f := <-peerUpdateCh:
+		case newPeerEvent := <-peerUpdateCh:
 			fmt.Printf("Peer update:\n")
-			fmt.Printf("  Peers:    %q\n", f.Peers)
-			fmt.Printf("  New:      %q\n", f.New)
-			fmt.Printf("  Lost:     %q\n", f.Lost)
+			fmt.Printf("  Peers:    %q\n", newPeerEvent.Peers)
+			fmt.Printf("  New:      %q\n", newPeerEvent.New)
+			fmt.Printf("  Lost:     %q\n", newPeerEvent.Lost)
 		}
 	}
 

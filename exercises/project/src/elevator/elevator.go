@@ -62,28 +62,6 @@ func elevatorLightsMatchQueue() {
 	}
 }
 
-/*
-func elevatorEnterDoorState() {
-	fmt.Println("Entering door state")
-	elevio.SetDoorOpenLamp(true)
-	elevator.DoorState = true
-
-	elevator.doorTimer.Stop()
-	select {
-		case <- elevator.doorTimer
-	default:
-	}
-	elevator.doorTimer.Reset(variables.DOOROPENTIME * time.Second)
-}
-
-func elevatorExitDoorState() {
-	defer fmt.Println("Exiting door state")
-	defer elevio.SetDoorOpenLamp(false)
-	elevatorEnterDoorState()
-	//<-elevator.doorTimer.c
-	elevator.DoorState = false
-}
-*/
 
 func elevatorSetDir(newDirection ElevDir) {
 	elevator.dir = newDirection
