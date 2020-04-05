@@ -35,6 +35,8 @@ func FsmPollButtonRequest(drvButtons chan elevio.ButtonEvent) {
 func fsmOnButtonRequest(a elevio.ButtonEvent) {
 	fmt.Print("New order recieved")
 	fmt.Printf("%+v\n", a)
+	
+	
 	queueRecieveOrder(a)
 	elevatorLightsMatchQueue()
 	//backupSync()
@@ -67,9 +69,6 @@ func FsmMessageReceivedHandler(msg ElevatorMessage) {
 
 }
 
-//func FsmMessageTransmit(msgType string, floor int, button int) {
-//
-//}
 
 func fsmDoorState() {
 	fmt.Print("Door state")
