@@ -15,6 +15,7 @@ type Direction int
 
 var queue [variables.N_FLOORS][variables.N_BUTTON_TYPES]bool
 
+
 const (
 	HallUp   OrderType = 0
 	HallDown           = 1

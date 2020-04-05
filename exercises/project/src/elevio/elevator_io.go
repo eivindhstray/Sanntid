@@ -5,12 +5,13 @@ import (
 	"net"
 	"sync"
 	"time"
+	"../variables"
 )
 
 const _pollRate = 20 * time.Millisecond
 
 var _initialized bool = false
-var _numFloors int = 4
+var _numFloors int = variables.N_FLOORS
 var _mtx sync.Mutex
 var _conn net.Conn
 
