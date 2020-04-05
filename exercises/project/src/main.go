@@ -58,7 +58,7 @@ func main() {
 	go elevio.PollFloorSensor(drvFloors)
 	//go elevio.PollObstructionSwitch(drvObstr)
 	go elevio.PollStopButton(drvStop)
-	go elevator.FsmPollButtonRequest(drvButtons)
+	//go elevator.FsmPollButtonRequest(drvButtons)
 	go bcast.Receiver(15648, elevRx)
 	go bcast.Transmitter(15648, elevTx)
 

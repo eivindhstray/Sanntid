@@ -26,11 +26,12 @@ func FsmFloor(newFloor int) {
 
 }
 
-func FsmPollButtonRequest(drvButtons chan elevio.ButtonEvent) {
+/*func FsmPollButtonRequest(drvButtons chan elevio.ButtonEvent) {
 	for {
 		fsmOnButtonRequest(<-drvButtons)
 	}
 }
+*/
 
 func fsmOnButtonRequest(a elevio.ButtonEvent) {
 	fmt.Print("New order recieved")
@@ -54,6 +55,7 @@ func fsmOnButtonRequest(a elevio.ButtonEvent) {
 
 func FsmMessageReceivedHandler(msg ElevatorMessage) {
 	//sync the new message with queue
+	fmt.Println("received a message")
 	msgType := msg.MessageType
 	button := msg.Button
 	floor := msg.Floor
