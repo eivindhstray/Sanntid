@@ -85,9 +85,6 @@ func elevatorGetFloor() int {
 	return elev.currentFloor
 }
 
-func elevatorPrint() {
-
-}
 
 func ElevatorSetDoorState(state bool){
 	elev.DoorState = state
