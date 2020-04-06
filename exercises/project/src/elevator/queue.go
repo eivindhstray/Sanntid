@@ -36,8 +36,9 @@ var OrderToButtonTypesMap = map[OrderType]elevio.ButtonType{
 //message
 
 type ElevatorMessage struct {
+	ElevID  string
 	MessageType string
-	Button      int //1 = hallup 2 = halldown 3 = cab
+	Button      int //0 = hallup 1= halldown 2 = cab
 	Floor       int
 }
 

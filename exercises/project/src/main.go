@@ -18,6 +18,7 @@ import (
 func main() {
 
 	cmd := os.Args[1]
+	ElevatorID := os.Args[2] 
 	fmt.Println(cmd)
 	elevio.Init("localhost:"+cmd, variables.N_FLOORS)
 	//go run main.go portnr
@@ -64,7 +65,7 @@ func main() {
 		select {
 		case atFloor := <-drvFloors:
 			elevator.FsmFloor(atFloor)
-			msg := elevator.ElevatorMessage{"FLOOR", atFloor, atFloor}
+			msg := elevator.ElevatorMessage{ElevatorID,"FLOOR", atFloor, atFloor}
 			elevTx <- msg
 			elevTx <- msg
 			elevTx <- msg
@@ -75,10 +76,10 @@ func main() {
 		case stop := <-drvStop:
 			elevator.FsmStop(stop)
 		case messageReceived := <-elevRx:
-			elevator.FsmMessageReceivedHandler(messageReceived)
+			elevator.FsmMessageReceivedHandler(messageReceived,ElevatorID)
 			fmt.Printf("New ButtonPress Sent\n")
 		case buttonCall := <-drvButtons:
-			msg := elevator.ElevatorMessage{"ORDER", int(buttonCall.Button), buttonCall.Floor}
+			msg := elevator.ElevatorMessage{ElevatorID,"ORDER", int(buttonCall.Button), buttonCall.Floor}
 			elevTx <- msg
 			elevTx <- msg
 			elevTx <- msg

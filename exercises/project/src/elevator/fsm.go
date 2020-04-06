@@ -44,15 +44,24 @@ func fsmOnButtonRequest(a elevio.ButtonEvent) {
 	}
 }
 
-func FsmMessageReceivedHandler(msg ElevatorMessage) {
+func FsmMessageReceivedHandler(msg ElevatorMessage, ID string) {
 	//sync the new message with queue
 	fmt.Println("received a message")
 	msgType := msg.MessageType
+	msgID := msg.ElevID
 	floor := msg.Floor
-	if msg.Button != 3 && msgType == "ORDER"{
-		button := msg.Button
-		event := elevio.ButtonEvent{floor, elevio.ButtonType(button)}
-		fsmOnButtonRequest(event)
+	button := msg.Button
+	event := elevio.ButtonEvent{floor, elevio.ButtonType(button)}
+	if msgType == "ORDER"{
+		if button == 3{
+			if msgID == ID {
+				fsmOnButtonRequest(event)
+			}else{
+				fmt.Println("cabcall other elev")
+			}
+		}else{
+			fsmOnButtonRequest(event)
+		}
 	} else if msgType == "FLOOR" {
 		FsmFloor(floor)
 	} else {
