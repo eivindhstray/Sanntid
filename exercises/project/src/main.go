@@ -23,7 +23,7 @@ func main() {
 	//go run main.go portnr
 
 	elevator.ElevatorInit()
-	elevator.QueueInit()
+	elevator.LocalQueueInit()
 	//elevator.backupInit()
 	fmt.Println("Initialized")
 

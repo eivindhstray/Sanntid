@@ -17,7 +17,6 @@ func FsmFloor(newFloor int) {
 		fsmDoorState()
 		localQueueRemoveOrder(newFloor, elev.dir)
 		elevatorLightsMatchQueue()
-
 	}
 	elevatorSetDir(localQueueReturnElevDir(newFloor, elev.dir))
 
@@ -49,7 +48,8 @@ func FsmMessageReceivedHandler(msg ElevatorMessage, ID string) {
 	floor := msg.Floor
 	button := msg.Button
 	event := elevio.ButtonEvent{floor, elevio.ButtonType(button)}
-	if msgType == "ORDER"{
+	switch msgType{
+	case "ORDER":
 		fmt.Println(msgID +"+"+ ID,"+",button)
 		if button == 2{
 			if msgID == ID {
@@ -60,9 +60,9 @@ func FsmMessageReceivedHandler(msg ElevatorMessage, ID string) {
 		}else{
 			fsmOnButtonRequest(event)
 		}
-	} else if msgType == "FLOOR" {
+	case "FLOOR":
 		FsmFloor(floor)
-	} else {
+	default:
 		fmt.Print("invalid message")
 	}
 	elevatorLightsMatchQueue()
