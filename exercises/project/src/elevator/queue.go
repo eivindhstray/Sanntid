@@ -13,7 +13,7 @@ type OrderType int
 
 type Direction int
 
-var queueLocal [variables.N_FLOORS][variables.N_BUTTON_TYPES]bool
+var queueLocal [variables.N_FLOORS][variables.N_BUTTON_TYPES]variables.QueueOrderType
 
 
 const (
@@ -43,15 +43,15 @@ type ElevatorMessage struct {
 }
 
 func localQueueSet(floor int, buttonType int) {
-	queueLocal[floor][buttonType] = true
+	queueLocal[floor][buttonType] = variables.LOCAL
 }
 
-func localQueueGet(floor int, buttonType int) bool {
+func localQueueGet(floor int, buttonType int) variables.QueueOrderType {
 	return queueLocal[floor][buttonType]
 }
 
 func localQueuePop(floor int, buttonType int) {
-	queueLocal[floor][buttonType] = false
+	queueLocal[floor][buttonType] = variables.NONE
 }
 
 func LocalQueueInit() {
@@ -126,11 +126,11 @@ func localQueueReturnElevDir(currentFloor int, currentDirection ElevDir) ElevDir
 //direction beyond current floor
 func localQueueCheckCurrentFloorSameDir(currentFloor int, currentDirection ElevDir) bool {
 	//Check current floor same direction
-	if queueLocal[currentFloor][Cab] {
+	if queueLocal[currentFloor][Cab] == variables.LOCAL {
 		return true
-	} else if (currentDirection == Up || currentDirection == Stop) && queueLocal[currentFloor][HallUp] {
+	} else if (currentDirection == Up || currentDirection == Stop) && queueLocal[currentFloor][HallUp] == variables.LOCAL {
 		return true
-	} else if (currentDirection == Down || currentDirection == Stop) && queueLocal[currentFloor][HallDown] {
+	} else if (currentDirection == Down || currentDirection == Stop) && queueLocal[currentFloor][HallDown] == variables.LOCAL {
 		return true
 	}
 
@@ -151,8 +151,8 @@ func localQueuePrint() {
 	for floor := variables.N_FLOORS - 1; floor > -1; floor-- {
 		fmt.Print(floor)
 		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
-			i := queueLocal[floor][button]
-			if i {
+			queuePos := queueLocal[floor][button]
+			if queuePos == variables.LOCAL {
 				fmt.Print("| ", "true ", " |")
 			} else {
 				fmt.Print("| ", "_____", " |")
@@ -169,7 +169,7 @@ func localQueueCheckBelow(currentFloor int) bool {
 	}
 	for floor := currentFloor - 1; floor > -1; floor-- {
 		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
-			if queueLocal[floor][button] == true {
+			if queueLocal[floor][button] == variables.LOCAL {
 				return true
 			}
 		}
@@ -184,7 +184,7 @@ func localQueueCheckAbove(currentFloor int) bool {
 	}
 	for floor := currentFloor + 1; floor < variables.N_FLOORS; floor++ {
 		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
-			if queueLocal[floor][button] == true {
+			if queueLocal[floor][button] == variables.LOCAL {
 				return true
 			}
 		}

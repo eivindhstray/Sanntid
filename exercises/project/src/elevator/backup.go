@@ -12,7 +12,9 @@ import (
 	"../variables"
 )
 
-var backupQueue [variables.N_FLOORS][variables.N_BUTTON_TYPES]bool
+
+
+var backupQueue [variables.N_FLOORS][variables.N_BUTTON_TYPES]variables.QueueOrderType
 
 func backupInit() {
 	for i := 0; i < variables.N_FLOORS; i++ {
