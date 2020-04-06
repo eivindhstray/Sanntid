@@ -66,7 +66,7 @@ func LocalQueueInit() {
 
 func localQueueRecieveOrder(order elevio.ButtonEvent) {
 	orderT := int(order.Button)
-	localQueueSet(order.Floor, orderT)
+	localQueueSetLocal(order.Floor, orderT)
 	fmt.Println("Order added to queue")
 	localQueuePrint()
 }
