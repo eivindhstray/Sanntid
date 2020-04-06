@@ -86,11 +86,11 @@ func elevatorGetFloor() int {
 }
 
 
-func ElevatorSetDoorState(state bool){
+func ElevatorSetDoorOpenState(state bool){
 	elev.DoorState = state
 }
 
-func ElevatorGetDoorState() bool{
+func ElevatorGetDoorOpenState() bool{
 	return elev.DoorState
 }
 

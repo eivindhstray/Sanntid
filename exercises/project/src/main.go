@@ -20,11 +20,10 @@ func main() {
 	ElevatorID := os.Args[2] 
 	fmt.Println(cmd)
 	elevio.Init("localhost:"+cmd, variables.N_FLOORS)
-	//go run main.go portnr
+	//go run main.go portnr id
 
 	elevator.ElevatorInit()
 	elevator.LocalQueueInit()
-	//elevator.backupInit()
 	fmt.Println("Initialized")
 
 	var id string

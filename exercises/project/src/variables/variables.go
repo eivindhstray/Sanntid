@@ -9,7 +9,8 @@ const DOOROPENTIME = 2
 const N_ELEVATORS = 2
 const ELEVATOR_STATE = 2
 
-var elevatorList[N_ELEVATORS][ELEVATOR_STATE] //N x 2 array with info on the elevators
+var elevatorList[N_ELEVATORS][ELEVATOR_STATE] int //N x 2 array with info on the 
+//elevators
 //For 2 elev
 
 //			Floor 	Dir

@@ -72,11 +72,11 @@ func FsmMessageReceivedHandler(msg ElevatorMessage, ID string) {
 
 func fsmDoorState() {
 	fmt.Print("Door state")
-	ElevatorSetDoorState(true)
+	ElevatorSetDoorOpenState(true)
 	elevio.SetDoorOpenLamp(true)
 	elev.doorTimer.Reset(variables.DOOROPENTIME * time.Second)
 	<-elev.doorTimer.C
-	ElevatorSetDoorState(false)
+	ElevatorSetDoorOpenState(false)
 	elevio.SetDoorOpenLamp(false)
 
 }
