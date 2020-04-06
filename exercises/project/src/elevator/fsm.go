@@ -26,13 +26,6 @@ func FsmFloor(newFloor int) {
 
 }
 
-/*func FsmPollButtonRequest(drvButtons chan elevio.ButtonEvent) {
-	for {
-		fsmOnButtonRequest(<-drvButtons)
-	}
-}
-*/
-
 func fsmOnButtonRequest(a elevio.ButtonEvent) {
 	fmt.Print("New order recieved")
 	fmt.Printf("%+v\n", a)
@@ -55,9 +48,9 @@ func FsmMessageReceivedHandler(msg ElevatorMessage) {
 	//sync the new message with queue
 	fmt.Println("received a message")
 	msgType := msg.MessageType
-	button := msg.Button
 	floor := msg.Floor
-	if msgType == "ORDER" {
+	if msg.Button != 3 && msgType == "ORDER"{
+		button := msg.Button
 		event := elevio.ButtonEvent{floor, elevio.ButtonType(button)}
 		fsmOnButtonRequest(event)
 	} else if msgType == "FLOOR" {
@@ -77,7 +70,6 @@ func fsmDoorState() {
 	elev.doorTimer.Reset(variables.DOOROPENTIME * time.Second)
 	<-elev.doorTimer.C
 	ElevatorSetDoorState(false)
-
 	elevio.SetDoorOpenLamp(false)
 
 }
