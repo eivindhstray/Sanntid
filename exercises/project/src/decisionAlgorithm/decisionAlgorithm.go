@@ -4,9 +4,9 @@
 
 //Assume queue has handled the newOrder and removeOrder such that queue is up to date.
 
-package costAlgorithm
+package decisionAlgorithm
 
-import(
+import (
 	"../elevator"
 )
 
@@ -18,7 +18,6 @@ import(
 
 //Positions 0 through N
 //Directions: -1 - down, 0 - idle, 1 - up
-
 
 /*Case 1: Elevator n in Stop:
 			if other elevator also in Stop:
