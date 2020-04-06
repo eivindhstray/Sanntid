@@ -55,12 +55,13 @@ func queuePop(floor int, buttonType int) {
 }
 
 func QueueInit() {
+	fmt.Println("Queue initializing")
 	for floor := 0; floor < variables.N_FLOORS; floor++ {
 		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
 			queuePop(floor, button)
 		}
 	}
-	fmt.Println("Init queue good")
+	fmt.Println("Queue initialized!")
 }
 
 func queueRecieveOrder(order elevio.ButtonEvent) {

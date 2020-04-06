@@ -16,9 +16,19 @@ import(
 //		direction int
 //)
 
-//Positions 0 through 3
+//Positions 0 through N
 //Directions: -1 - down, 0 - idle, 1 - up
 
+
+/*Case 1: Elevator n in Stop:
+			if other elevator also in Stop:
+				Choose closest one
+  Case 2: Elevator n going up:
+			pick up anyone at or above going up
+
+  Case 3: Elevator n going down.
+			pick up anyone at or below going down
+*/
 //Returns the floor in the new order
 func getNewOrderPosition(elev elevator.Elevator) int {
 	return elev.CurrentFloor
