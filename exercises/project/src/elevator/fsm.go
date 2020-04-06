@@ -34,7 +34,7 @@ func fsmOnButtonRequest(a elevio.ButtonEvent) {
 			fsmDoorState()
 			FsmFloor(elev.currentFloor)
 		}
-		if ElevatorGetDoorState() == false{ 
+		if ElevatorGetDoorOpenState() == false{ 
 			elevatorSetDir(localQueueReturnElevDir(elev.currentFloor, elev.dir))
 		}
 	}
