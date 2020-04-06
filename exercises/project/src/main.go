@@ -49,7 +49,6 @@ func main() {
 	drvButtons := make(chan elevio.ButtonEvent)
 	drvFloors := make(chan int)
 	drvStop := make(chan bool)
-
 	elevTx := make(chan elevator.ElevatorMessage)
 	elevRx := make(chan elevator.ElevatorMessage)
 

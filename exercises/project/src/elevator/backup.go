@@ -17,7 +17,7 @@ var backupQueue [variables.N_FLOORS][variables.N_BUTTON_TYPES]bool
 func backupInit() {
 	for i := 0; i < variables.N_FLOORS; i++ {
 		for j := 0; j < variables.N_FLOORS; j++ {
-			backupQueue[i][j] = queue[i][j]
+			backupQueue[i][j] = queueLocal[i][j]
 		}
 	}
 	fmt.Println("Backup queue initialized")
@@ -27,8 +27,8 @@ func backupInit() {
 func backupSync() {
 	for i := 0; i < variables.N_FLOORS; i++ {
 		for j := 0; j < variables.N_BUTTON_TYPES; j++ {
-			if backupQueue[i][j] != queue[i][j] {
-				backupQueue[i][j] = queue[i][j]
+			if backupQueue[i][j] != queueLocal[i][j] {
+				backupQueue[i][j] = queueLocal[i][j]
 			}
 		}
 	}
@@ -39,7 +39,7 @@ func backupSync() {
 func fetchBackupQueue() {
 	for i := 0; i < variables.N_FLOORS; i++ {
 		for j := 0; j < variables.N_BUTTON_TYPES; j++ {
-			queue[i][j] = backupQueue[i][j]
+			queueLocal[i][j] = backupQueue[i][j]
 		}
 	}
 	fmt.Println("Backup fetched as a result of backwards recovery")

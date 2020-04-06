@@ -13,7 +13,7 @@ type OrderType int
 
 type Direction int
 
-var queue [variables.N_FLOORS][variables.N_BUTTON_TYPES]bool
+var queueLocal [variables.N_FLOORS][variables.N_BUTTON_TYPES]bool
 
 
 const (
@@ -42,80 +42,80 @@ type ElevatorMessage struct {
 	Floor       int
 }
 
-func queueSet(floor int, buttonType int) {
-	queue[floor][buttonType] = true
+func localQueueSet(floor int, buttonType int) {
+	queueLocal[floor][buttonType] = true
 }
 
-func queueGet(floor int, buttonType int) bool {
-	return queue[floor][buttonType]
+func localQueueGet(floor int, buttonType int) bool {
+	return queueLocal[floor][buttonType]
 }
 
-func queuePop(floor int, buttonType int) {
-	queue[floor][buttonType] = false
+func localQueuePop(floor int, buttonType int) {
+	queueLocal[floor][buttonType] = false
 }
 
-func QueueInit() {
+func LocalQueueInit() {
 	fmt.Println("Queue initializing")
 	for floor := 0; floor < variables.N_FLOORS; floor++ {
 		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
-			queuePop(floor, button)
+			localQueuePop(floor, button)
 		}
 	}
-	fmt.Println("Queue initialized!")
+	fmt.Println("Local Queue initialized!")
 }
 
-func queueRecieveOrder(order elevio.ButtonEvent) {
+func localQueueRecieveOrder(order elevio.ButtonEvent) {
 	orderT := int(order.Button)
-	queueSet(order.Floor, orderT)
+	localQueueSet(order.Floor, orderT)
 	fmt.Println("Order added to queue")
-	queuePrint()
+	localQueuePrint()
 }
 
-func queueRemoveOrder(floor int, currentDirection ElevDir) {
-	queuePop(floor, int(Cab))
-	if !(queueCheckBelow(floor) || queueCheckAbove(floor)) {
-		queuePop(floor, int(HallUp))
-		queuePop(floor, int(HallDown))
+func localQueueRemoveOrder(floor int, currentDirection ElevDir) {
+	localQueuePop(floor, int(Cab))
+	if !(localQueueCheckBelow(floor) || localQueueCheckAbove(floor)) {
+		localQueuePop(floor, int(HallUp))
+		localQueuePop(floor, int(HallDown))
 		return
 	}
 	switch currentDirection {
 	case Up:
-		queuePop(floor, int(HallUp))
-		if queueCheckAbove(floor) == false {
-			queuePop(floor, int(HallDown))
+		localQueuePop(floor, int(HallUp))
+		if localQueueCheckAbove(floor) == false {
+			localQueuePop(floor, int(HallDown))
 		}
 		break
 	case Down:
-		queuePop(floor, int(HallDown))
-		if queueCheckBelow(floor) == false {
-			queuePop(floor, int(HallUp))
+		localQueuePop(floor, int(HallDown))
+		if localQueueCheckBelow(floor) == false {
+			localQueuePop(floor, int(HallUp))
 		}
 		break
 	case Stop:
-		queuePop(floor, int(HallUp))
-		queuePop(floor, int(HallDown))
+		localQueuePop(floor, int(HallUp))
+		localQueuePop(floor, int(HallDown))
 		break
 	}
 }
 
-func queueReturnElevDir(currentFloor int, currentDirection ElevDir) ElevDir {
+func localQueueReturnElevDir(currentFloor int, currentDirection ElevDir) ElevDir {
 	switch currentDirection {
 	case Up:
-		if queueCheckAbove(currentFloor) == true {
+		if localQueueCheckAbove(currentFloor) == true {
 			return currentDirection
-		} else if queueCheckBelow(currentFloor) == true && queueCheckAbove(currentFloor) == false {
+		} else if localQueueCheckBelow(currentFloor) == true && localQueueCheckAbove(currentFloor) == false {
 			return Down
 		}
 	case Down:
-		if queueCheckBelow(currentFloor) == true {
+		if localQueueCheckBelow(currentFloor) == true {
 			return currentDirection
-		} else if queueCheckAbove(currentFloor) == true && queueCheckBelow(currentFloor) == false {
+		} else if localQueueCheckAbove(currentFloor) == true && localQueueCheckBelow(currentFloor) == false {
 			return Up
 		}
 	case Stop:
-		if queueCheckAbove(currentFloor) == true {
+		if localQueueCheckAbove(currentFloor) == true {
 			return Up
-		} else if queueCheckBelow(currentFloor) == true {
+		} else if localQueueCheckBelow(currentFloor) == true {
 			return Down
 		}
 	}
@@ -124,34 +124,34 @@ func queueReturnElevDir(currentFloor int, currentDirection ElevDir) ElevDir {
 
 // Returns true if the there exist an order on current floor with same direction or no
 //direction beyond current floor
-func queueCheckCurrentFloorSameDir(currentFloor int, currentDirection ElevDir) bool {
+func localQueueCheckCurrentFloorSameDir(currentFloor int, currentDirection ElevDir) bool {
 	//Check current floor same direction
-	if queue[currentFloor][Cab] {
+	if queueLocal[currentFloor][Cab] {
 		return true
-	} else if (currentDirection == Up || currentDirection == Stop) && queue[currentFloor][HallUp] {
+	} else if (currentDirection == Up || currentDirection == Stop) && queueLocal[currentFloor][HallUp] {
 		return true
-	} else if (currentDirection == Down || currentDirection == Stop) && queue[currentFloor][HallDown] {
+	} else if (currentDirection == Down || currentDirection == Stop) && queueLocal[currentFloor][HallDown] {
 		return true
 	}
 
 	//Check current floor noe orders beyond
-	if currentDirection == Up && queueCheckAbove(currentFloor) == false {
+	if currentDirection == Up && localQueueCheckAbove(currentFloor) == false {
 		return true
 	}
-	if currentDirection == Down && queueCheckBelow(currentFloor) == false {
+	if currentDirection == Down && localQueueCheckBelow(currentFloor) == false {
 		return true
 	}
 
 	return false
 }
 
-func queuePrint() {
+func localQueuePrint() {
 	fmt.Println("\n   HallUp   HallDn    Cab  ")
 	fmt.Println("-" + strings.Repeat("|-------|", variables.N_BUTTON_TYPES))
 	for floor := variables.N_FLOORS - 1; floor > -1; floor-- {
 		fmt.Print(floor)
 		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
-			i := queue[floor][button]
+			i := queueLocal[floor][button]
 			if i {
 				fmt.Print("| ", "true ", " |")
 			} else {
@@ -163,13 +163,13 @@ func queuePrint() {
 	fmt.Print("-"+strings.Repeat("---------", variables.N_BUTTON_TYPES), "\n\n")
 }
 
-func queueCheckBelow(currentFloor int) bool {
+func localQueueCheckBelow(currentFloor int) bool {
 	if currentFloor == 0 {
 		return false
 	}
 	for floor := currentFloor - 1; floor > -1; floor-- {
 		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
-			if queue[floor][button] == true {
+			if queueLocal[floor][button] == true {
 				return true
 			}
 		}
@@ -178,13 +178,13 @@ func queueCheckBelow(currentFloor int) bool {
 	return false
 }
 
-func queueCheckAbove(currentFloor int) bool {
+func localQueueCheckAbove(currentFloor int) bool {
 	if currentFloor == variables.N_FLOORS-1 {
 		return false
 	}
 	for floor := currentFloor + 1; floor < variables.N_FLOORS; floor++ {
 		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
-			if queue[floor][button] == true {
+			if queueLocal[floor][button] == true {
 				return true
 			}
 		}

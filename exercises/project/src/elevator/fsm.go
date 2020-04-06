@@ -12,21 +12,21 @@ import (
 func FsmFloor(newFloor int) {
 
 	elevatorSetNewFloor(newFloor)
-	if queueCheckCurrentFloorSameDir(newFloor, elev.dir) {
+	if localQueueCheckCurrentFloorSameDir(newFloor, elev.dir) {
 		elevatorSetMotorDir(Stop)
 		fsmDoorState()
-		queueRemoveOrder(newFloor, elev.dir)
+		localQueueRemoveOrder(newFloor, elev.dir)
 		elevatorLightsMatchQueue()
 
 	}
-	elevatorSetDir(queueReturnElevDir(newFloor, elev.dir))
+	elevatorSetDir(localQueueReturnElevDir(newFloor, elev.dir))
 
 }
 
 func fsmOnButtonRequest(a elevio.ButtonEvent) {
 	fmt.Print("New order recieved")
 	fmt.Printf("%+v\n", a)
-	queueRecieveOrder(a)
+	localQueueRecieveOrder(a)
 	elevatorLightsMatchQueue()
 	elev = ElevatorGetElev()
 
@@ -36,7 +36,7 @@ func fsmOnButtonRequest(a elevio.ButtonEvent) {
 			FsmFloor(elev.currentFloor)
 		}
 		if ElevatorGetDoorState() == false{ 
-			elevatorSetDir(queueReturnElevDir(elev.currentFloor, elev.dir))
+			elevatorSetDir(localQueueReturnElevDir(elev.currentFloor, elev.dir))
 		}
 	}
 }
@@ -86,7 +86,7 @@ func FsmStop(a bool) {
 	fmt.Print("Stop state")
 	fmt.Printf("%+v\n", a)
 	ElevatorInit()
-	QueueInit()
+	LocalQueueInit()
 	elevatorLightsMatchQueue()
 }
 
