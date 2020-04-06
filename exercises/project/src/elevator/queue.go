@@ -42,7 +42,7 @@ type ElevatorMessage struct {
 	Floor       int
 }
 
-func localQueueSet(floor int, buttonType int) {
+func localQueueSetLocal(floor int, buttonType int) {
 	queueLocal[floor][buttonType] = variables.LOCAL
 }
 
@@ -190,4 +190,8 @@ func localQueueCheckAbove(currentFloor int) bool {
 		}
 	}
 	return false
+}
+
+func localQueueSetRemote(floor int, button int){
+	queueLocal[floor][button] = variables.REMOTE
 }
