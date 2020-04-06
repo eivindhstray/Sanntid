@@ -49,7 +49,7 @@ func costFunction() bool {
 }
 
 //Decision to handle new order.
-func decision() bool {
+func costDecision() bool {
 	x := costFunction()
 	if x == true {
 		return true

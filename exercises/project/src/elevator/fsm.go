@@ -8,8 +8,6 @@ import (
 	"../variables"
 )
 
-//seems like there is a bug related to cab calls. The elevator sometimes go
-//out of bounds
 
 func FsmFloor(newFloor int) {
 
@@ -30,15 +28,15 @@ func fsmOnButtonRequest(a elevio.ButtonEvent) {
 	fmt.Printf("%+v\n", a)
 	queueRecieveOrder(a)
 	elevatorLightsMatchQueue()
-	//backupSync()
+	elev = ElevatorGetElev()
 
-	if elevatorGetDir() == Stop {
-		if a.Floor == elevatorGetFloor() && elevatorGetDir() == Stop {
+	if elev.dir == Stop {
+		if a.Floor == elev.currentFloor && elev.dir == Stop {
 			fsmDoorState()
-			FsmFloor(elevatorGetFloor())
+			FsmFloor(elev.currentFloor)
 		}
 		if ElevatorGetDoorState() == false{ 
-			elevatorSetDir(queueReturnElevDir(elevatorGetFloor(), elevatorGetDir()))
+			elevatorSetDir(queueReturnElevDir(elev.currentFloor, elev.dir))
 		}
 	}
 }
@@ -91,3 +89,4 @@ func FsmStop(a bool) {
 	QueueInit()
 	elevatorLightsMatchQueue()
 }
+

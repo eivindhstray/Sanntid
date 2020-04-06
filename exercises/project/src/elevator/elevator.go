@@ -96,3 +96,8 @@ func ElevatorSetDoorState(state bool){
 func ElevatorGetDoorState() bool{
 	return elev.DoorState
 }
+
+
+func ElevatorGetElev()Elevator{
+	return elev
+}
