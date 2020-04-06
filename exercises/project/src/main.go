@@ -53,14 +53,12 @@ func main() {
 
 	elevTx := make(chan elevator.ElevatorMessage)
 	elevRx := make(chan elevator.ElevatorMessage)
-	DoorTimer := make(chan bool)
 
 	go elevio.PollButtons(drvButtons)
 	go elevio.PollFloorSensor(drvFloors)
 	go elevio.PollStopButton(drvStop)
 	go bcast.Receiver(15648, elevRx)
 	go bcast.Transmitter(15648, elevTx)
-	go elevator.DoorState(doorTimer)
 
 	for {
 		select {
