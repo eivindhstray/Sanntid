@@ -53,7 +53,8 @@ func FsmMessageReceivedHandler(msg ElevatorMessage, ID string) {
 	button := msg.Button
 	event := elevio.ButtonEvent{floor, elevio.ButtonType(button)}
 	if msgType == "ORDER"{
-		if button == 3{
+		fmt.Println(msgID +"+"+ ID,"+",button)
+		if button == 2{
 			if msgID == ID {
 				fsmOnButtonRequest(event)
 			}else{
