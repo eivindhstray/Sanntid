@@ -10,7 +10,7 @@ import (
 
 type ElevDir int
 
-var elevator Elevator
+var elev Elevator
 
 const (
 	Up   ElevDir = 1
@@ -33,6 +33,7 @@ func ElevatorInit() {
 	}
 	elevatorSetDir(Stop)
 	elevatorSetFloor(elevio.GetFloor())
+	elev.doorTimer= time.NewTimer(0)
 
 	fmt.Println("Elevator initialized")
 }
@@ -64,7 +65,7 @@ func elevatorLightsMatchQueue() {
 
 
 func elevatorSetDir(newDirection ElevDir) {
-	elevator.dir = newDirection
+	elev.dir = newDirection
 	elevatorSetMotorDir(newDirection)
 }
 
@@ -73,17 +74,25 @@ func elevatorSetMotorDir(newDirection ElevDir) {
 }
 
 func elevatorSetFloor(newFloor int) {
-	elevator.currentFloor = newFloor
+	elev.currentFloor = newFloor
 }
 
 func elevatorGetDir() ElevDir {
-	return elevator.dir
+	return elev.dir
 }
 
 func elevatorGetFloor() int {
-	return elevator.currentFloor
+	return elev.currentFloor
 }
 
 func elevatorPrint() {
 
+}
+
+func ElevatorSetDoorState(state bool){
+	elev.DoorState = state
+}
+
+func ElevatorGetDoorState() bool{
+	return elev.DoorState
 }

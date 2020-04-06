@@ -14,15 +14,15 @@ import (
 func FsmFloor(newFloor int) {
 
 	elevatorSetNewFloor(newFloor)
-	if queueCheckCurrentFloorSameDir(newFloor, elevator.dir) {
+	if queueCheckCurrentFloorSameDir(newFloor, elev.dir) {
 		elevatorSetMotorDir(Stop)
 		fsmDoorState()
 		//elevatorExitDoorState()
-		queueRemoveOrder(newFloor, elevator.dir)
+		queueRemoveOrder(newFloor, elev.dir)
 		elevatorLightsMatchQueue()
 
 	}
-	elevatorSetDir(queueReturnElevDir(newFloor, elevator.dir))
+	elevatorSetDir(queueReturnElevDir(newFloor, elev.dir))
 
 }
 
@@ -36,8 +36,6 @@ func FsmFloor(newFloor int) {
 func fsmOnButtonRequest(a elevio.ButtonEvent) {
 	fmt.Print("New order recieved")
 	fmt.Printf("%+v\n", a)
-	
-	
 	queueRecieveOrder(a)
 	elevatorLightsMatchQueue()
 	//backupSync()
@@ -47,9 +45,9 @@ func fsmOnButtonRequest(a elevio.ButtonEvent) {
 			fsmDoorState()
 			FsmFloor(elevatorGetFloor())
 		}
-
-		elevatorSetDir(queueReturnElevDir(elevatorGetFloor(), elevatorGetDir()))
-
+		if ElevatorGetDoorState() == false{ 
+			elevatorSetDir(queueReturnElevDir(elevatorGetFloor(), elevatorGetDir()))
+		}
 	}
 }
 
@@ -74,9 +72,11 @@ func FsmMessageReceivedHandler(msg ElevatorMessage) {
 
 func fsmDoorState() {
 	fmt.Print("Door state")
+	ElevatorSetDoorState(true)
 	elevio.SetDoorOpenLamp(true)
-	timer1 := time.NewTimer(variables.DOOROPENTIME * time.Second)
-	<-timer1.C
+	elev.doorTimer.Reset(variables.DOOROPENTIME * time.Second)
+	<-elev.doorTimer.C
+	ElevatorSetDoorState(false)
 	elevio.SetDoorOpenLamp(false)
 }
 
