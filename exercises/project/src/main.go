@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"time"
 
 	"./elevator"
 	"./elevio"
@@ -11,6 +12,7 @@ import (
 	"./network/localip"
 	"./network/peers"
 	"./variables"
+
 )
 
 func main() {
@@ -39,8 +41,6 @@ func main() {
 	}
 
 	peerUpdateCh := make(chan peers.PeerUpdate)
-	// We can disable/enable the transmitter after it has been started.
-	// This could be used to signal that we are somehow "unavailable".
 	peerTxEnable := make(chan bool)
 	go peers.Transmitter(15647, id, peerTxEnable)
 	go peers.Receiver(15647, peerUpdateCh)
@@ -53,6 +53,7 @@ func main() {
 
 	elevTx := make(chan elevator.ElevatorMessage)
 	elevRx := make(chan elevator.ElevatorMessage)
+	DoorTimer := make(chan bool)
 
 	go elevio.PollButtons(drvButtons)
 	go elevio.PollFloorSensor(drvFloors)
@@ -61,6 +62,7 @@ func main() {
 	//go elevator.FsmPollButtonRequest(drvButtons)
 	go bcast.Receiver(15648, elevRx)
 	go bcast.Transmitter(15648, elevTx)
+	go elevator.DoorState(doorTimer)
 
 	for {
 		select {
@@ -72,6 +74,7 @@ func main() {
 			elevTx <- msg
 			elevTx <- msg
 			elevTx <- msg
+			time.Sleep(1*time.Second)
 			fmt.Printf("New Floor Sent\n")
 		case stop := <-drvStop:
 			elevator.FsmStop(stop)
@@ -80,6 +83,10 @@ func main() {
 			fmt.Printf("New ButtonPress Sent\n")
 		case buttonCall := <-drvButtons:
 			msg := elevator.ElevatorMessage{"ORDER", int(buttonCall.Button), buttonCall.Floor}
+			elevTx <- msg
+			elevTx <- msg
+			elevTx <- msg
+			elevTx <- msg
 			elevTx <- msg
 			fmt.Printf("New message sent\n")
 		case newPeerEvent := <-peerUpdateCh:

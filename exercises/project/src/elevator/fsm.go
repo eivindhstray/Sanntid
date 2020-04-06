@@ -76,8 +76,8 @@ func fsmDoorState() {
 	fmt.Print("Door state")
 	elevio.SetDoorOpenLamp(true)
 	timer1 := time.NewTimer(variables.DOOROPENTIME * time.Second)
-	<-timer1.C
 	elevio.SetDoorOpenLamp(false)
+
 }
 
 //From project destription in the course embedded systems
