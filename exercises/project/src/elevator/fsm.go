@@ -77,7 +77,9 @@ func fsmDoorState() {
 	elev.doorTimer.Reset(variables.DOOROPENTIME * time.Second)
 	<-elev.doorTimer.C
 	ElevatorSetDoorState(false)
+
 	elevio.SetDoorOpenLamp(false)
+
 }
 
 //From project destription in the course embedded systems
