@@ -71,7 +71,6 @@ func main() {
 			elevTx <- msg
 			elevTx <- msg
 			elevTx <- msg
-			time.Sleep(1*time.Second)
 			fmt.Printf("New Floor Sent\n")
 		case stop := <-drvStop:
 			elevator.FsmStop(stop)
