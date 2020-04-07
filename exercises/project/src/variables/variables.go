@@ -7,6 +7,10 @@ const DOOROPENTIME = 2
 const N_ELEVATORS = 2
 const ELEVATOR_STATE = 2
 
+const WATCHDOGINTERVAL = 10
+
+var COMMSALIVE = true
+
 type QueueOrderType int
 
 const(

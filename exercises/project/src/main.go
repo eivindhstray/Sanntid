@@ -11,6 +11,7 @@ import (
 	"./network/localip"
 	"./network/peers"
 	"./variables"
+	
 
 )
 
@@ -73,6 +74,7 @@ func main() {
 		case messageReceived := <-elevRx:
 			elevator.FsmMessageReceivedHandler(messageReceived,ElevatorID)
 			fmt.Printf("New ButtonPress Sent\n")
+
 		case buttonCall := <-drvButtons:
 			msg := elevator.ElevatorMessage{ElevatorID,"ORDER", int(buttonCall.Button), buttonCall.Floor}
 			elevTx <- msg
