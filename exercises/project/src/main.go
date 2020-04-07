@@ -19,12 +19,12 @@ func main() {
 
 	cmd := os.Args[1]
 	ElevatorID := os.Args[2] 
-	fmt.Println(cmd)
 	elevio.Init("localhost:"+cmd, variables.N_FLOORS)
 	//go run main.go portnr id
 
 	elevator.ElevatorInit()
 	elevator.LocalQueueInit()
+	WatchDogInit()
 	fmt.Println("Initialized")
 
 	var id string
@@ -71,6 +71,7 @@ func main() {
 		case stop := <-drvStop:
 			elevator.FsmStop(stop)
 		case messageReceived := <-elevRx:
+			WatchDogReset()
 			elevator.FsmMessageReceivedHandler(messageReceived,ElevatorID)	
 		case buttonCall := <-drvButtons:
 			msg := elevator.ElevatorMessage{ElevatorID,"ORDER", int(buttonCall.Button), buttonCall.Floor}
