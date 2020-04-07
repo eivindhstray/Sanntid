@@ -8,16 +8,8 @@ package decisionAlgorithm
 
 import (
 	"../elevator"
+	"../variables"
 )
-
-//Very helpful if the messages are stored in a struct on som format like
-//struct newOrder (
-//		position int
-//		direction int
-//)
-
-//Positions 0 through N
-//Directions: -1 - down, 0 - idle, 1 - up
 
 /*Case 1: Elevator n in Stop:
 			if other elevator also in Stop:
@@ -28,6 +20,35 @@ import (
   Case 3: Elevator n going down.
 			pick up anyone at or below going down
 */
+
+//Decision based on current floor and direction of elevator
+//New orders have been stored as remote in localQueue. Decision determines if its supposed to be local
+func decisionAlgorithm(newFloor int, CurrentDirection elevator.ElevDir) {
+	switch CurrentDirection {
+	case Up:
+		for i := newFloor; i < variables.N_FLOORS; i++ {
+			if elevator.QueueLocal[i][HallUp] == variables.REMOTE {
+				elevator.localQueueSetLocal(i, int(elevator.HallUp))
+			}
+		}
+	case Down:
+		for i := newFloor - 1; i > -1; i-- {
+			if elevator.QueueLocal[i][HallDown] == variables.REMOTE {
+				queueLocal[i][HallDown] = variables.LOCAL
+			}
+		}
+	case Stop:
+		for i := 0; i < variables.N_FLOORS; i++ {
+			if queueLocal[i][HallDown] == variables.REMOTE {
+				queueLocal[i][HallDown] = variables.LOCAL
+			} else if queueLocal[i][HallUp] == variables.REMOTE {
+				queueLocal[i][HallUp] = variables.LOCAL
+			}
+
+		}
+	}
+}
+
 //Returns the floor in the new order
 func getNewOrderPosition(elev elevator.Elevator) int {
 	return elev.CurrentFloor

@@ -15,7 +15,6 @@ type Direction int
 
 var queueLocal [variables.N_FLOORS][variables.N_BUTTON_TYPES]variables.QueueOrderType
 
-
 const (
 	HallUp   OrderType = 0
 	HallDown           = 1
@@ -36,7 +35,7 @@ var OrderToButtonTypesMap = map[OrderType]elevio.ButtonType{
 //message
 
 type ElevatorMessage struct {
-	ElevID  string
+	ElevID      string
 	MessageType string
 	Button      int //0 = hallup 1= halldown 2 = cab
 	Floor       int
@@ -192,6 +191,6 @@ func localQueueCheckAbove(currentFloor int) bool {
 	return false
 }
 
-func localQueueSetRemote(floor int, button int){
+func localQueueSetRemote(floor int, button int) {
 	queueLocal[floor][button] = variables.REMOTE
 }
