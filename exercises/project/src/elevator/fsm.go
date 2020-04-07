@@ -62,6 +62,8 @@ func FsmMessageReceivedHandler(msg ElevatorMessage, ID string) {
 		}
 	case "FLOOR":
 		FsmFloor(floor)
+	case "ALIVE":
+		fmt.Println("Alive from",msgID)
 	default:
 		fmt.Print("invalid message")
 	}

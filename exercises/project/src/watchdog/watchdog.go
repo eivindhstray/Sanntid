@@ -1,9 +1,9 @@
-package main
+package watchdog
 
 import(
 	"time"
 
-	"./variables"
+	"../variables"
 )
 
 var WatchDogTimer *time.Timer
@@ -12,13 +12,13 @@ func WatchDogInit(){
 	WatchDogTimer = time.NewTimer(0)
 }
 
-func WatchDogTimeNSeconds(){
+func WatchDogTimeNSeconds(timeout chan <- bool){
 	WatchDogTimer.Reset(variables.WATCHDOGINTERVAL * time.Second)
 	<-WatchDogTimer.C	
-	variables.COMMSALIVE = false
+	timeout <- true
 }
 
-func WatchDogReset(){
+func WatchDogReset(timeout chan <- bool){
 	WatchDogTimer.Reset(variables.WATCHDOGINTERVAL * time.Second)
-	variables.COMMSALIVE = true
+	timeout <- true
 }

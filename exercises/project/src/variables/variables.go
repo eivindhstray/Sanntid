@@ -9,7 +9,8 @@ const ELEVATOR_STATE = 2
 
 const WATCHDOGINTERVAL = 10
 
-var COMMSALIVE = true
+
+
 
 type QueueOrderType int
 
