@@ -40,10 +40,6 @@ func main() {
 		id = fmt.Sprintf("peer-%s-%d", localIP, os.Getpid())
 	}
 
-	peerUpdateCh := make(chan peers.PeerUpdate)
-	peerTxEnable := make(chan bool)
-	go peers.Transmitter(15647, id, peerTxEnable)
-	go peers.Receiver(15647, peerUpdateCh)
 
 	// Channels
 	drvButtons := make(chan elevio.ButtonEvent)
@@ -51,12 +47,16 @@ func main() {
 	drvStop := make(chan bool)
 	elevTx := make(chan elevator.ElevatorMessage)
 	elevRx := make(chan elevator.ElevatorMessage)
+    peerUpdateCh := make(chan peers.PeerUpdate)
+	peerTxEnable := make(chan bool)
 
 	go elevio.PollButtons(drvButtons)
 	go elevio.PollFloorSensor(drvFloors)
 	go elevio.PollStopButton(drvStop)
 	go bcast.Receiver(15648, elevRx)
 	go bcast.Transmitter(15648, elevTx)
+	go peers.Transmitter(15647, id, peerTxEnable)
+	go peers.Receiver(15647, peerUpdateCh)
 
 	for {
 		select {
@@ -67,14 +67,11 @@ func main() {
 			elevTx <- msg
 			elevTx <- msg
 			elevTx <- msg
-			elevTx <- msg
-			fmt.Printf("New Floor Sent\n")
+			elevTx <- msg	
 		case stop := <-drvStop:
 			elevator.FsmStop(stop)
 		case messageReceived := <-elevRx:
-			elevator.FsmMessageReceivedHandler(messageReceived,ElevatorID)
-			fmt.Printf("New ButtonPress Sent\n")
-
+			elevator.FsmMessageReceivedHandler(messageReceived,ElevatorID)	
 		case buttonCall := <-drvButtons:
 			msg := elevator.ElevatorMessage{ElevatorID,"ORDER", int(buttonCall.Button), buttonCall.Floor}
 			elevTx <- msg
@@ -82,7 +79,6 @@ func main() {
 			elevTx <- msg
 			elevTx <- msg
 			elevTx <- msg
-			fmt.Printf("New message sent\n")
 		case newPeerEvent := <-peerUpdateCh:
 			fmt.Printf("Peer update:\n")
 			fmt.Printf("  Peers:    %q\n", newPeerEvent.Peers)
