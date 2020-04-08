@@ -28,10 +28,8 @@ func fsmOnButtonRequest(a elevio.ButtonEvent) {
 	localQueueRecieveOrder(a)
 	elevatorLightsMatchQueue()
 	elev = ElevatorGetElev()
-
-	if elev.dir == Stop {
+	if elev.dir == Stop{
 		if a.Floor == elev.currentFloor && elev.dir == Stop {
-			fsmDoorState()
 			FsmFloor(elev.currentFloor)
 		}
 		if ElevatorGetDoorOpenState() == false{ 
@@ -78,9 +76,9 @@ func fsmDoorState() {
 	elevio.SetDoorOpenLamp(true)
 	elev.doorTimer.Reset(variables.DOOROPENTIME * time.Second)
 	<-elev.doorTimer.C
-	ElevatorSetDoorOpenState(false)
+	fmt.Print("DoorState over")
 	elevio.SetDoorOpenLamp(false)
-
+	ElevatorSetDoorOpenState(false)
 }
 
 //From project destription in the course embedded systems
