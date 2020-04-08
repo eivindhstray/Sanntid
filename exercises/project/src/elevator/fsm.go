@@ -14,9 +14,9 @@ func FsmFloor(newFloor int) {
 	elevatorSetNewFloor(newFloor)
 	if localQueueCheckCurrentFloorSameDir(newFloor, elev.dir) {
 		elevatorSetMotorDir(Stop)
-		fsmDoorState()
 		localQueueRemoveOrder(newFloor, elev.dir)
 		elevatorLightsMatchQueue()
+		fsmDoorState()
 	}
 	elevatorSetDir(localQueueReturnElevDir(newFloor, elev.dir))
 
@@ -78,9 +78,9 @@ func fsmDoorState() {
 	elevio.SetDoorOpenLamp(true)
 	elev.doorTimer.Reset(variables.DOOROPENTIME * time.Second)
 	<-elev.doorTimer.C
-	ElevatorSetDoorOpenState(false)
+	fmt.Print("DoorState over")
 	elevio.SetDoorOpenLamp(false)
-
+	ElevatorSetDoorOpenState(false)
 }
 
 //From project destription in the course embedded systems
