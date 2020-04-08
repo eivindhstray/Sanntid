@@ -37,7 +37,7 @@ func fsmOnButtonRequest(a elevio.ButtonEvent) {
 	}
 }
 
-func FsmMessageReceivedHandler(msg ElevatorMessage, ID string) {
+func FsmMessageReceivedHandler(msg variables.ElevatorMessage, ID string) {
 	//sync the new message with queue
 	fmt.Println("received a message")
 	msgType := msg.MessageType
@@ -48,7 +48,7 @@ func FsmMessageReceivedHandler(msg ElevatorMessage, ID string) {
 	switch msgType {
 	case "ORDER":
 		fmt.Println(msgID+"+"+ID, "+", button)
-		if button == 2 {
+		if button == 2 { //cabcall
 			if msgID == ID {
 				fsmOnButtonRequest(event)
 			} else {
@@ -97,9 +97,10 @@ func fsmExitDoorState(){
 }
 //From project destription in the course embedded systems
 func FsmStop(a bool) {
+	elev = ElevatorGetElev()
 	fmt.Print("Stop state")
 	fmt.Printf("%+v\n", a)
-	ElevatorInit()
+	ElevatorInit(elev.ElevID)
 	LocalQueueInit()
 	elevatorLightsMatchQueue()
 }

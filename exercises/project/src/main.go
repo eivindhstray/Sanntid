@@ -17,11 +17,11 @@ import (
 func main() {
 
 	cmd := os.Args[1]
-	ElevatorID := os.Args[2]
+	ElevatorID := int(os.Args[2])
 	elevio.Init("localhost:"+cmd, variables.N_FLOORS)
 	//go run main.go portnr id
 
-	elevator.ElevatorInit()
+	elevator.ElevatorInit(ElevatorID)
 	elevator.LocalQueueInit()
 	//watchdog.WatchDogInit()
 	fmt.Println("Initialized")
@@ -43,8 +43,8 @@ func main() {
 	drvButtons := make(chan elevio.ButtonEvent)
 	drvFloors := make(chan int)
 	drvStop := make(chan bool)
-	elevTx := make(chan elevator.ElevatorMessage)
-	elevRx := make(chan elevator.ElevatorMessage)
+	elevTx := make(chan variables.ElevatorMessage)
+	elevRx := make(chan variables.ElevatorMessage)
 	peerUpdateCh := make(chan peers.PeerUpdate)
 	peerTxEnable := make(chan bool)
 	//watchDogTimeOut := make(chan bool)
@@ -61,14 +61,14 @@ func main() {
 	for {
 		select {
 		case atFloor := <-drvFloors:
-			msg := elevator.ElevatorMessage{ElevatorID, "FLOOR",-1, atFloor}
+			msg := variables.ElevatorMessage{ElevatorID, "FLOOR",-1, atFloor}
 			elevTx <- msg
 		case stop := <-drvStop:
 			elevator.FsmStop(stop)
 		case messageReceived := <-elevRx:
 			elevator.FsmMessageReceivedHandler(messageReceived, ElevatorID)
 		case buttonCall := <-drvButtons:
-			msg := elevator.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor}
+			msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor}
 			elevTx <- msg
 		//case watchDogTimeOut <- true:
 		//	AliveMsg := elevator.ElevatorMessage{ElevatorID, "ALIVE", 0	,0}

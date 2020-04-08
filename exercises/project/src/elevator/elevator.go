@@ -19,13 +19,21 @@ const (
 )
 
 type Elevator struct {
+	ElevID 		 int
 	currentFloor int
 	dir          ElevDir
 	doorTimer    *time.Timer
 	DoorState    bool
 }
 
-func ElevatorInit() {
+func ElevatorListUpdate(floor int, dir int,msg variables.ElevatorMessage) variables.ElevatorMessage {
+	elev = ElevatorGetElev()
+	msg.Elevators[elev.ElevID][0] = floor
+	msg.Elevators[elev.ElevID][1] = dir
+	return msg
+}
+
+func ElevatorInit(ID int) {
 	if elevio.GetFloor() == -1 {
 		elevatorSetDir(Down)
 	}
@@ -34,6 +42,7 @@ func ElevatorInit() {
 	elevatorSetDir(Stop)
 	elevatorSetFloor(elevio.GetFloor())
 	elev.doorTimer = time.NewTimer(0)
+	elev.ElevID = ID
 
 	fmt.Println("Elevator initialized")
 }

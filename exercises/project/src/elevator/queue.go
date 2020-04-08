@@ -32,14 +32,6 @@ var OrderToButtonTypesMap = map[OrderType]elevio.ButtonType{
 	Cab:      elevio.BT_Cab,
 }
 
-//message
-
-type ElevatorMessage struct {
-	ElevID      string
-	MessageType string
-	Button      int //0 = hallup 1= halldown 2 = cab
-	Floor       int
-}
 
 func localQueueSetLocal(floor int, buttonType int) {
 	queueLocal[floor][buttonType] = variables.LOCAL

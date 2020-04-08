@@ -7,7 +7,17 @@ const DOOROPENTIME = 2
 const N_ELEVATORS = 2
 const ELEVATOR_STATE = 2
 
-const WATCHDOGINTERVAL = 10
+
+//message
+
+type ElevatorMessage struct {
+	ElevID      string
+	MessageType string
+	Button      int //0 = hallup 1= halldown 2 = cab
+	Floor       int
+	Elevators	ElevatorList
+	
+}
 
 
 
@@ -20,7 +30,9 @@ const(
 	LOCAL    			   = 2
 )
 
-var elevatorList[N_ELEVATORS][ELEVATOR_STATE] int //N x 2 array with info on the 
+
+ 
+type ElevatorList[N_ELEVATORS][ELEVATOR_STATE] int //N x 2 array with info on the 
 //elevators
 //For 2 elev
 
@@ -31,5 +43,3 @@ var elevatorList[N_ELEVATORS][ELEVATOR_STATE] int //N x 2 array with info on the
 // Elev N	  x		 y
 
 //From this array it will be easy to easy to determine orders
-
-
