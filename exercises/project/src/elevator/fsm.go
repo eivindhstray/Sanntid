@@ -14,9 +14,9 @@ func FsmFloor(newFloor int) {
 	elevatorSetNewFloor(newFloor)
 	if localQueueCheckCurrentFloorSameDir(newFloor, elev.dir) {
 		elevatorSetMotorDir(Stop)
-		fsmDoorState()
 		localQueueRemoveOrder(newFloor, elev.dir)
 		elevatorLightsMatchQueue()
+		fsmDoorState()
 	}
 	elevatorSetDir(localQueueReturnElevDir(newFloor, elev.dir))
 
