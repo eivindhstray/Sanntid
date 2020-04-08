@@ -121,6 +121,8 @@ func localQueueReturnElevDir(currentFloor int, currentDirection ElevDir) ElevDir
 	return Stop
 }
 
+
+
 // Returns true if the there exist an order on current floor with same direction or no
 //direction beyond current floor
 func localQueueCheckCurrentFloorSameDir(currentFloor int, currentDirection ElevDir) bool {

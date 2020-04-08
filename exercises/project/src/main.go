@@ -61,12 +61,7 @@ func main() {
 	for {
 		select {
 		case atFloor := <-drvFloors:
-			elevator.FsmFloor(atFloor)
-			msg := elevator.ElevatorMessage{ElevatorID, "FLOOR", atFloor, atFloor}
-			elevTx <- msg
-			elevTx <- msg
-			elevTx <- msg
-			elevTx <- msg
+			msg := elevator.ElevatorMessage{ElevatorID, "FLOOR",-1, atFloor}
 			elevTx <- msg
 		case stop := <-drvStop:
 			elevator.FsmStop(stop)
@@ -74,10 +69,6 @@ func main() {
 			elevator.FsmMessageReceivedHandler(messageReceived, ElevatorID)
 		case buttonCall := <-drvButtons:
 			msg := elevator.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor}
-			elevTx <- msg
-			elevTx <- msg
-			elevTx <- msg
-			elevTx <- msg
 			elevTx <- msg
 		//case watchDogTimeOut <- true:
 		//	AliveMsg := elevator.ElevatorMessage{ElevatorID, "ALIVE", 0	,0}

@@ -12,10 +12,7 @@ func FsmFloor(newFloor int) {
 
 	//decisionAlgorithm(newFloor, elev.dir)
 	elevatorSetNewFloor(newFloor)
-	if localQueueCheckCurrentFloorSameDir(newFloor, elev.dir) {
-		elevatorSetMotorDir(Stop)
-		localQueueRemoveOrder(newFloor, elev.dir)
-		elevatorLightsMatchQueue()
+	if localQueueCheckCurrentFloorSameDir(newFloor, elev.dir) == true {
 		fsmDoorState()
 	}
 	elevatorSetDir(localQueueReturnElevDir(newFloor, elev.dir))
@@ -30,9 +27,8 @@ func fsmOnButtonRequest(a elevio.ButtonEvent) {
 	localQueueRecieveOrder(a)
 	elevatorLightsMatchQueue()
 	elev = ElevatorGetElev()
-	if elev.dir == Stop {
+	if elev.dir == Stop && !ElevatorGetDoorOpenState() {
 		if a.Floor == elev.currentFloor && elev.dir == Stop {
-			//fsmDoorState()
 			FsmFloor(elev.currentFloor)
 		}
 		if ElevatorGetDoorOpenState() == false {
@@ -62,7 +58,10 @@ func FsmMessageReceivedHandler(msg ElevatorMessage, ID string) {
 			fsmOnButtonRequest(event)
 		}
 	case "FLOOR":
-		FsmFloor(floor)
+		if msgID == ID{
+			fmt.Print("Floor")
+			FsmFloor(floor)
+		}
 	case "ALIVE":
 		fmt.Println("Alive from", msgID)
 	default:
@@ -72,22 +71,40 @@ func FsmMessageReceivedHandler(msg ElevatorMessage, ID string) {
 
 }
 
-func fsmDoorState() {
-	fmt.Print("Door state")
+
+func fsmDoorState(){
+	elev = ElevatorGetElev()
+	elevatorSetMotorDir(Stop)
 	ElevatorSetDoorOpenState(true)
 	elevio.SetDoorOpenLamp(true)
+	
 	elev.doorTimer.Reset(variables.DOOROPENTIME * time.Second)
-	<-elev.doorTimer.C
-	fmt.Print("DoorState over")
-	elevio.SetDoorOpenLamp(false)
-	ElevatorSetDoorOpenState(false)
+	select{
+		case <- elev.doorTimer.C:
+		default:
+	}
+	fsmRemoveOrderHandler(elev)
+	fsmExitDoorState()
+
+	
 }
 
+func fsmExitDoorState(){
+	<-elev.doorTimer.C
+	elevio.SetDoorOpenLamp(false)
+	ElevatorSetDoorOpenState(false)
+	fmt.Print("yo")
+}
 //From project destription in the course embedded systems
 func FsmStop(a bool) {
 	fmt.Print("Stop state")
 	fmt.Printf("%+v\n", a)
 	ElevatorInit()
 	LocalQueueInit()
+	elevatorLightsMatchQueue()
+}
+
+func fsmRemoveOrderHandler(elev Elevator){
+	localQueueRemoveOrder(elev.currentFloor,elev.dir)
 	elevatorLightsMatchQueue()
 }
