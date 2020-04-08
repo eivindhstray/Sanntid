@@ -11,7 +11,6 @@ import (
 	"./network/localip"
 	"./network/peers"
 	"./variables"
-	"./watchdog"
 	
 
 )
@@ -25,7 +24,6 @@ func main() {
 
 	elevator.ElevatorInit()
 	elevator.LocalQueueInit()
-	watchdog.WatchDogInit()
 	fmt.Println("Initialized")
 
 	var id string
