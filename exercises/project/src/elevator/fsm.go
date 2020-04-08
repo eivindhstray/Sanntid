@@ -8,9 +8,9 @@ import (
 	"../variables"
 )
 
-
 func FsmFloor(newFloor int) {
 
+	//decisionAlgorithm(newFloor, elev.dir)
 	elevatorSetNewFloor(newFloor)
 	if localQueueCheckCurrentFloorSameDir(newFloor, elev.dir) {
 		elevatorSetMotorDir(Stop)
@@ -25,16 +25,17 @@ func FsmFloor(newFloor int) {
 func fsmOnButtonRequest(a elevio.ButtonEvent) {
 	fmt.Print("New order recieved")
 	fmt.Printf("%+v\n", a)
+	//remoteQueueRecieveOrder(a)
+	//decisionAlgorithm(elev.currentFloor, elev.dir)
 	localQueueRecieveOrder(a)
 	elevatorLightsMatchQueue()
 	elev = ElevatorGetElev()
-
 	if elev.dir == Stop {
 		if a.Floor == elev.currentFloor && elev.dir == Stop {
-			fsmDoorState()
+			//fsmDoorState()
 			FsmFloor(elev.currentFloor)
 		}
-		if ElevatorGetDoorOpenState() == false{ 
+		if ElevatorGetDoorOpenState() == false {
 			elevatorSetDir(localQueueReturnElevDir(elev.currentFloor, elev.dir))
 		}
 	}
@@ -48,29 +49,28 @@ func FsmMessageReceivedHandler(msg ElevatorMessage, ID string) {
 	floor := msg.Floor
 	button := msg.Button
 	event := elevio.ButtonEvent{floor, elevio.ButtonType(button)}
-	switch msgType{
+	switch msgType {
 	case "ORDER":
-		fmt.Println(msgID +"+"+ ID,"+",button)
-		if button == 2{
+		fmt.Println(msgID+"+"+ID, "+", button)
+		if button == 2 {
 			if msgID == ID {
 				fsmOnButtonRequest(event)
-			}else{
+			} else {
 				fmt.Println("cabcall other elev")
 			}
-		}else{
+		} else {
 			fsmOnButtonRequest(event)
 		}
 	case "FLOOR":
 		FsmFloor(floor)
 	case "ALIVE":
-		fmt.Println("Alive from",msgID)
+		fmt.Println("Alive from", msgID)
 	default:
 		fmt.Print("invalid message")
 	}
 	elevatorLightsMatchQueue()
 
 }
-
 
 func fsmDoorState() {
 	fmt.Print("Door state")
@@ -91,4 +91,3 @@ func FsmStop(a bool) {
 	LocalQueueInit()
 	elevatorLightsMatchQueue()
 }
-

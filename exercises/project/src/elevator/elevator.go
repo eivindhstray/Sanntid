@@ -33,7 +33,7 @@ func ElevatorInit() {
 	}
 	elevatorSetDir(Stop)
 	elevatorSetFloor(elevio.GetFloor())
-	elev.doorTimer= time.NewTimer(0)
+	elev.doorTimer = time.NewTimer(0)
 
 	fmt.Println("Elevator initialized")
 }
@@ -63,7 +63,6 @@ func elevatorLightsMatchQueue() {
 	}
 }
 
-
 func elevatorSetDir(newDirection ElevDir) {
 	elev.dir = newDirection
 	elevatorSetMotorDir(newDirection)
@@ -85,16 +84,14 @@ func elevatorGetFloor() int {
 	return elev.currentFloor
 }
 
-
-func ElevatorSetDoorOpenState(state bool){
+func ElevatorSetDoorOpenState(state bool) {
 	elev.DoorState = state
 }
 
-func ElevatorGetDoorOpenState() bool{
+func ElevatorGetDoorOpenState() bool {
 	return elev.DoorState
 }
 
-
-func ElevatorGetElev()Elevator{
+func ElevatorGetElev() Elevator {
 	return elev
 }

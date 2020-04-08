@@ -191,6 +191,31 @@ func localQueueCheckAbove(currentFloor int) bool {
 	return false
 }
 
-func localQueueSetRemote(floor int, button int) {
+func remoteQueueSetOrder(floor int, button int) {
 	queueLocal[floor][button] = variables.REMOTE
+}
+
+func remoteQueueRecieveOrder(order elevio.ButtonEvent) {
+	orderT := int(order.Button)
+	remoteQueueSetOrder(order.Floor, orderT)
+	fmt.Println("Order added to queue")
+	remoteQueuePrint()
+}
+
+func remoteQueuePrint() {
+	fmt.Println("\n   HallUp   HallDn    Cab  ")
+	fmt.Println("-" + strings.Repeat("|-------|", variables.N_BUTTON_TYPES))
+	for floor := variables.N_FLOORS - 1; floor > -1; floor-- {
+		fmt.Print(floor)
+		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
+			queuePos := queueLocal[floor][button]
+			if queuePos == variables.REMOTE {
+				fmt.Print("| ", "true ", " |")
+			} else {
+				fmt.Print("| ", "_____", " |")
+			}
+		}
+		fmt.Println()
+	}
+	fmt.Print("-"+strings.Repeat("---------", variables.N_BUTTON_TYPES), "\n\n")
 }

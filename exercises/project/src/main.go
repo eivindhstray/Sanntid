@@ -11,21 +11,19 @@ import (
 	"./network/localip"
 	"./network/peers"
 	"./variables"
-	"./watchdog"
-	
-
+	//"./watchdog"
 )
 
 func main() {
 
 	cmd := os.Args[1]
-	ElevatorID := os.Args[2] 
+	ElevatorID := os.Args[2]
 	elevio.Init("localhost:"+cmd, variables.N_FLOORS)
 	//go run main.go portnr id
 
 	elevator.ElevatorInit()
 	elevator.LocalQueueInit()
-	watchdog.WatchDogInit()
+	//watchdog.WatchDogInit()
 	fmt.Println("Initialized")
 
 	var id string
@@ -41,16 +39,15 @@ func main() {
 		id = fmt.Sprintf("peer-%s-%d", localIP, os.Getpid())
 	}
 
-
 	// Channels
 	drvButtons := make(chan elevio.ButtonEvent)
 	drvFloors := make(chan int)
 	drvStop := make(chan bool)
 	elevTx := make(chan elevator.ElevatorMessage)
 	elevRx := make(chan elevator.ElevatorMessage)
-    peerUpdateCh := make(chan peers.PeerUpdate)
+	peerUpdateCh := make(chan peers.PeerUpdate)
 	peerTxEnable := make(chan bool)
-	watchDogTimeOut := make(chan bool)
+	//watchDogTimeOut := make(chan bool)
 
 	go elevio.PollButtons(drvButtons)
 	go elevio.PollFloorSensor(drvFloors)
@@ -59,32 +56,32 @@ func main() {
 	go bcast.Transmitter(15648, elevTx)
 	go peers.Transmitter(15647, id, peerTxEnable)
 	go peers.Receiver(15647, peerUpdateCh)
-	go watchdog.WatchDogTimeNSeconds(watchDogTimeOut)
+	//go watchdog.WatchDogTimeNSeconds(watchDogTimeOut)
 
 	for {
 		select {
 		case atFloor := <-drvFloors:
 			elevator.FsmFloor(atFloor)
-			msg := elevator.ElevatorMessage{ElevatorID,"FLOOR", atFloor, atFloor}
+			msg := elevator.ElevatorMessage{ElevatorID, "FLOOR", atFloor, atFloor}
 			elevTx <- msg
 			elevTx <- msg
 			elevTx <- msg
 			elevTx <- msg
-			elevTx <- msg	
+			elevTx <- msg
 		case stop := <-drvStop:
 			elevator.FsmStop(stop)
 		case messageReceived := <-elevRx:
-			elevator.FsmMessageReceivedHandler(messageReceived,ElevatorID)	
+			elevator.FsmMessageReceivedHandler(messageReceived, ElevatorID)
 		case buttonCall := <-drvButtons:
-			msg := elevator.ElevatorMessage{ElevatorID,"ORDER", int(buttonCall.Button), buttonCall.Floor}
+			msg := elevator.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor}
 			elevTx <- msg
 			elevTx <- msg
 			elevTx <- msg
 			elevTx <- msg
 			elevTx <- msg
-		case watchDogTimeOut <- true:
-			AliveMsg := elevator.ElevatorMessage{ElevatorID, "ALIVE", 0	,0}
-			elevTx <- AliveMsg
+		//case watchDogTimeOut <- true:
+		//	AliveMsg := elevator.ElevatorMessage{ElevatorID, "ALIVE", 0	,0}
+		//	elevTx <- AliveMsg
 		case newPeerEvent := <-peerUpdateCh:
 			fmt.Printf("Peer update:\n")
 			fmt.Printf("  Peers:    %q\n", newPeerEvent.Peers)
