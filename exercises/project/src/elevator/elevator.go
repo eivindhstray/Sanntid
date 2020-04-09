@@ -24,13 +24,11 @@ type Elevator struct {
 	dir          ElevDir
 	doorTimer    *time.Timer
 	DoorState    bool
+	ElevState	 variables.ElevatorList
 }
 
-func ElevatorListUpdate(floor int, dir int,msg variables.ElevatorMessage) variables.ElevatorMessage {
-	elev = ElevatorGetElev()
-	msg.Elevators[elev.ElevID][0] = floor
-	msg.Elevators[elev.ElevID][1] = dir
-	return msg
+func ElevatorListUpdate(ID int,floor int) {
+	elev.ElevState[ID][0] = floor
 }
 
 func ElevatorInit(ID int) {

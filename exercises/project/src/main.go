@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strconv"
 
 	"./elevator"
 	"./elevio"
@@ -17,7 +18,10 @@ import (
 func main() {
 
 	cmd := os.Args[1]
-	ElevatorID := int(os.Args[2])
+	ElevatorID,err := strconv.Atoi(os.Args[2])
+	if err != nil{
+		panic(err)
+	}
 	elevio.Init("localhost:"+cmd, variables.N_FLOORS)
 	//go run main.go portnr id
 
@@ -61,18 +65,19 @@ func main() {
 	for {
 		select {
 		case atFloor := <-drvFloors:
-			msg := variables.ElevatorMessage{ElevatorID, "FLOOR",-1, atFloor}
+			elevator.ElevatorListUpdate(ElevatorID,atFloor)
+			elev := elevator.ElevatorGetElev()
+			msg := variables.ElevatorMessage{ElevatorID, "FLOOR",-1, atFloor,elev.ElevState}
+			fmt.Printf("elevstates%q\n",elev.ElevState)
 			elevTx <- msg
 		case stop := <-drvStop:
 			elevator.FsmStop(stop)
 		case messageReceived := <-elevRx:
 			elevator.FsmMessageReceivedHandler(messageReceived, ElevatorID)
 		case buttonCall := <-drvButtons:
-			msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor}
+			elev := elevator.ElevatorGetElev()
+			msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor,elev.ElevState}
 			elevTx <- msg
-		//case watchDogTimeOut <- true:
-		//	AliveMsg := elevator.ElevatorMessage{ElevatorID, "ALIVE", 0	,0}
-		//	elevTx <- AliveMsg
 		case newPeerEvent := <-peerUpdateCh:
 			fmt.Printf("Peer update:\n")
 			fmt.Printf("  Peers:    %q\n", newPeerEvent.Peers)

@@ -11,7 +11,7 @@ const ELEVATOR_STATE = 2
 //message
 
 type ElevatorMessage struct {
-	ElevID      string
+	ElevID      int
 	MessageType string
 	Button      int //0 = hallup 1= halldown 2 = cab
 	Floor       int
@@ -32,7 +32,7 @@ const(
 
 
  
-type ElevatorList[N_ELEVATORS][ELEVATOR_STATE] int //N x 2 array with info on the 
+type ElevatorList[N_ELEVATORS+1][1] int //N x 2 array with info on the 
 //elevators
 //For 2 elev
 

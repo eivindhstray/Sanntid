@@ -19,16 +19,16 @@ func FsmFloor(newFloor int) {
 
 }
 
-func fsmOnButtonRequest(a elevio.ButtonEvent) {
+func fsmOnButtonRequest(buttonPush elevio.ButtonEvent) {
 	fmt.Print("New order recieved")
-	fmt.Printf("%+v\n", a)
+	fmt.Printf("%+v\n", buttonPush)
 	//remoteQueueRecieveOrder(a)
-	//decisionAlgorithm(elev.currentFloor, elev.dir)
-	localQueueRecieveOrder(a)
+	//decisionAlgsorithm(elev.currentFloor, elev.dir)
+	localQueueRecieveOrder(buttonPush)
 	elevatorLightsMatchQueue()
 	elev = ElevatorGetElev()
 	if elev.dir == Stop && !ElevatorGetDoorOpenState() {
-		if a.Floor == elev.currentFloor && elev.dir == Stop {
+		if buttonPush.Floor == elev.currentFloor && elev.dir == Stop {
 			FsmFloor(elev.currentFloor)
 		}
 		if ElevatorGetDoorOpenState() == false {
@@ -37,7 +37,7 @@ func fsmOnButtonRequest(a elevio.ButtonEvent) {
 	}
 }
 
-func FsmMessageReceivedHandler(msg variables.ElevatorMessage, ID string) {
+func FsmMessageReceivedHandler(msg variables.ElevatorMessage, ID int) {
 	//sync the new message with queue
 	fmt.Println("received a message")
 	msgType := msg.MessageType
@@ -47,8 +47,7 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, ID string) {
 	event := elevio.ButtonEvent{floor, elevio.ButtonType(button)}
 	switch msgType {
 	case "ORDER":
-		fmt.Println(msgID+"+"+ID, "+", button)
-		if button == 2 { //cabcall
+		if button == 2 {
 			if msgID == ID {
 				fsmOnButtonRequest(event)
 			} else {
@@ -59,9 +58,10 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, ID string) {
 		}
 	case "FLOOR":
 		if msgID == ID{
-			fmt.Print("Floor")
+			fmt.Print("Floor\v%q",msgID)
 			FsmFloor(floor)
 		}
+		ElevatorListUpdate(msgID,floor)
 	case "ALIVE":
 		fmt.Println("Alive from", msgID)
 	default:
@@ -73,33 +73,25 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, ID string) {
 
 
 func fsmDoorState(){
-	elev = ElevatorGetElev()
+	fmt.Print("door")
 	elevatorSetMotorDir(Stop)
 	ElevatorSetDoorOpenState(true)
 	elevio.SetDoorOpenLamp(true)
-	
+	elev.doorTimer.Stop()
 	elev.doorTimer.Reset(variables.DOOROPENTIME * time.Second)
-	select{
-		case <- elev.doorTimer.C:
-		default:
-	}
-	fsmRemoveOrderHandler(elev)
-	fsmExitDoorState()
-
-	
-}
-
-func fsmExitDoorState(){
 	<-elev.doorTimer.C
 	elevio.SetDoorOpenLamp(false)
 	ElevatorSetDoorOpenState(false)
-	fmt.Print("yo")
+	fsmRemoveOrderHandler(elev)
+
+	
 }
+
 //From project destription in the course embedded systems
 func FsmStop(a bool) {
-	elev = ElevatorGetElev()
 	fmt.Print("Stop state")
 	fmt.Printf("%+v\n", a)
+	elev = ElevatorGetElev()
 	ElevatorInit(elev.ElevID)
 	LocalQueueInit()
 	elevatorLightsMatchQueue()
