@@ -136,6 +136,7 @@ func localQueueCheckCurrentFloorSameDir(currentFloor int, currentDirection ElevD
 }
 
 func localQueuePrint() {
+	fmt.Println("Local queue")
 	fmt.Println("\n   HallUp   HallDn    Cab  ")
 	fmt.Println("-" + strings.Repeat("|-------|", variables.N_BUTTON_TYPES))
 	for floor := variables.N_FLOORS - 1; floor > -1; floor-- {
@@ -194,6 +195,7 @@ func remoteQueueRecieveOrder(order elevio.ButtonEvent) {
 }
 
 func remoteQueuePrint() {
+	fmt.Println("Remote queue")
 	fmt.Println("\n   HallUp   HallDn    Cab  ")
 	fmt.Println("-" + strings.Repeat("|-------|", variables.N_BUTTON_TYPES))
 	for floor := variables.N_FLOORS - 1; floor > -1; floor-- {

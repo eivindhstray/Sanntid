@@ -27,6 +27,8 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent) {
 	//----------Part that needs work ---------------
 	remoteQueueRecieveOrder(buttonPush)
 	decisionAlgorithm()
+	remoteQueuePrint()
+	localQueuePrint()
 	//----------------------------------------------
 
 	//localQueueRecieveOrder(buttonPush)
