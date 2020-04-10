@@ -11,6 +11,7 @@ import (
 func FsmFloor(newFloor int) {
 
 	//decisionAlgorithm(newFloor, elev.dir)
+	//Function that updates elevatorList with position and direction
 	elevatorSetNewFloor(newFloor)
 	if localQueueCheckCurrentFloorSameDir(newFloor, elev.dir) == true {
 		fsmDoorState()
@@ -22,9 +23,13 @@ func FsmFloor(newFloor int) {
 func fsmOnButtonRequest(buttonPush elevio.ButtonEvent) {
 	fmt.Print("New order recieved")
 	fmt.Printf("%+v\n", buttonPush)
-	//remoteQueueRecieveOrder(a)
-	//decisionAlgsorithm(elev.currentFloor, elev.dir)
-	localQueueRecieveOrder(buttonPush)
+
+	//----------Part that needs work ---------------
+	remoteQueueRecieveOrder(buttonPush)
+	decisionAlgorithm()
+	//----------------------------------------------
+
+	//localQueueRecieveOrder(buttonPush)
 	elevatorLightsMatchQueue()
 	elev = ElevatorGetElev()
 	if elev.dir == Stop && !ElevatorGetDoorOpenState() {
@@ -57,11 +62,11 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, ID int) {
 			fsmOnButtonRequest(event)
 		}
 	case "FLOOR":
-		if msgID == ID{
-			fmt.Print("Floor\v%q",msgID)
+		if msgID == ID {
+			fmt.Print("Floor\v%q", msgID)
 			FsmFloor(floor)
 		}
-		ElevatorListUpdate(msgID,floor)
+		ElevatorListUpdate(msgID, floor)
 	case "ALIVE":
 		fmt.Println("Alive from", msgID)
 	default:
@@ -71,8 +76,7 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, ID int) {
 
 }
 
-
-func fsmDoorState(){
+func fsmDoorState() {
 	fmt.Print("door")
 	elevatorSetMotorDir(Stop)
 	ElevatorSetDoorOpenState(true)
@@ -84,7 +88,6 @@ func fsmDoorState(){
 	ElevatorSetDoorOpenState(false)
 	fsmRemoveOrderHandler(elev)
 
-	
 }
 
 //From project destription in the course embedded systems
@@ -97,7 +100,7 @@ func FsmStop(a bool) {
 	elevatorLightsMatchQueue()
 }
 
-func fsmRemoveOrderHandler(elev Elevator){
-	localQueueRemoveOrder(elev.currentFloor,elev.dir)
+func fsmRemoveOrderHandler(elev Elevator) {
+	localQueueRemoveOrder(elev.currentFloor, elev.dir)
 	elevatorLightsMatchQueue()
 }

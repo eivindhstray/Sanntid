@@ -32,7 +32,6 @@ var OrderToButtonTypesMap = map[OrderType]elevio.ButtonType{
 	Cab:      elevio.BT_Cab,
 }
 
-
 func localQueueSetLocal(floor int, buttonType int) {
 	queueLocal[floor][buttonType] = variables.LOCAL
 }
@@ -112,8 +111,6 @@ func localQueueReturnElevDir(currentFloor int, currentDirection ElevDir) ElevDir
 	}
 	return Stop
 }
-
-
 
 // Returns true if the there exist an order on current floor with same direction or no
 //direction beyond current floor

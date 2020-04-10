@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"time"
 
 	"./elevator"
 	"./elevio"
@@ -18,8 +19,14 @@ import (
 func main() {
 
 	cmd := os.Args[1]
-	ElevatorID,err := strconv.Atoi(os.Args[2])
-	if err != nil{
+	ElevatorID, err := strconv.Atoi(os.Args[2])
+
+	//variables.ElevatorID = ElevatorID
+	//^^ Need ElevID to be an int for cost to function properly
+	fmt.Println(ElevatorID)
+	time.Sleep(1 * time.Second)
+
+	if err != nil {
 		panic(err)
 	}
 	elevio.Init("localhost:"+cmd, variables.N_FLOORS)
@@ -65,10 +72,10 @@ func main() {
 	for {
 		select {
 		case atFloor := <-drvFloors:
-			elevator.ElevatorListUpdate(ElevatorID,atFloor)
+			elevator.ElevatorListUpdate(ElevatorID, atFloor)
 			elev := elevator.ElevatorGetElev()
-			msg := variables.ElevatorMessage{ElevatorID, "FLOOR",-1, atFloor,elev.ElevState}
-			fmt.Printf("elevstates%q\n",elev.ElevState)
+			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, atFloor, elev.ElevState}
+			fmt.Printf("elevstates%q\n", elev.ElevState)
 			elevTx <- msg
 		case stop := <-drvStop:
 			elevator.FsmStop(stop)
@@ -76,7 +83,7 @@ func main() {
 			elevator.FsmMessageReceivedHandler(messageReceived, ElevatorID)
 		case buttonCall := <-drvButtons:
 			elev := elevator.ElevatorGetElev()
-			msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor,elev.ElevState}
+			msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor, elev.ElevState}
 			elevTx <- msg
 		case newPeerEvent := <-peerUpdateCh:
 			fmt.Printf("Peer update:\n")
