@@ -8,11 +8,13 @@ import (
 	"../variables"
 )
 
-func FsmFloor(newFloor int, dir ElevDir) {
+func FsmFloor(newFloor int, dir ElevDir, ID int) {
 
 	//decisionAlgorithm(newFloor, elev.dir)
 	//Function that updates elevatorList with position and direction
-	elevatorSetNewFloor(newFloor)
+	if ID == elev.ElevID{
+		elevatorSetNewFloor(newFloor)
+	}
 	if localQueueCheckCurrentFloorSameDir(newFloor, elev.Dir) == true {
 		fsmDoorState()
 	}
@@ -42,7 +44,7 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 	previousDirection := elev.Dir
 	if elev.Dir == Stop && !ElevatorGetDoorOpenState() {
 		if buttonPush.Floor == elev.currentFloor && elev.Dir == Stop {
-			FsmFloor(elev.currentFloor, previousDirection)
+			FsmFloor(elev.currentFloor, previousDirection, elev.ElevID)
 		}
 		if ElevatorGetDoorOpenState() == false {
 			elevatorSetDir(localQueueReturnElevDir(elev.currentFloor, elev.Dir))
@@ -74,7 +76,7 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, ID int) {
 		if msgID == ID {
 			fmt.Print("Floor\v%q", msgID)
 		}
-		FsmFloor(floor, ElevDir(dir))
+		FsmFloor(floor, ElevDir(dir),elev.ElevID)
 		ElevatorListUpdate(msgID, floor)
 	case "ALIVE":
 		fmt.Println("Alive from", msgID)
