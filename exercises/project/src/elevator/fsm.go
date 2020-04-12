@@ -14,9 +14,9 @@ func FsmFloor(newFloor int) {
 	//Function that updates elevatorList with position and direction
 	elevatorSetNewFloor(newFloor)
 	if localQueueCheckCurrentFloorSameDir(newFloor, elev.dir) == true {
-		fsmRemoveOrderHandler(elev)
 		fsmDoorState()
 	}
+	elevatorLightsMatchQueue()
 	elevatorSetDir(localQueueReturnElevDir(newFloor, elev.dir))
 
 }
@@ -92,6 +92,7 @@ func fsmDoorState() {
 	<-elev.doorTimer.C
 	elevio.SetDoorOpenLamp(false)
 	ElevatorSetDoorOpenState(false)
+	fsmRemoveOrderHandler(elev)
 
 }
 
