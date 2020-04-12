@@ -21,7 +21,7 @@ const (
 type Elevator struct {
 	ElevID 		 int
 	currentFloor int
-	dir          ElevDir
+	Dir          ElevDir
 	doorTimer    *time.Timer
 	DoorState    bool
 	ElevState	 variables.ElevatorList
@@ -72,7 +72,7 @@ func elevatorLightsMatchQueue() {
 }
 
 func elevatorSetDir(newDirection ElevDir) {
-	elev.dir = newDirection
+	elev.Dir = newDirection
 	elevatorSetMotorDir(newDirection)
 }
 
@@ -85,7 +85,7 @@ func elevatorSetFloor(newFloor int) {
 }
 
 func elevatorGetDir() ElevDir {
-	return elev.dir
+	return elev.Dir
 }
 
 func elevatorGetFloor() int {

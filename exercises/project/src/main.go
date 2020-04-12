@@ -74,7 +74,7 @@ func main() {
 		case atFloor := <-drvFloors:
 			elevator.ElevatorListUpdate(ElevatorID, atFloor)
 			elev := elevator.ElevatorGetElev()
-			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, atFloor, elev.ElevState}
+			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, atFloor,int(elev.Dir), elev.ElevState}
 			fmt.Printf("elevstates%q\n", elev.ElevState)
 			elevTx <- msg
 		case stop := <-drvStop:
@@ -83,7 +83,7 @@ func main() {
 			elevator.FsmMessageReceivedHandler(messageReceived, ElevatorID)
 		case buttonCall := <-drvButtons:
 			elev := elevator.ElevatorGetElev()
-			msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor, elev.ElevState}
+			msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor,int(elev.Dir), elev.ElevState}
 			elevTx <- msg
 		case newPeerEvent := <-peerUpdateCh:
 			fmt.Printf("Peer update:\n")

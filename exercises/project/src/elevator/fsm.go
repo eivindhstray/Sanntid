@@ -8,16 +8,17 @@ import (
 	"../variables"
 )
 
-func FsmFloor(newFloor int) {
+func FsmFloor(newFloor int, dir ElevDir) {
 
 	//decisionAlgorithm(newFloor, elev.dir)
 	//Function that updates elevatorList with position and direction
 	elevatorSetNewFloor(newFloor)
-	if localQueueCheckCurrentFloorSameDir(newFloor, elev.dir) == true {
+	if localQueueCheckCurrentFloorSameDir(newFloor, elev.Dir) == true {
 		fsmDoorState()
 	}
+	localQueueRemoveOrder(newFloor, dir)
 	elevatorLightsMatchQueue()
-	elevatorSetDir(localQueueReturnElevDir(newFloor, elev.dir))
+	elevatorSetDir(localQueueReturnElevDir(newFloor, elev.Dir))
 
 }
 
@@ -38,12 +39,13 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 
 	elevatorLightsMatchQueue()
 	elev = ElevatorGetElev()
-	if elev.dir == Stop && !ElevatorGetDoorOpenState() {
-		if buttonPush.Floor == elev.currentFloor && elev.dir == Stop {
-			FsmFloor(elev.currentFloor)
+	previousDirection := elev.Dir
+	if elev.Dir == Stop && !ElevatorGetDoorOpenState() {
+		if buttonPush.Floor == elev.currentFloor && elev.Dir == Stop {
+			FsmFloor(elev.currentFloor,previousDirection)
 		}
 		if ElevatorGetDoorOpenState() == false {
-			elevatorSetDir(localQueueReturnElevDir(elev.currentFloor, elev.dir))
+			elevatorSetDir(localQueueReturnElevDir(elev.currentFloor, elev.Dir))
 		}
 	}
 }
@@ -54,6 +56,7 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, ID int) {
 	msgType := msg.MessageType
 	msgID := msg.ElevID
 	floor := msg.Floor
+	dir := msg.Dir
 	button := msg.Button
 	event := elevio.ButtonEvent{floor, elevio.ButtonType(button)}
 	switch msgType {
@@ -70,7 +73,7 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, ID int) {
 	case "FLOOR":
 		if msgID == ID {
 			fmt.Print("Floor\v%q", msgID)
-			FsmFloor(floor)
+			FsmFloor(floor,ElevDir(dir))
 		}
 		ElevatorListUpdate(msgID, floor)
 	case "ALIVE":
@@ -92,7 +95,6 @@ func fsmDoorState() {
 	<-elev.doorTimer.C
 	elevio.SetDoorOpenLamp(false)
 	ElevatorSetDoorOpenState(false)
-	fsmRemoveOrderHandler(elev)
 
 }
 
@@ -106,7 +108,3 @@ func FsmStop(a bool) {
 	elevatorLightsMatchQueue()
 }
 
-func fsmRemoveOrderHandler(elev Elevator) {
-	localQueueRemoveOrder(elev.currentFloor, elev.dir)
-	elevatorLightsMatchQueue()
-}

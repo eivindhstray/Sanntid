@@ -17,6 +17,7 @@ type ElevatorMessage struct {
 	MessageType string
 	Button      int //0 = hallup 1= halldown 2 = cab
 	Floor       int
+	Dir 		int
 	Elevators   ElevatorList
 }
 
