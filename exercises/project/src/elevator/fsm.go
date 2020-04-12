@@ -19,6 +19,8 @@ func FsmFloor(newFloor int, dir ElevDir) {
 	localQueueRemoveOrder(newFloor, dir)
 	elevatorLightsMatchQueue()
 	elevatorSetDir(localQueueReturnElevDir(newFloor, elev.Dir))
+	remoteQueuePrint()
+	localQueuePrint()
 
 }
 
@@ -33,8 +35,6 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 	}else{
 		localQueueRecieveOrder(buttonPush)
 	}
-	remoteQueuePrint()
-	localQueuePrint()
 	//----------------------------------------------
 
 	elevatorLightsMatchQueue()
