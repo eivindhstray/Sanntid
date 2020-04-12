@@ -73,8 +73,8 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, ID int) {
 	case "FLOOR":
 		if msgID == ID {
 			fmt.Print("Floor\v%q", msgID)
-			FsmFloor(floor, ElevDir(dir))
 		}
+		FsmFloor(floor, ElevDir(dir))
 		ElevatorListUpdate(msgID, floor)
 	case "ALIVE":
 		fmt.Println("Alive from", msgID)
