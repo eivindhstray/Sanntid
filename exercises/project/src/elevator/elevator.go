@@ -48,6 +48,7 @@ func ElevatorInit(ID int) {
 func elevatorSetNewFloor(newFloor int) {
 
 	elevatorSetFloor(newFloor)
+	elevio.SetFloorIndicator(newFloor)
 	switch newFloor {
 	case variables.N_FLOORS - 1:
 		elevatorSetDir(Down)

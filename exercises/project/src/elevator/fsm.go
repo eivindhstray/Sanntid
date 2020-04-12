@@ -31,7 +31,6 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent) {
 	localQueuePrint()
 	//----------------------------------------------
 
-	//localQueueRecieveOrder(buttonPush)
 	elevatorLightsMatchQueue()
 	elev = ElevatorGetElev()
 	if elev.dir == Stop && !ElevatorGetDoorOpenState() {
