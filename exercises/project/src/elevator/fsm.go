@@ -8,11 +8,13 @@ import (
 	"../variables"
 )
 
-func FsmFloor(newFloor int, dir ElevDir, ID int) {
+func FsmFloor(newFloor int, dir ElevDir, msgID int) {
 
 	//decisionAlgorithm(newFloor, elev.dir)
 	//Function that updates elevatorList with position and direction
-	if ID == elev.ElevID{
+	ElevatorListUpdate(msgID, newFloor)
+	fmt.Println(elev.ElevState,"   ",msgID,"   ", newFloor)
+	if msgID == elev.ElevID{
 		elevatorSetNewFloor(newFloor)
 	}
 	if localQueueCheckCurrentFloorSameDir(newFloor, elev.Dir) == true {
@@ -20,7 +22,9 @@ func FsmFloor(newFloor int, dir ElevDir, ID int) {
 	}
 	localQueueRemoveOrder(newFloor, dir)
 	elevatorLightsMatchQueue()
-	elevatorSetDir(localQueueReturnElevDir(newFloor, elev.Dir))
+	if msgID == elev.ElevID{
+		elevatorSetDir(localQueueReturnElevDir(newFloor, elev.Dir))
+	}
 	remoteQueuePrint()
 	localQueuePrint()
 
@@ -52,7 +56,7 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 	}
 }
 
-func FsmMessageReceivedHandler(msg variables.ElevatorMessage, ID int) {
+func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 	//sync the new message with queue
 	fmt.Println("received a message")
 	msgType := msg.MessageType
@@ -64,7 +68,7 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, ID int) {
 	switch msgType {
 	case "ORDER":
 		if button == 2 {
-			if msgID == ID {
+			if msgID == LocalID {
 				fsmOnButtonRequest(event, true)
 			} else {
 				fmt.Println("cabcall other elev")
@@ -73,11 +77,10 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, ID int) {
 			fsmOnButtonRequest(event, false)
 		}
 	case "FLOOR":
-		if msgID == ID {
+		if msgID == LocalID {
 			fmt.Print("Floor\v%q", msgID)
 		}
-		FsmFloor(floor, ElevDir(dir),elev.ElevID)
-		ElevatorListUpdate(msgID, floor)
+		FsmFloor(floor, ElevDir(dir),msgID)
 	case "ALIVE":
 		fmt.Println("Alive from", msgID)
 	default:
