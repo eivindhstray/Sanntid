@@ -7,6 +7,7 @@
 package elevator
 
 import (
+	"../elevio"
 	"../variables"
 )
 
@@ -56,10 +57,10 @@ func decisionAlgorithm(newFloor int, CurrentDirection ElevDir) {
 //The algorithm tuns through the queue to find the remote order.
 //The elevator with the lowest cost makes the order local.
 
-func decisionAlgorithm() {
+func decisionAlgorithm(buttonPush elevio.ButtonEvent) {
 	var CostArray [variables.N_ELEVATORS + 1]int
 	var correctFloor int
-	var correctButton int
+	//var correctButton int
 	//Init cost array
 	for elev := 1; elev < variables.N_ELEVATORS+1; elev++ {
 		CostArray[elev] = 0
@@ -76,7 +77,7 @@ func decisionAlgorithm() {
 						cost = -cost
 					}
 					correctFloor = floors
-					correctButton = buttons
+					//correctButton = buttons
 					if correctFloor > elev.ElevState[elevator][0] && elev.Dir == Down {
 						cost = cost + 10
 					}
@@ -101,6 +102,7 @@ func decisionAlgorithm() {
 
 	//Set local in queue of best elevator
 	if bestElev == elev.ElevID {
-		queueLocal[correctFloor][correctButton] = variables.LOCAL
+		localQueueRecieveOrder(buttonPush)
+		//queueLocal[correctFloor][correctButton] = variables.LOCAL
 	}
 }

@@ -29,10 +29,10 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 	fmt.Printf("%+v\n", buttonPush)
 
 	//----------Part that needs work ---------------
-	if !cabCall{
+	if !cabCall {
 		remoteQueueRecieveOrder(buttonPush)
-		decisionAlgorithm()
-	}else{
+		decisionAlgorithm(buttonPush)
+	} else {
 		localQueueRecieveOrder(buttonPush)
 	}
 	//----------------------------------------------
@@ -42,7 +42,7 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 	previousDirection := elev.Dir
 	if elev.Dir == Stop && !ElevatorGetDoorOpenState() {
 		if buttonPush.Floor == elev.currentFloor && elev.Dir == Stop {
-			FsmFloor(elev.currentFloor,previousDirection)
+			FsmFloor(elev.currentFloor, previousDirection)
 		}
 		if ElevatorGetDoorOpenState() == false {
 			elevatorSetDir(localQueueReturnElevDir(elev.currentFloor, elev.Dir))
@@ -73,7 +73,7 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, ID int) {
 	case "FLOOR":
 		if msgID == ID {
 			fmt.Print("Floor\v%q", msgID)
-			FsmFloor(floor,ElevDir(dir))
+			FsmFloor(floor, ElevDir(dir))
 		}
 		ElevatorListUpdate(msgID, floor)
 	case "ALIVE":
@@ -107,4 +107,3 @@ func FsmStop(a bool) {
 	LocalQueueInit()
 	elevatorLightsMatchQueue()
 }
-
