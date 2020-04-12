@@ -20,13 +20,17 @@ func FsmFloor(newFloor int) {
 
 }
 
-func fsmOnButtonRequest(buttonPush elevio.ButtonEvent) {
+func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 	fmt.Print("New order recieved")
 	fmt.Printf("%+v\n", buttonPush)
 
 	//----------Part that needs work ---------------
-	remoteQueueRecieveOrder(buttonPush)
-	decisionAlgorithm()
+	if !cabCall{
+		remoteQueueRecieveOrder(buttonPush)
+		decisionAlgorithm()
+	}else{
+		localQueueRecieveOrder(buttonPush)
+	}
 	remoteQueuePrint()
 	localQueuePrint()
 	//----------------------------------------------
@@ -55,12 +59,12 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, ID int) {
 	case "ORDER":
 		if button == 2 {
 			if msgID == ID {
-				fsmOnButtonRequest(event)
+				fsmOnButtonRequest(event, true)
 			} else {
 				fmt.Println("cabcall other elev")
 			}
 		} else {
-			fsmOnButtonRequest(event)
+			fsmOnButtonRequest(event, false)
 		}
 	case "FLOOR":
 		if msgID == ID {
