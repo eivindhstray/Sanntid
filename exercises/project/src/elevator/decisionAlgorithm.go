@@ -77,10 +77,10 @@ func decisionAlgorithm() {
 					}
 					correctFloor = floors
 					correctButton = buttons
-					if correctFloor > elev.ElevState[elevator][0] && elev.dir == Down {
+					if correctFloor > elev.ElevState[elevator][0] && elev.Dir == Down {
 						cost = cost + 10
 					}
-					if correctFloor < elev.ElevState[elevator][0] && elev.dir == Up {
+					if correctFloor < elev.ElevState[elevator][0] && elev.Dir == Up {
 						cost = cost + 10
 					}
 					CostArray[elevator] = cost
