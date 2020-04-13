@@ -53,7 +53,7 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 		if buttonPush.Floor == elev.currentFloor && elev.Dir == Stop {
 			FsmFloor(elev.currentFloor, previousDirection, elev.ElevID, cabCall)
 		}
-		if ElevatorGetDoorOpenState() == false {
+		if !ElevatorGetDoorOpenState() {
 			elevatorSetDir(localQueueReturnElevDir(elev.currentFloor, elev.Dir))
 		}
 	}
