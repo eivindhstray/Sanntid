@@ -96,7 +96,7 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 
 func fsmStartDoorState(doorTimer *time.Timer) {
 	fmt.Print("door")
-	elevatorSetMotorDir(Stop)
+	elevatorSetDir(Stop)
 	ElevatorSetDoorOpenState(true)
 	elevio.SetDoorOpenLamp(true)
 	doorTimer.Reset(variables.DOOROPENTIME * time.Second)
