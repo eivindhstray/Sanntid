@@ -8,7 +8,7 @@ import (
 	"../variables"
 )
 
-func FsmFloor(newFloor int, dir ElevDir, msgID int) {
+func FsmFloor(newFloor int, dir ElevDir, msgID int, cabCall bool) {
 
 	//decisionAlgorithm(newFloor, elev.dir)
 	//Function that updates elevatorList with position and direction
@@ -16,12 +16,15 @@ func FsmFloor(newFloor int, dir ElevDir, msgID int) {
 	fmt.Println(Elev.ElevState,"   ",msgID,"   ", newFloor)
 	if msgID == Elev.ElevID{
 		elevatorSetNewFloor(newFloor)
+		localQueueRemoveOrder(newFloor,dir)
 	}
 	if localQueueCheckCurrentFloorSameDir(newFloor, Elev.Dir) == true {
 		fsmStartDoorState(Elev.DoorTimer)
 	}
-	localQueueRemoveOrder(newFloor, dir)
-	elevatorLightsMatchQueue()
+	if !cabCall{
+		localQueueRemoveOrder(newFloor, dir)
+		elevatorLightsMatchQueue()
+	}
 	if msgID == Elev.ElevID{
 		elevatorSetDir(localQueueReturnElevDir(newFloor, Elev.Dir))
 	}
@@ -48,7 +51,7 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 	previousDirection := elev.Dir
 	if elev.Dir == Stop && !ElevatorGetDoorOpenState() {
 		if buttonPush.Floor == elev.currentFloor && elev.Dir == Stop {
-			FsmFloor(elev.currentFloor, previousDirection, elev.ElevID)
+			FsmFloor(elev.currentFloor, previousDirection, elev.ElevID, cabCall)
 		}
 		if ElevatorGetDoorOpenState() == false {
 			elevatorSetDir(localQueueReturnElevDir(elev.currentFloor, elev.Dir))
@@ -65,9 +68,13 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 	dir := msg.Dir
 	button := msg.Button
 	event := elevio.ButtonEvent{floor, elevio.ButtonType(button)}
+	cabCall := false
+	if button == 2{
+		cabCall = true
+	}
 	switch msgType {
 	case "ORDER":
-		if button == 2 {
+		if cabCall {
 			if msgID == LocalID {
 				fsmOnButtonRequest(event, true)
 			} else {
@@ -80,9 +87,7 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 		if msgID == LocalID {
 			fmt.Print("Floor\v%q", msgID)
 		}
-		FsmFloor(floor, ElevDir(dir),msgID)
-	case "ALIVE":
-		fmt.Println("Alive from", msgID)
+		FsmFloor(floor, ElevDir(dir),msgID, cabCall)
 	default:
 		fmt.Print("invalid message")
 	}
