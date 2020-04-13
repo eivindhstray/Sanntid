@@ -49,7 +49,7 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 	elevatorLightsMatchQueue()
 	fmt.Println("Direction: ", Elev.Dir)
 
-	if buttonPush.Floor == Elev.CurrentFloor {
+	if buttonPush.Floor == Elev.CurrentFloor && elevatorGetDir() == 0 {
 		FsmFloor(Elev.CurrentFloor, Elev.Dir, Elev.ElevID, cabCall)
 	}
 	if !ElevatorGetDoorOpenState() {
