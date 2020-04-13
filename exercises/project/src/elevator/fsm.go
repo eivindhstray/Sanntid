@@ -45,20 +45,15 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 	} else {
 		localQueueRecieveOrder(buttonPush)
 	}
-	//----------------------------------------------
-
-	//elevatorSetDir(localQueueReturnElevDir(Elev.currentFloor, Elev.Dir))
 
 	elevatorLightsMatchQueue()
-	elev := ElevatorGetElev()
-	previousDirection := elev.Dir
-	fmt.Println("Direction: ", elev.Dir)
+	fmt.Println("Direction: ", Elev.Dir)
 
-	if buttonPush.Floor == elev.currentFloor {
-		FsmFloor(elev.currentFloor, previousDirection, elev.ElevID, cabCall)
+	if buttonPush.Floor == Elev.currentFloor {
+		FsmFloor(Elev.currentFloor, Elev.Dir, Elev.ElevID, cabCall)
 	}
 	if !ElevatorGetDoorOpenState() {
-		elevatorSetDir(localQueueReturnElevDir(elev.currentFloor, elev.Dir))
+		elevatorSetDir(localQueueReturnElevDir(Elev.currentFloor, Elev.Dir))
 	}
 
 }
