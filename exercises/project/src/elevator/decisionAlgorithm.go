@@ -72,16 +72,16 @@ func decisionAlgorithm(buttonPush elevio.ButtonEvent) {
 		for floors := 0; floors < variables.N_FLOORS; floors++ {
 			for buttons := 0; buttons < variables.N_BUTTON_TYPES-1; buttons++ {
 				if queueLocal[floors][buttons] == variables.REMOTE {
-					cost = floors - elev.ElevState[elevator][0]
+					cost = floors - Elev.ElevState[elevator][0]
 					if cost < 0 {
 						cost = -cost
 					}
 					correctFloor = floors
 					//correctButton = buttons
-					if correctFloor > elev.ElevState[elevator][0] && elev.Dir == Down {
+					if correctFloor > Elev.ElevState[elevator][0] && Elev.Dir == Down {
 						cost = cost + 10
 					}
-					if correctFloor < elev.ElevState[elevator][0] && elev.Dir == Up {
+					if correctFloor < Elev.ElevState[elevator][0] && Elev.Dir == Up {
 						cost = cost + 10
 					}
 					CostArray[elevator] = cost
@@ -101,7 +101,7 @@ func decisionAlgorithm(buttonPush elevio.ButtonEvent) {
 	}
 
 	//Set local in queue of best elevator
-	if bestElev == elev.ElevID {
+	if bestElev == Elev.ElevID {
 		localQueueRecieveOrder(buttonPush)
 		//queueLocal[correctFloor][correctButton] = variables.LOCAL
 	}

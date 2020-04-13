@@ -10,7 +10,7 @@ import (
 
 type ElevDir int
 
-var elev Elevator
+var Elev Elevator
 
 const (
 	Up   ElevDir = 1
@@ -22,13 +22,13 @@ type Elevator struct {
 	ElevID 		 int
 	currentFloor int
 	Dir          ElevDir
-	doorTimer    *time.Timer
+	DoorTimer    *time.Timer
 	DoorState    bool
 	ElevState	 variables.ElevatorList
 }
 
 func ElevatorListUpdate(ID int,floor int) {
-	elev.ElevState[ID][0] = floor
+	Elev.ElevState[ID][0] = floor
 }
 
 func ElevatorInit(ID int) {
@@ -39,9 +39,8 @@ func ElevatorInit(ID int) {
 	}
 	elevatorSetDir(Stop)
 	elevatorSetFloor(elevio.GetFloor())
-	elev.doorTimer = time.NewTimer(0)
-	elev.ElevID = ID
-
+	Elev.ElevID = ID
+	Elev.DoorTimer = time.NewTimer(0)
 	fmt.Println("Elevator initialized")
 }
 
@@ -72,7 +71,7 @@ func elevatorLightsMatchQueue() {
 }
 
 func elevatorSetDir(newDirection ElevDir) {
-	elev.Dir = newDirection
+	Elev.Dir = newDirection
 	elevatorSetMotorDir(newDirection)
 }
 
@@ -81,25 +80,25 @@ func elevatorSetMotorDir(newDirection ElevDir) {
 }
 
 func elevatorSetFloor(newFloor int) {
-	elev.currentFloor = newFloor
+	Elev.currentFloor = newFloor
 }
 
 func elevatorGetDir() ElevDir {
-	return elev.Dir
+	return Elev.Dir
 }
 
 func elevatorGetFloor() int {
-	return elev.currentFloor
+	return Elev.currentFloor
 }
 
 func ElevatorSetDoorOpenState(state bool) {
-	elev.DoorState = state
+	Elev.DoorState = state
 }
 
 func ElevatorGetDoorOpenState() bool {
-	return elev.DoorState
+	return Elev.DoorState
 }
 
 func ElevatorGetElev() Elevator {
-	return elev
+	return Elev
 }

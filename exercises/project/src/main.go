@@ -13,7 +13,6 @@ import (
 	"./network/localip"
 	"./network/peers"
 	"./variables"
-	//"./watchdog"
 )
 
 func main() {
@@ -34,7 +33,6 @@ func main() {
 
 	elevator.ElevatorInit(ElevatorID)
 	elevator.LocalQueueInit()
-	//watchdog.WatchDogInit()
 	fmt.Println("Initialized")
 
 	var id string
@@ -58,8 +56,8 @@ func main() {
 	elevRx := make(chan variables.ElevatorMessage)
 	peerUpdateCh := make(chan peers.PeerUpdate)
 	peerTxEnable := make(chan bool)
-	//watchDogTimeOut := make(chan bool)
-
+	timeOut := time.NewTimer(0)
+	DoorTimer := elevator.Elev.DoorTimer
 	go elevio.PollButtons(drvButtons)
 	go elevio.PollFloorSensor(drvFloors)
 	go elevio.PollStopButton(drvStop)
@@ -67,7 +65,7 @@ func main() {
 	go bcast.Transmitter(15648, elevTx)
 	go peers.Transmitter(15647, id, peerTxEnable)
 	go peers.Receiver(15647, peerUpdateCh)
-	//go watchdog.WatchDogTimeNSeconds(watchDogTimeOut)
+
 
 	for {
 		select {
@@ -77,6 +75,7 @@ func main() {
 			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, atFloor,int(elev.Dir), elev.ElevState}
 			fmt.Printf("elevstates%q\n", elev.ElevState)
 			elevTx <- msg
+			timeOut.Reset(2*time.Second)
 		case stop := <-drvStop:
 			elevator.FsmStop(stop)
 		case messageReceived := <-elevRx:
@@ -85,6 +84,11 @@ func main() {
 			elev := elevator.ElevatorGetElev()
 			msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor,int(elev.Dir), elev.ElevState}
 			elevTx <- msg
+		case <- timeOut.C:
+			fmt.Printf("Timer fired")
+		case <- DoorTimer.C:
+			elevator.FsmExitDoorState(elevator.Elev.DoorTimer)
+
 		case newPeerEvent := <-peerUpdateCh:
 			fmt.Printf("Peer update:\n")
 			fmt.Printf("  Peers:    %q\n", newPeerEvent.Peers)

@@ -13,17 +13,17 @@ func FsmFloor(newFloor int, dir ElevDir, msgID int) {
 	//decisionAlgorithm(newFloor, elev.dir)
 	//Function that updates elevatorList with position and direction
 	ElevatorListUpdate(msgID, newFloor)
-	fmt.Println(elev.ElevState,"   ",msgID,"   ", newFloor)
-	if msgID == elev.ElevID{
+	fmt.Println(Elev.ElevState,"   ",msgID,"   ", newFloor)
+	if msgID == Elev.ElevID{
 		elevatorSetNewFloor(newFloor)
 	}
-	if localQueueCheckCurrentFloorSameDir(newFloor, elev.Dir) == true {
-		fsmDoorState()
+	if localQueueCheckCurrentFloorSameDir(newFloor, Elev.Dir) == true {
+		fsmStartDoorState(Elev.DoorTimer)
 	}
 	localQueueRemoveOrder(newFloor, dir)
 	elevatorLightsMatchQueue()
-	if msgID == elev.ElevID{
-		elevatorSetDir(localQueueReturnElevDir(newFloor, elev.Dir))
+	if msgID == Elev.ElevID{
+		elevatorSetDir(localQueueReturnElevDir(newFloor, Elev.Dir))
 	}
 	remoteQueuePrint()
 	localQueuePrint()
@@ -44,7 +44,7 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 	//----------------------------------------------
 
 	elevatorLightsMatchQueue()
-	elev = ElevatorGetElev()
+	elev := ElevatorGetElev()
 	previousDirection := elev.Dir
 	if elev.Dir == Stop && !ElevatorGetDoorOpenState() {
 		if buttonPush.Floor == elev.currentFloor && elev.Dir == Stop {
@@ -90,24 +90,25 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 
 }
 
-func fsmDoorState() {
+func fsmStartDoorState(doorTimer *time.Timer) {
 	fmt.Print("door")
 	elevatorSetMotorDir(Stop)
 	ElevatorSetDoorOpenState(true)
 	elevio.SetDoorOpenLamp(true)
-	elev.doorTimer.Stop()
-	elev.doorTimer.Reset(variables.DOOROPENTIME * time.Second)
-	<-elev.doorTimer.C
-	elevio.SetDoorOpenLamp(false)
-	ElevatorSetDoorOpenState(false)
+	doorTimer.Reset(variables.DOOROPENTIME * time.Second)
+}
 
+func FsmExitDoorState(doorTimer *time.Timer){
+	doorTimer.Stop()
+	ElevatorSetDoorOpenState(false)
+	elevio.SetDoorOpenLamp(false)
 }
 
 //From project destription in the course embedded systems
 func FsmStop(a bool) {
 	fmt.Print("Stop state")
 	fmt.Printf("%+v\n", a)
-	elev = ElevatorGetElev()
+	elev := ElevatorGetElev()
 	ElevatorInit(elev.ElevID)
 	LocalQueueInit()
 	elevatorLightsMatchQueue()
