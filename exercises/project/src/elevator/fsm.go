@@ -16,7 +16,6 @@ func FsmFloor(newFloor int, dir ElevDir, msgID int, cabCall bool) {
 	fmt.Println(Elev.ElevState,"   ",msgID,"   ", newFloor)
 	if msgID == Elev.ElevID{
 		elevatorSetNewFloor(newFloor)
-		localQueueRemoveOrder(newFloor,dir)
 		elevatorLightsMatchQueue()
 	}
 	if localQueueCheckCurrentFloorSameDir(newFloor, Elev.Dir) == true {
@@ -26,7 +25,7 @@ func FsmFloor(newFloor int, dir ElevDir, msgID int, cabCall bool) {
 		localQueueRemoveOrder(newFloor, dir)
 		elevatorLightsMatchQueue()
 	}
-	if msgID == Elev.ElevID{
+	if !Elev.DoorState{
 		elevatorSetDir(localQueueReturnElevDir(newFloor, Elev.Dir))
 	}
 	remoteQueuePrint()
