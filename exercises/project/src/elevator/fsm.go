@@ -37,7 +37,6 @@ func FsmFloor(newFloor int, dir ElevDir, msgID int, cabCall bool) {
 func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 	fmt.Print("New order recieved")
 	fmt.Printf("%+v\n", buttonPush)
-
 	//----------Part that needs work ---------------
 	if !cabCall {
 		remoteQueueRecieveOrder(buttonPush)
@@ -49,7 +48,7 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 	elevatorLightsMatchQueue()
 	fmt.Println("Direction: ", Elev.Dir)
 
-	if buttonPush.Floor == Elev.CurrentFloor && elevatorGetDir() == 0 {
+	if buttonPush.Floor == Elev.CurrentFloor && elevatorGetDir() == Stop {
 		FsmFloor(Elev.CurrentFloor, Elev.Dir, Elev.ElevID, cabCall)
 	}
 	if !ElevatorGetDoorOpenState() {

@@ -42,6 +42,8 @@ func ElevatorInit(ID int) {
 	elevatorSetFloor(elevio.GetFloor())
 	Elev.ElevID = ID
 	Elev.DoorTimer = time.NewTimer(0)
+	ElevatorSetDoorOpenState(false)
+	elevio.SetDoorOpenLamp(false)
 	fmt.Println("Elevator initialized")
 }
 
