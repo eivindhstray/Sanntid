@@ -7,11 +7,11 @@
 package elevator
 
 import (
+	"fmt"
+
 	"../elevio"
 	"../variables"
 )
-
-
 
 //decisionAlgorithm making a choice every time a new order is stashed into queue remote.
 //The algorithm tuns through the queue to find the remote order.
@@ -20,7 +20,7 @@ import (
 func decisionAlgorithm(buttonPush elevio.ButtonEvent) {
 	var CostArray [variables.N_ELEVATORS + 1]int
 	var correctFloor int
-	//var correctButton int
+	var correctButton int
 	//Init cost array
 	for elev := 1; elev < variables.N_ELEVATORS+1; elev++ {
 		CostArray[elev] = 0
@@ -37,18 +37,25 @@ func decisionAlgorithm(buttonPush elevio.ButtonEvent) {
 						cost = -cost
 					}
 					correctFloor = floors
-					//correctButton = buttons
-					if correctFloor > Elev.ElevState[elevator][0] && Elev.Dir == Down {
+					correctButton = buttons
+
+					if correctFloor >= Elev.ElevState[elevator][0] && Elev.ElevState[elevator][1] == -1 {
 						cost = cost + 10
 					}
-					if correctFloor < Elev.ElevState[elevator][0] && Elev.Dir == Up {
+					if correctFloor <= Elev.ElevState[elevator][0] && Elev.ElevState[elevator][1] == 1 {
 						cost = cost + 10
 					}
+
 					CostArray[elevator] = cost
+					fmt.Println("Elevator #: ", elevator, "%n Cost: ", cost)
 				}
 			}
 		}
 	}
+	/*
+		for i := 0; i < variables.N_ELEVATORS+1; i++ {
+			fmt.Println("Elev ", i, "costvalue ", CostArray[i])
+		}*/
 
 	//Find best elevator
 	var bestElev int
@@ -56,13 +63,17 @@ func decisionAlgorithm(buttonPush elevio.ButtonEvent) {
 	for elevator := 2; elevator < variables.N_ELEVATORS+1; elevator++ {
 		if CostArray[elevator] < CostArray[bestElev] {
 			bestElev = elevator
+			//fmt.Println("Elevator:", elevator)
+			//fmt.Println("Bestelev:", bestElev)
 		}
 
 	}
+	fmt.Println("Best elevator : ", bestElev)
+	fmt.Println("Elevator ID : ", Elev.ElevID)
 
 	//Set local in queue of best elevator
 	if bestElev == Elev.ElevID {
-		localQueueRecieveOrder(buttonPush)
-		//queueLocal[correctFloor][correctButton] = variables.LOCAL
+		//localQueueRecieveOrder(buttonPush)
+		queueLocal[correctFloor][correctButton] = variables.LOCAL
 	}
 }

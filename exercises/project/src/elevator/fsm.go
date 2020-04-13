@@ -12,24 +12,25 @@ func FsmFloor(newFloor int, dir ElevDir, msgID int, cabCall bool) {
 
 	//decisionAlgorithm(newFloor, elev.dir)
 	//Function that updates elevatorList with position and direction
-	ElevatorListUpdate(msgID, newFloor)
-	fmt.Println(Elev.ElevState,"   ",msgID,"   ", newFloor)
-	if msgID == Elev.ElevID{
+	//ElevatorListUpdate(msgID, newFloor, Elev.Dir)
+	fmt.Println(Elev.ElevState, "   ", msgID, "   ", newFloor)
+	if msgID == Elev.ElevID {
 		elevatorSetNewFloor(newFloor)
 		elevatorLightsMatchQueue()
 	}
 	if localQueueCheckCurrentFloorSameDir(newFloor, Elev.Dir) == true {
 		fsmStartDoorState(Elev.DoorTimer)
 	}
-	if !cabCall{
+	if !cabCall {
 		localQueueRemoveOrder(newFloor, dir)
 		elevatorLightsMatchQueue()
 	}
-	if !Elev.DoorState{
+	if !Elev.DoorState {
 		elevatorSetDir(localQueueReturnElevDir(newFloor, Elev.Dir))
 	}
 	remoteQueuePrint()
 	localQueuePrint()
+	ElevatorListUpdate(msgID, newFloor, Elev.Dir)
 
 }
 
@@ -46,17 +47,20 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 	}
 	//----------------------------------------------
 
+	//elevatorSetDir(localQueueReturnElevDir(Elev.currentFloor, Elev.Dir))
+
 	elevatorLightsMatchQueue()
 	elev := ElevatorGetElev()
 	previousDirection := elev.Dir
-	if elev.Dir == Stop && !ElevatorGetDoorOpenState() {
-		if buttonPush.Floor == elev.currentFloor && elev.Dir == Stop {
-			FsmFloor(elev.currentFloor, previousDirection, elev.ElevID, cabCall)
-		}
-		if !ElevatorGetDoorOpenState() {
-			elevatorSetDir(localQueueReturnElevDir(elev.currentFloor, elev.Dir))
-		}
+	fmt.Println("Direction: ", elev.Dir)
+
+	if buttonPush.Floor == elev.currentFloor {
+		FsmFloor(elev.currentFloor, previousDirection, elev.ElevID, cabCall)
 	}
+	if !ElevatorGetDoorOpenState() {
+		elevatorSetDir(localQueueReturnElevDir(elev.currentFloor, elev.Dir))
+	}
+
 }
 
 func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
@@ -69,7 +73,7 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 	button := msg.Button
 	event := elevio.ButtonEvent{floor, elevio.ButtonType(button)}
 	cabCall := false
-	if button == 2{
+	if button == 2 {
 		cabCall = true
 	}
 	switch msgType {
@@ -87,7 +91,7 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 		if msgID == LocalID {
 			fmt.Print("Floor\v%q", msgID)
 		}
-		FsmFloor(floor, ElevDir(dir),msgID, cabCall)
+		FsmFloor(floor, ElevDir(dir), msgID, cabCall)
 	default:
 		fmt.Print("invalid message")
 	}
@@ -103,7 +107,7 @@ func fsmStartDoorState(doorTimer *time.Timer) {
 	doorTimer.Reset(variables.DOOROPENTIME * time.Second)
 }
 
-func FsmExitDoorState(doorTimer *time.Timer){
+func FsmExitDoorState(doorTimer *time.Timer) {
 	doorTimer.Stop()
 	ElevatorSetDoorOpenState(false)
 	elevio.SetDoorOpenLamp(false)

@@ -66,27 +66,26 @@ func main() {
 	go peers.Transmitter(15647, id, peerTxEnable)
 	go peers.Receiver(15647, peerUpdateCh)
 
-
 	for {
 		select {
 		case atFloor := <-drvFloors:
-			elevator.ElevatorListUpdate(ElevatorID, atFloor)
+			elevator.ElevatorListUpdate(ElevatorID, atFloor, elevator.Elev.Dir)
 			elev := elevator.ElevatorGetElev()
-			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, atFloor,int(elev.Dir), elev.ElevState}
+			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, atFloor, int(elev.Dir), elev.ElevState}
 			fmt.Printf("elevstates%q\n", elev.ElevState)
 			elevTx <- msg
-			timeOut.Reset(2*time.Second)
+			timeOut.Reset(2 * time.Second)
 		case stop := <-drvStop:
 			elevator.FsmStop(stop)
 		case messageReceived := <-elevRx:
 			elevator.FsmMessageReceivedHandler(messageReceived, ElevatorID)
 		case buttonCall := <-drvButtons:
 			elev := elevator.ElevatorGetElev()
-			msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor,int(elev.Dir), elev.ElevState}
+			msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor, int(elev.Dir), elev.ElevState}
 			elevTx <- msg
-		case <- timeOut.C:
+		case <-timeOut.C:
 			fmt.Printf("Timer fired")
-		case <- DoorTimer.C:
+		case <-DoorTimer.C:
 			elevator.FsmExitDoorState(elevator.Elev.DoorTimer)
 
 		case newPeerEvent := <-peerUpdateCh:

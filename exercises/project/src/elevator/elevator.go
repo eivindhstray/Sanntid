@@ -19,16 +19,17 @@ const (
 )
 
 type Elevator struct {
-	ElevID 		 int
+	ElevID       int
 	currentFloor int
 	Dir          ElevDir
 	DoorTimer    *time.Timer
 	DoorState    bool
-	ElevState	 variables.ElevatorList
+	ElevState    variables.ElevatorList
 }
 
-func ElevatorListUpdate(ID int,floor int) {
+func ElevatorListUpdate(ID int, floor int, newDirection ElevDir) {
 	Elev.ElevState[ID][0] = floor
+	Elev.ElevState[ID][1] = int(newDirection)
 }
 
 func ElevatorInit(ID int) {
@@ -61,7 +62,7 @@ func elevatorSetNewFloor(newFloor int) {
 func elevatorLightsMatchQueue() {
 	for floor := 0; floor < variables.N_FLOORS; floor++ {
 		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
-			if queueLocal[floor][button] == variables.LOCAL || queueLocal[floor][button] == variables.REMOTE {
+			if queueLocal[floor][button] == variables.LOCAL { //|| queueLocal[floor][button] == variables.REMOTE {
 				elevio.SetButtonLamp(elevio.ButtonType(button), floor, true)
 			} else {
 				elevio.SetButtonLamp(elevio.ButtonType(button), floor, false)

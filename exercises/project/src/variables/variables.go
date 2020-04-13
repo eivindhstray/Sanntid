@@ -17,7 +17,7 @@ type ElevatorMessage struct {
 	MessageType string
 	Button      int //0 = hallup 1= halldown 2 = cab
 	Floor       int
-	Dir 		int
+	Dir         int
 	Elevators   ElevatorList
 }
 
@@ -29,7 +29,7 @@ const (
 	LOCAL                 = 2
 )
 
-type ElevatorList [N_ELEVATORS + 1][1]int //N x 2 array with info on the
+type ElevatorList [N_ELEVATORS + 1][2]int //N x 2 array with info on the
 //elevators
 //For 2 elev
 
