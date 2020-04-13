@@ -87,6 +87,8 @@ func main() {
 			fmt.Printf("Timer fired")
 		case <-DoorTimer.C:
 			elevator.FsmExitDoorState(elevator.Elev.DoorTimer)
+			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, elevator.Elev.CurrentFloor, int(elevator.Elev.Dir), elevator.Elev.ElevState}
+			elevTx<-msg
 
 		case newPeerEvent := <-peerUpdateCh:
 			fmt.Printf("Peer update:\n")

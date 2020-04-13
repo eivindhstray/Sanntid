@@ -20,7 +20,7 @@ const (
 
 type Elevator struct {
 	ElevID       int
-	currentFloor int
+	CurrentFloor int
 	Dir          ElevDir
 	DoorTimer    *time.Timer
 	DoorState    bool
@@ -81,7 +81,7 @@ func elevatorSetMotorDir(newDirection ElevDir) {
 }
 
 func elevatorSetFloor(newFloor int) {
-	Elev.currentFloor = newFloor
+	Elev.CurrentFloor = newFloor
 }
 
 func elevatorGetDir() ElevDir {
@@ -89,7 +89,7 @@ func elevatorGetDir() ElevDir {
 }
 
 func elevatorGetFloor() int {
-	return Elev.currentFloor
+	return Elev.CurrentFloor
 }
 
 func ElevatorSetDoorOpenState(state bool) {
