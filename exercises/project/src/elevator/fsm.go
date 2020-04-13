@@ -17,6 +17,7 @@ func FsmFloor(newFloor int, dir ElevDir, msgID int, cabCall bool) {
 	if msgID == Elev.ElevID{
 		elevatorSetNewFloor(newFloor)
 		localQueueRemoveOrder(newFloor,dir)
+		elevatorLightsMatchQueue()
 	}
 	if localQueueCheckCurrentFloorSameDir(newFloor, Elev.Dir) == true {
 		fsmStartDoorState(Elev.DoorTimer)
