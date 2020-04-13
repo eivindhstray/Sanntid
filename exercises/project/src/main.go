@@ -69,7 +69,7 @@ func main() {
 	for {
 		select {
 		case atFloor := <-drvFloors:
-			elevator.ElevatorListUpdate(ElevatorID, atFloor, elevator.Elev.Dir)
+			elevator.ElevatorListUpdate(ElevatorID, atFloor, elevator.Elev.Dir, elevator.Elev.ElevOnline)
 			elev := elevator.ElevatorGetElev()
 			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, atFloor, int(elev.Dir), elev.ElevState}
 			fmt.Printf("elevstates%q\n", elev.ElevState)

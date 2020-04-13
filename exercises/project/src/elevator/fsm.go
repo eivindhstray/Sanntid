@@ -30,7 +30,7 @@ func FsmFloor(newFloor int, dir ElevDir, msgID int, cabCall bool) {
 	}
 	remoteQueuePrint()
 	localQueuePrint()
-	ElevatorListUpdate(msgID, newFloor, Elev.Dir)
+	ElevatorListUpdate(msgID, newFloor, Elev.Dir, Elev.ElevOnline)
 
 }
 

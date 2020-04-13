@@ -29,7 +29,7 @@ const (
 	LOCAL                 = 2
 )
 
-type ElevatorList [N_ELEVATORS + 1][2]int //N x 2 array with info on the
+type ElevatorList [N_ELEVATORS + 1][3]int //N x 2 array with info on the
 //elevators
 //For 2 elev
 
