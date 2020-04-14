@@ -34,7 +34,7 @@ func ElevatorListUpdate(ID int, floor int, newDirection ElevDir, connectionStatu
 	Elev.ElevState[ID][2] = connectionStatus
 }
 
-func ElevatorSetConnectionStatus(connectionStatus int, ID int){
+func ElevatorSetConnectionStatus(connectionStatus int, ID int) {
 	Elev.ElevState[ID][2] = connectionStatus
 }
 
@@ -50,6 +50,7 @@ func ElevatorInit(ID int) {
 	Elev.DoorTimer = time.NewTimer(0)
 	ElevatorSetDoorOpenState(false)
 	elevio.SetDoorOpenLamp(false)
+	ElevatorListUpdate(Elev.ElevID, Elev.CurrentFloor, Elev.Dir, Elev.ElevOnline)
 	fmt.Println("Elevator initialized")
 }
 
