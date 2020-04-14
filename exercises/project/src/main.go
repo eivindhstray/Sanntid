@@ -74,7 +74,11 @@ func main() {
 			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, atFloor, int(elev.Dir), elev.ElevState}
 			fmt.Printf("elevstates%q\n", elev.ElevState)
 			elevTx <- msg
-			timeOut.Reset(2 * time.Second)
+			if !elevator.CheckLocalQueueEmpty(){
+				timeOut.Reset(2 * time.Second)
+			}else{
+				timeOut.Stop()
+			}
 		case stop := <-drvStop:
 			elevator.FsmStop(stop)
 		case messageReceived := <-elevRx:
