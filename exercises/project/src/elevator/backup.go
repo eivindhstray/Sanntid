@@ -12,29 +12,17 @@ import (
 	"../variables"
 )
 
-
-
 var backupQueue [variables.N_FLOORS][variables.N_BUTTON_TYPES]variables.QueueOrderType
 
-func backupInit() {
+func BackupSyncQueue() {
 	for i := 0; i < variables.N_FLOORS; i++ {
 		for j := 0; j < variables.N_FLOORS; j++ {
-			backupQueue[i][j] = queueLocal[i][j]
-		}
-	}
-	fmt.Println("Backup queue initialized")
-}
-
-//To be called every time a order is recieved or completed
-func backupSync() {
-	for i := 0; i < variables.N_FLOORS; i++ {
-		for j := 0; j < variables.N_BUTTON_TYPES; j++ {
-			if backupQueue[i][j] != queueLocal[i][j] {
-				backupQueue[i][j] = queueLocal[i][j]
+			if queueLocal[i][j] == variables.LOCAL || queueLocal[i][j] == variables.REMOTE {
+				backupQueue[i][j] = variables.REMOTE
 			}
 		}
 	}
-	fmt.Println("Backup queue synced")
+	fmt.Println("Backup queue syncreonised")
 }
 
 //Only to be used in case of backwards recovery

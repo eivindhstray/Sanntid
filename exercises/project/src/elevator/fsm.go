@@ -32,7 +32,7 @@ func FsmFloor(newFloor int, dir ElevDir, msgID int, cabCall bool) {
 func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 	fmt.Print("New order recieved")
 	fmt.Printf("%+v\n", buttonPush)
-	//----------Part that needs work ---------------
+
 	if !cabCall {
 		remoteQueueRecieveOrder(buttonPush)
 		decisionAlgorithm(buttonPush)
