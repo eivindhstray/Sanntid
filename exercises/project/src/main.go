@@ -90,6 +90,7 @@ func main() {
 		case <-timeOut.C:
 			fmt.Printf("Timer fired")
 			elevator.ElevatorSetConnectionStatus(100,ElevatorID)
+			
 		case <-DoorTimer.C:
 			elevator.FsmExitDoorState(elevator.Elev.DoorTimer)
 

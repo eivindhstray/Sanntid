@@ -14,7 +14,6 @@ type PeerUpdate struct {
 	Lost  []string
 }
 
-var p PeerUpdate 
 
 const interval = 15 * time.Millisecond
 const timeout = 50 * time.Millisecond
@@ -40,6 +39,9 @@ func Receiver(port int, peerUpdateCh chan<- PeerUpdate) {
 
 	var buf [1024]byte
 	lastSeen := make(map[string]time.Time)
+
+
+	var p PeerUpdate 
 
 	conn := conn.DialBroadcastUDP(port)
 
