@@ -74,15 +74,15 @@ func main() {
 			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, atFloor, int(elev.Dir), elev.ElevState}
 			fmt.Printf("elevstates%q\n", elev.ElevState)
 			elevTx <- msg
+		case stop := <-drvStop:
+			elevator.FsmStop(stop)
+		case messageReceived := <-elevRx:
+			elevator.FsmMessageReceivedHandler(messageReceived, ElevatorID)
 			if !elevator.CheckLocalQueueEmpty(){
 				timeOut.Reset(5 * time.Second)
 			}else{
 				timeOut.Stop()
 			}
-		case stop := <-drvStop:
-			elevator.FsmStop(stop)
-		case messageReceived := <-elevRx:
-			elevator.FsmMessageReceivedHandler(messageReceived, ElevatorID)
 		case buttonCall := <-drvButtons:
 			elev := elevator.ElevatorGetElev()
 			msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor, int(elev.Dir), elev.ElevState}

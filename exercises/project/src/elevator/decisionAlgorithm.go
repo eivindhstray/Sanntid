@@ -47,9 +47,9 @@ func decisionAlgorithm(buttonPush elevio.ButtonEvent) {
 					}
 
 					//Added ----------------------------------
-					if Elev.ElevState[elevator][2] == 1 {
-						cost = cost + 1000
-					}
+					cost = cost + Elev.ElevState[elevator][2]
+					
+					
 					//----------------------------------------
 					CostArray[elevator] = cost
 					fmt.Println("Elevator #: ", elevator, "%n Cost: ", cost)
