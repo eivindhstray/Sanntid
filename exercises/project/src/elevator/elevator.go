@@ -31,9 +31,11 @@ type Elevator struct {
 func ElevatorListUpdate(ID int, floor int, newDirection ElevDir, connectionStatus int) {
 	Elev.ElevState[ID][0] = floor
 	Elev.ElevState[ID][1] = int(newDirection)
-	//Added -------------------------------------
 	Elev.ElevState[ID][2] = connectionStatus
-	//------------------------------------------
+}
+
+func ElevatorSetConnectionStatus(connectionStatus int, ID int){
+	Elev.ElevState[ID][2] = connectionStatus
 }
 
 func ElevatorInit(ID int) {

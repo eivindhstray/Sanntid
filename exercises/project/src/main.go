@@ -75,7 +75,7 @@ func main() {
 			fmt.Printf("elevstates%q\n", elev.ElevState)
 			elevTx <- msg
 			if !elevator.CheckLocalQueueEmpty(){
-				timeOut.Reset(2 * time.Second)
+				timeOut.Reset(5 * time.Second)
 			}else{
 				timeOut.Stop()
 			}
@@ -89,6 +89,7 @@ func main() {
 			elevTx <- msg
 		case <-timeOut.C:
 			fmt.Printf("Timer fired")
+			elevator.ElevatorSetConnectionStatus(100,ElevatorID)
 		case <-DoorTimer.C:
 			elevator.FsmExitDoorState(elevator.Elev.DoorTimer)
 
