@@ -112,3 +112,8 @@ func ElevatorGetDoorOpenState() bool {
 func ElevatorGetElev() Elevator {
 	return Elev
 }
+
+//---------------------------------------------------------------
+func ElevatorChannelGetDir(reciever chan<- ElevDir) {
+	reciever <- Elev.Dir
+}
