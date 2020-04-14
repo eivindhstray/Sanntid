@@ -80,10 +80,13 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 		if msgID == LocalID {
 			fmt.Print("Floor\v%q", msgID)
 		}
+		for elevio.GetFloor() == -1 {
+		}
+		elevatorSetDir(Stop)
 		FsmFloor(floor, ElevDir(dir), msgID, cabCall)
 	case "FAULTY_MOTOR":
-		if msgID == LocalID{
-			ElevatorSetConnectionStatus(variables.NEW_FLOOR_TIMEOUT_PENALTY,msgID)
+		if msgID == LocalID {
+			ElevatorSetConnectionStatus(variables.NEW_FLOOR_TIMEOUT_PENALTY, msgID)
 		}
 		if msgID != LocalID && Elev.Dir == Stop {
 			FsmFloor(Elev.CurrentFloor, Elev.Dir, LocalID, false)
@@ -107,7 +110,7 @@ func FsmExitDoorState(doorTimer *time.Timer) {
 	doorTimer.Stop()
 	ElevatorSetDoorOpenState(false)
 	elevio.SetDoorOpenLamp(false)
-	FsmFloor(Elev.CurrentFloor,Elev.Dir,Elev.ElevID,false)
+	FsmFloor(Elev.CurrentFloor, Elev.Dir, Elev.ElevID, false)
 }
 
 //From project destription in the course embedded systems
