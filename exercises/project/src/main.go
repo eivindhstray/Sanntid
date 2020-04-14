@@ -74,6 +74,10 @@ func main() {
 	go peers.Transmitter(15647, id, peerTxEnable)
 	go peers.Receiver(15647, peerUpdateCh)
 
+	elevator.ElevatorListUpdate(elevator.Elev.ElevID, elevator.Elev.CurrentFloor, elevator.Elev.Dir, elevator.Elev.ElevOnline)
+	msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, elevator.Elev.CurrentFloor, int(elevator.Elev.Dir), elevator.Elev.ElevState}
+	elevTx <- msg
+
 
 	for {
 		select {
@@ -88,8 +92,9 @@ func main() {
 		case elevatorMessageReceived := <-elevRx:
 			elevator.FsmMessageReceivedHandler(elevatorMessageReceived, ElevatorID)
 			if !elevator.CheckLocalQueueEmpty(){
+
 				timeOut.Reset(5 * time.Second)
-			}else{
+			} else {
 				timeOut.Stop()
 			}
 		case queueMessageReceived := <- queueRx:
@@ -100,12 +105,13 @@ func main() {
 			elevTx <- msg
 		case <-timeOut.C:
 			fmt.Printf("Timer fired")
-			elevator.ElevatorSetConnectionStatus(variables.NEW_FLOOR_TIMEOUT_PENALTY,ElevatorID)
+			elevator.ElevatorSetConnectionStatus(variables.NEW_FLOOR_TIMEOUT_PENALTY, ElevatorID)
 			elev := elevator.ElevatorGetElev()
 			msg := variables.ElevatorMessage{ElevatorID,"FAULTY_MOTOR", -1, -1, int(elev.Dir), elev.ElevState}
 			elevTx<-msg
 		
 			
+
 		case <-DoorTimer.C:
 			elevator.FsmExitDoorState(elevator.Elev.DoorTimer)
 
