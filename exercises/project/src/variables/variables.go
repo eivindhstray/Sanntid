@@ -7,7 +7,7 @@ const DOOROPENTIME = 2
 
 const N_ELEVATORS = 2
 const ELEVATOR_STATE = 2
-
+const NEW_FLOOR_TIMEOUT_PENALTY = 100
 var ElevatorID string
 
 //message

@@ -89,7 +89,8 @@ func main() {
 			elevTx <- msg
 		case <-timeOut.C:
 			fmt.Printf("Timer fired")
-			elevator.ElevatorSetConnectionStatus(100,ElevatorID)
+			elevator.ElevatorSetConnectionStatus(variables.NEW_FLOOR_TIMEOUT_PENALTY,ElevatorID)
+
 			
 		case <-DoorTimer.C:
 			elevator.FsmExitDoorState(elevator.Elev.DoorTimer)
