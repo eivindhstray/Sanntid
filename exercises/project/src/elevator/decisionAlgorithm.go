@@ -33,7 +33,7 @@ func decisionAlgorithm(buttonPush elevio.ButtonEvent) {
 		for floors := 0; floors < variables.N_FLOORS; floors++ {
 			for buttons := 0; buttons < variables.N_BUTTON_TYPES-1; buttons++ {
 				if queueLocal[floors][buttons] == variables.REMOTE {
-					cost = floors - Elev.ElevState[elevator][0]
+					cost = floors - 10*Elev.ElevState[elevator][0]
 					if cost < 0 {
 						cost = -cost
 					}
@@ -48,7 +48,7 @@ func decisionAlgorithm(buttonPush elevio.ButtonEvent) {
 					}
 
 					//Added ----------------------------------
-					cost = cost + 10*Elev.ElevState[elevator][2]
+					cost = cost + Elev.ElevState[elevator][2]
 					
 					
 					//----------------------------------------
