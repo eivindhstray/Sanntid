@@ -31,8 +31,8 @@ func main() {
 	elevio.Init("localhost:"+cmd, variables.N_FLOORS)
 	//go run main.go portnr id
 
-	elevator.ElevatorInit(ElevatorID)
 	elevator.LocalQueueInit()
+	elevator.ElevatorInit(ElevatorID)
 	fmt.Println("Initialized")
 
 	var id string
