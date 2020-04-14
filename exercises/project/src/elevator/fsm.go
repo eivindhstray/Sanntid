@@ -105,6 +105,7 @@ func FsmExitDoorState(doorTimer *time.Timer) {
 	doorTimer.Stop()
 	ElevatorSetDoorOpenState(false)
 	elevio.SetDoorOpenLamp(false)
+	FsmFloor(Elev.CurrentFloor,Elev.Dir,Elev.ElevID,false)
 }
 
 //From project destription in the course embedded systems

@@ -82,7 +82,6 @@ func main() {
 		case stop := <-drvStop:
 			elevator.FsmStop(stop)
 		case messageReceived := <-elevRx:
-			timeOut.Reset(5 *time.Second)
 			elevator.FsmMessageReceivedHandler(messageReceived, ElevatorID)
 		case buttonCall := <-drvButtons:
 			elev := elevator.ElevatorGetElev()
