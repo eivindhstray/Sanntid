@@ -30,8 +30,12 @@ func main() {
 	}
 	elevio.Init("localhost:"+cmd, variables.N_FLOORS)
 	//go run main.go portnr id
-
-	elevator.LocalQueueInit()
+	QueueSyncNeeded := false
+	if ElevatorID == 1{
+		elevator.LocalQueueInit()
+	}else{
+		QueueSyncNeeded = true
+	}
 	elevator.ElevatorInit(ElevatorID)
 	fmt.Println("Initialized")
 
@@ -53,7 +57,9 @@ func main() {
 	drvFloors := make(chan int)
 	drvStop := make(chan bool)
 	elevTx := make(chan variables.ElevatorMessage)
+	queueTx := make(chan variables.QueueMessage)
 	elevRx := make(chan variables.ElevatorMessage)
+	queueRx := make(chan variables.QueueMessage)
 	peerUpdateCh := make(chan peers.PeerUpdate)
 	peerTxEnable := make(chan bool)
 	timeOut := time.NewTimer(0)
@@ -62,9 +68,12 @@ func main() {
 	go elevio.PollFloorSensor(drvFloors)
 	go elevio.PollStopButton(drvStop)
 	go bcast.Receiver(15648, elevRx)
+	go bcast.Receiver(15646,queueRx)
 	go bcast.Transmitter(15648, elevTx)
+	go bcast.Transmitter(15646, queueTx)
 	go peers.Transmitter(15647, id, peerTxEnable)
 	go peers.Receiver(15647, peerUpdateCh)
+
 
 	for {
 		select {
@@ -76,13 +85,15 @@ func main() {
 			elevTx <- msg
 		case stop := <-drvStop:
 			elevator.FsmStop(stop)
-		case messageReceived := <-elevRx:
-			elevator.FsmMessageReceivedHandler(messageReceived, ElevatorID)
+		case elevatorMessageReceived := <-elevRx:
+			elevator.FsmMessageReceivedHandler(elevatorMessageReceived, ElevatorID)
 			if !elevator.CheckLocalQueueEmpty(){
 				timeOut.Reset(5 * time.Second)
 			}else{
 				timeOut.Stop()
 			}
+		case queueMessageReceived := <- queueRx:
+			elevator.FsmQueueReceivedHandler(queueMessageReceived, ElevatorID)
 		case buttonCall := <-drvButtons:
 			elev := elevator.ElevatorGetElev()
 			msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor, int(elev.Dir), elev.ElevState}
@@ -93,7 +104,7 @@ func main() {
 			elev := elevator.ElevatorGetElev()
 			msg := variables.ElevatorMessage{ElevatorID,"FAULTY_MOTOR", -1, -1, int(elev.Dir), elev.ElevState}
 			elevTx<-msg
-
+		
 			
 		case <-DoorTimer.C:
 			elevator.FsmExitDoorState(elevator.Elev.DoorTimer)
@@ -103,6 +114,11 @@ func main() {
 			fmt.Printf("  Peers:    %q\n", newPeerEvent.Peers)
 			fmt.Printf("  New:      %q\n", newPeerEvent.New)
 			fmt.Printf("  Lost:     %q\n", newPeerEvent.Lost)
+			if QueueSyncNeeded == true{
+				queue := elevator.GetBackUpQueue()
+				message := variables.QueueMessage{ElevatorID,"QUEUE_UPDATE",queue,true}
+				queueTx<-message
+			}
 		}
 	}
 

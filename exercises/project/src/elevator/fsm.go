@@ -9,6 +9,7 @@ import (
 )
 
 func FsmFloor(newFloor int, dir ElevDir, msgID int, cabCall bool) {
+	BackupSyncQueue()
 	if msgID == Elev.ElevID {
 		elevatorSetNewFloor(newFloor)
 		elevatorLightsMatchQueue()
@@ -96,6 +97,14 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 	}
 	elevatorLightsMatchQueue()
 
+}
+
+func FsmQueueReceivedHandler(msg variables.QueueMessage, LocalID int){
+	if LocalID == msg.ElevID{
+		fmt.Printf("yolo")
+	}else{
+		queueLocal = msg.Queue
+	}
 }
 
 func fsmStartDoorState(doorTimer *time.Timer) {

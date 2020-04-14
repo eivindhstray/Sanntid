@@ -1,5 +1,6 @@
 package variables
 
+
 //global variables
 const N_FLOORS = 4
 const N_BUTTON_TYPES = 3
@@ -20,6 +21,15 @@ type ElevatorMessage struct {
 	Dir         int
 	Elevators   ElevatorList
 }
+
+
+type QueueMessage struct{
+	ElevID 		int
+	MessageType string
+	Queue[N_FLOORS][N_BUTTON_TYPES]	QueueOrderType
+	NeedQueueSync bool
+}
+
 
 type QueueOrderType int
 
