@@ -56,6 +56,7 @@ func main() {
 	drvButtons := make(chan elevio.ButtonEvent)
 	drvFloors := make(chan int)
 	drvStop := make(chan bool)
+	//drvDir := make(chan elevator.ElevDir)
 	elevTx := make(chan variables.ElevatorMessage)
 	queueTx := make(chan variables.QueueMessage)
 	elevRx := make(chan variables.ElevatorMessage)
@@ -67,6 +68,7 @@ func main() {
 	go elevio.PollButtons(drvButtons)
 	go elevio.PollFloorSensor(drvFloors)
 	go elevio.PollStopButton(drvStop)
+	//go elevator.ElevatorChannelGetDir(drvDir)
 	go bcast.Receiver(15648, elevRx)
 	go bcast.Receiver(15646,queueRx)
 	go bcast.Transmitter(15648, elevTx)
@@ -120,11 +122,19 @@ func main() {
 			fmt.Printf("  Peers:    %q\n", newPeerEvent.Peers)
 			fmt.Printf("  New:      %q\n", newPeerEvent.New)
 			fmt.Printf("  Lost:     %q\n", newPeerEvent.Lost)
+
 			if QueueSyncNeeded == true{
 				queue := elevator.GetBackUpQueue()
 				message := variables.QueueMessage{ElevatorID,"QUEUE_UPDATE",queue,true}
 				queueTx<-message
 			}
+
+			/*
+				case DirectionChange := <-drvDir:
+					elevator.ElevatorListUpdate(elevator.Elev.ElevID, elevator.Elev.CurrentFloor, DirectionChange, elevator.Elev.ElevOnline)
+					msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, elevator.Elev.CurrentFloor, int(DirectionChange), elevator.Elev.ElevState}
+					elevTx <- msg
+
 		}
 	}
 
