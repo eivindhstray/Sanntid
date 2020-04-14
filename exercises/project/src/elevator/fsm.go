@@ -9,11 +9,6 @@ import (
 )
 
 func FsmFloor(newFloor int, dir ElevDir, msgID int, cabCall bool) {
-
-	//decisionAlgorithm(newFloor, elev.dir)
-	//Function that updates elevatorList with position and direction
-	//ElevatorListUpdate(msgID, newFloor, Elev.Dir)
-	fmt.Println(Elev.ElevState, "   ", msgID, "   ", newFloor)
 	if msgID == Elev.ElevID {
 		elevatorSetNewFloor(newFloor)
 		elevatorLightsMatchQueue()
