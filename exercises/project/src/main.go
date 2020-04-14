@@ -82,6 +82,7 @@ func main() {
 		case stop := <-drvStop:
 			elevator.FsmStop(stop)
 		case messageReceived := <-elevRx:
+			timeOut.Reset(5 *time.Second)
 			elevator.FsmMessageReceivedHandler(messageReceived, ElevatorID)
 		case buttonCall := <-drvButtons:
 			elev := elevator.ElevatorGetElev()
@@ -90,6 +91,9 @@ func main() {
 		case <-timeOut.C:
 			fmt.Printf("Timer fired")
 			elevator.ElevatorSetConnectionStatus(variables.NEW_FLOOR_TIMEOUT_PENALTY,ElevatorID)
+			elev := elevator.ElevatorGetElev()
+			msg := variables.ElevatorMessage{ElevatorID,"FAULTY_MOTOR", -1, -1, int(elev.Dir), elev.ElevState}
+			elevTx<-msg
 
 			
 		case <-DoorTimer.C:
