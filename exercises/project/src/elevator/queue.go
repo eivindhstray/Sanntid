@@ -37,10 +37,6 @@ func QueueSetLocal(floor int, buttonType int) {
 	queue[floor][buttonType] = variables.LOCAL
 }
 
-//Return value of element in queue.
-func QueueGet(floor int, buttonType int) variables.QueueOrderType {
-	return queue[floor][buttonType]
-}
 
 //Pop order in queue.
 func QueuePop(floor int, buttonType int) {
