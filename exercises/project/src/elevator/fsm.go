@@ -98,14 +98,6 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 
 }
 
-func FsmQueueMessageHandler(msg variables.QueueMessage, LocalID int){
-
-	if !CheckQueueEmpty(variables.REMOTE) {
-		fmt.Println(msg.Queue)
-		queueLocal = msg.Queue
-	}
-}
-
 func fsmStartDoorState(doorTimer *time.Timer) {
 	fmt.Print("door")
 	elevatorSetDir(Stop)
@@ -118,7 +110,9 @@ func FsmExitDoorState(doorTimer *time.Timer) {
 	doorTimer.Stop()
 	ElevatorSetDoorOpenState(false)
 	elevio.SetDoorOpenLamp(false)
-	FsmFloor(Elev.CurrentFloor, Elev.Dir, Elev.ElevID, false)
+	if !CheckQueueEmpty(variables.LOCAL){
+		FsmFloor(Elev.CurrentFloor, Elev.Dir, Elev.ElevID, false)
+	}
 }
 
 //From project destription in the course embedded systems

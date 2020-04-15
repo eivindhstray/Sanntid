@@ -31,9 +31,8 @@ func main() {
 	elevio.Init("localhost:"+cmd, variables.N_FLOORS)
 	//go run main.go portnr id
 	
-	if ElevatorID == 1{
-		elevator.LocalQueueInit()
-	}
+	elevator.LocalQueueInit()
+	
 	
 	elevator.ElevatorInit(ElevatorID)
 	fmt.Println("Initialized")
@@ -57,9 +56,7 @@ func main() {
 	drvStop := make(chan bool)
 	//drvDir := make(chan elevator.ElevDir)
 	elevTx := make(chan variables.ElevatorMessage)
-	queueTx := make(chan variables.QueueMessage)
 	elevRx := make(chan variables.ElevatorMessage)
-	queueRx := make(chan variables.QueueMessage)
 	peerUpdateCh := make(chan peers.PeerUpdate)
 	peerTxEnable := make(chan bool)
 	timeOut := time.NewTimer(0)
@@ -69,15 +66,11 @@ func main() {
 	go elevio.PollStopButton(drvStop)
 	//go elevator.ElevatorChannelGetDir(drvDir)
 	go bcast.Receiver(15648, elevRx)
-	go bcast.Receiver(15646,queueRx)
 	go bcast.Transmitter(15648, elevTx)
-	go bcast.Transmitter(15646, queueTx)
 	go peers.Transmitter(15647, id, peerTxEnable)
 	go peers.Receiver(15647, peerUpdateCh)
 
-	elevator.ElevatorListUpdate(elevator.Elev.ElevID, elevator.Elev.CurrentFloor, elevator.Elev.Dir, elevator.Elev.ElevOnline)
-	msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, elevator.Elev.CurrentFloor, int(elevator.Elev.Dir), elevator.Elev.ElevState}
-	elevTx <- msg
+	
 
 
 	for {
@@ -94,12 +87,10 @@ func main() {
 			elevator.FsmMessageReceivedHandler(elevatorMessageReceived, ElevatorID)
 			if !elevator.CheckQueueEmpty(variables.LOCAL){
 
-				timeOut.Reset(5 * time.Second)
+				timeOut.Reset(variables.FAULT_TIME * time.Second)
 			} else {
 				timeOut.Stop()
 			}
-		case queueMessageReceived := <- queueRx:
-			elevator.FsmQueueMessageHandler(queueMessageReceived, ElevatorID)
 		case buttonCall := <-drvButtons:
 			elev := elevator.ElevatorGetElev()
 			msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor, int(elev.Dir), elev.ElevState}
@@ -118,15 +109,10 @@ func main() {
 			fmt.Printf("  Peers:    %q\n", newPeerEvent.Peers)
 			fmt.Printf("  New:      %q\n", newPeerEvent.New)
 			fmt.Printf("  Lost:     %q\n", newPeerEvent.Lost)
-
+			elevator.ElevatorListUpdate(elevator.Elev.ElevID, elevator.Elev.CurrentFloor, elevator.Elev.Dir, elevator.Elev.ElevOnline)
+			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, elevator.Elev.CurrentFloor, int(elevator.Elev.Dir), elevator.Elev.ElevState}
+			elevTx <- msg
 			
-			queue := elevator.GetBackUpQueue()
-			fmt.Println(queue)
-			message := variables.QueueMessage{ElevatorID,"QUEUE_UPDATE",queue,true}
-			queueTx<-message
-			fmt.Printf("sending queue")
-			
-		
 
 			/*
 				case DirectionChange := <-drvDir:

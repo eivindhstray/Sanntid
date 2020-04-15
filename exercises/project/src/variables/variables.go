@@ -8,6 +8,7 @@ const DOOROPENTIME = 2
 
 const N_ELEVATORS = 2
 const ELEVATOR_STATE = 2
+const FAULT_TIME = 7
 const NEW_FLOOR_TIMEOUT_PENALTY = 100
 var ElevatorID string
 
@@ -20,14 +21,6 @@ type ElevatorMessage struct {
 	Floor       int
 	Dir         int
 	Elevators   ElevatorList
-}
-
-
-type QueueMessage struct{
-	ElevID 		int
-	MessageType string
-	Queue[N_FLOORS][N_BUTTON_TYPES]	QueueOrderType
-	NeedQueueSync bool
 }
 
 
