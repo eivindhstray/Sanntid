@@ -19,9 +19,6 @@ func main() {
 
 	cmd := os.Args[1]
 	ElevatorID, err := strconv.Atoi(os.Args[2])
-
-	//variables.ElevatorID = ElevatorID
-	//^^ Need ElevID to be an int for cost to function properly
 	fmt.Println(ElevatorID)
 	time.Sleep(1 * time.Second)
 
