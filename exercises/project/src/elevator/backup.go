@@ -14,6 +14,7 @@ import (
 
 var BackUpQueue [variables.N_FLOORS][variables.N_BUTTON_TYPES]variables.QueueOrderType
 
+//Backup queue containing every order; local or remote
 func BackupSyncQueue() {
 	for floor := 0; floor < variables.N_FLOORS; floor++ {
 		for buttons := 0; buttons < variables.N_BUTTON_TYPES; buttons++ {
@@ -22,9 +23,10 @@ func BackupSyncQueue() {
 			}
 		}
 	}
-	fmt.Println("Backup queue syncreonised")
+	fmt.Println("Backup queue synced")
 }
 
+//Making local queue identical to backup queue
 //Only to be used in case of backwards recovery
 func fetchBackupQueue() {
 	for i := 0; i < variables.N_FLOORS; i++ {
@@ -35,6 +37,7 @@ func fetchBackupQueue() {
 	fmt.Println("Backup fetched as a result of backwards recovery")
 }
 
-func GetBackUpQueue()[variables.N_FLOORS][variables.N_BUTTON_TYPES]variables.QueueOrderType{
+func GetBackUpQueue() [variables.N_FLOORS][variables.N_BUTTON_TYPES]variables.QueueOrderType {
+	fetchBackupQueue()
 	return BackUpQueue
 }
