@@ -14,16 +14,16 @@ func FsmFloor(newFloor int, dir ElevDir, msgID int) {
 		elevatorSetNewFloor(newFloor)
 		elevatorLightsMatchQueue()
 	}
-	if localQueueCheckCurrentFloorSameDir(newFloor, Elev.Dir) {
+	if QueueCheckCurrentFloorSameDir(newFloor, Elev.Dir) {
 		fsmStartDoorState(Elev.DoorTimer)
 	}
 	if !Elev.DoorState {
-		elevatorSetDir(localQueueReturnElevDir(newFloor, Elev.Dir))
+		elevatorSetDir(QueueReturnElevDir(newFloor, Elev.Dir))
 	}
-	localQueueRemoveOrder(newFloor, dir)
+	QueueRemoveOrder(newFloor, dir)
 	elevatorLightsMatchQueue()
-	remoteQueuePrint()
-	localQueuePrint()
+	QueuePrintRemote()
+	QueuePrintLocal()
 	ElevatorListUpdate(msgID, newFloor, Elev.Dir, Elev.ElevOnline)
 
 }
@@ -33,10 +33,10 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 	fmt.Printf("%+v\n", buttonPush)
 
 	if !cabCall {
-		remoteQueueRecieveOrder(buttonPush)
+		QueueRecieveOrderRemote(buttonPush)
 		decisionAlgorithm(buttonPush)
 	} else {
-		localQueueRecieveOrder(buttonPush)
+		QueueRecieveOrderRemote(buttonPush)
 	}
 
 	elevatorLightsMatchQueue()
@@ -46,7 +46,7 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 		FsmFloor(Elev.CurrentFloor, Elev.Dir, Elev.ElevID)
 	}
 	if !ElevatorGetDoorOpenState() {
-		elevatorSetDir(localQueueReturnElevDir(Elev.CurrentFloor, Elev.Dir))
+		elevatorSetDir(QueueReturnElevDir(Elev.CurrentFloor, Elev.Dir))
 	}
 
 }
