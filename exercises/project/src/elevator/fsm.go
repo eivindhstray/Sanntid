@@ -86,10 +86,9 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 		elevatorSetDir(Stop)
 		FsmFloor(floor, ElevDir(dir), msgID, cabCall)
 	case "FAULTY_MOTOR":
-		if msgID == LocalID {
-			ElevatorSetConnectionStatus(variables.NEW_FLOOR_TIMEOUT_PENALTY, msgID)
-		}
+		ElevatorSetConnectionStatus(variables.NEW_FLOOR_TIMEOUT_PENALTY, msgID)
 		if msgID != LocalID && Elev.Dir == Stop {
+			QueueMakeRemoteLocal()
 			FsmFloor(Elev.CurrentFloor, Elev.Dir, LocalID, false)
 		}
 	default:
