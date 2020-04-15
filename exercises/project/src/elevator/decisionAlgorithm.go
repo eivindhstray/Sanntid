@@ -20,7 +20,7 @@ func decisionAlgorithm(buttonPush elevio.ButtonEvent) {
 	for elev := 1; elev < variables.N_ELEVATORS+1; elev++ {
 		CostArray[elev] = 0
 	}
-	//CostArray[1] = 1
+	CostArray[1] = 1
 
 	//Find the remote order and determine cost for every elevator
 	for elevator := 1; elevator < variables.N_ELEVATORS+1; elevator++ {

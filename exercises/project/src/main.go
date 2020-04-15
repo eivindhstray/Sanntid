@@ -81,6 +81,9 @@ func main() {
 			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, atFloor, int(elev.Dir), elev.ElevState}
 			fmt.Printf("elevstates%q\n", elev.ElevState)
 			elevTx <- msg
+			elevTx <- msg
+			elevTx <- msg
+			elevTx <- msg
 		case stop := <-drvStop:
 			elevator.FsmStop(stop)
 		case elevatorMessageReceived := <-elevRx:
@@ -100,6 +103,9 @@ func main() {
 			elevator.ElevatorSetConnectionStatus(variables.NEW_FLOOR_TIMEOUT_PENALTY, ElevatorID)
 			elev := elevator.ElevatorGetElev()
 			msg := variables.ElevatorMessage{ElevatorID,"FAULTY_MOTOR", -1, -1, int(elev.Dir), elev.ElevState}
+			elevTx<-msg
+			elevTx<-msg
+			elevTx<-msg
 			elevTx<-msg
 		
 		case <-DoorTimer.C:
