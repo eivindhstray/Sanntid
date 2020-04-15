@@ -42,6 +42,9 @@ func ElevatorSetConnectionStatus(connectionStatus int, ID int) {
 
 //Initialize elevator. Update elevator list.
 func ElevatorInit(ID int) {
+	for id:=ID; id <variables.N_ELEVATORS+1; id++{
+		ElevatorSetConnectionStatus(variables.ELEV_OFFLINE,id)
+	}
 	if elevio.GetFloor() == -1 {
 		elevatorSetDir(Down)
 	}

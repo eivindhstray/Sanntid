@@ -32,7 +32,6 @@ func main() {
 	//go run main.go portnr id
 
 	elevator.LocalQueueInit()
-
 	elevator.ElevatorInit(ElevatorID)
 	fmt.Println("Initialized")
 

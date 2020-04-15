@@ -10,6 +10,7 @@ const N_ELEVATORS = 2
 const ELEVATOR_STATE = 2
 const FAULT_TIME = 7
 const NEW_FLOOR_TIMEOUT_PENALTY = 100
+const ELEV_OFFLINE = 100
 var ElevatorID string
 
 //message

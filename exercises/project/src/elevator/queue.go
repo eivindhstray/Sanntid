@@ -248,8 +248,8 @@ func CheckQueueEmpty(queueType variables.QueueOrderType) bool {
 
 //Make remote order local.
 func QueueMakeRemoteLocal() {
-	for floor := 0; floor < variables.N_FLOORS-1; floor++ {
-		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
+	for floor := 0; floor < variables.N_FLOORS; floor++ {
+		for button := 0; button < variables.N_BUTTON_TYPES-1; button++ {
 			queuePos := queueLocal[floor][button]
 			if queuePos == variables.REMOTE {
 				queueLocal[floor][button] = variables.LOCAL
