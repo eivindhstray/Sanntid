@@ -14,7 +14,7 @@ func FsmFloor(newFloor int, dir ElevDir, msgID int, cabCall bool) {
 		elevatorSetNewFloor(newFloor)
 		elevatorLightsMatchQueue()
 	}
-	if localQueueCheckCurrentFloorSameDir(newFloor, Elev.Dir) == true {
+	if localQueueCheckCurrentFloorSameDir(newFloor, Elev.Dir) {
 		fsmStartDoorState(Elev.DoorTimer)
 	}
 	if !cabCall {
@@ -74,8 +74,6 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 			} else {
 				fmt.Println("cabcall other elev")
 			}
-		} else {
-			fsmOnButtonRequest(event, false)
 		}
 	case "FLOOR":
 		if msgID == LocalID {
