@@ -20,7 +20,7 @@ func decisionAlgorithm(buttonPush elevio.ButtonEvent) {
 	for elev := 1; elev < variables.N_ELEVATORS+1; elev++ {
 		CostArray[elev] = 0
 	}
-	CostArray[1] = 1
+	//CostArray[1] = 1
 
 	//Find the remote order and determine cost for every elevator
 	for elevator := 1; elevator < variables.N_ELEVATORS+1; elevator++ {
@@ -35,12 +35,12 @@ func decisionAlgorithm(buttonPush elevio.ButtonEvent) {
 					correctFloor = floors
 					correctButton = buttons
 					/*
-					if correctFloor >= Elev.ElevState[elevator][0] && Elev.ElevState[elevator][1] == -1 {
-						cost = cost + 10
-					}
-					if correctFloor <= Elev.ElevState[elevator][0] && Elev.ElevState[elevator][1] == 1 {
-						cost = cost + 10
-					}
+						if correctFloor >= Elev.ElevState[elevator][0] && Elev.ElevState[elevator][1] == -1 {
+							cost = cost + 10
+						}
+						if correctFloor <= Elev.ElevState[elevator][0] && Elev.ElevState[elevator][1] == 1 {
+							cost = cost + 10
+						}
 					*/
 					//Added ----------------------------------
 					if Elev.ElevState[elevator][2] > 0 {
@@ -60,7 +60,7 @@ func decisionAlgorithm(buttonPush elevio.ButtonEvent) {
 	var bestElev int
 	bestElev = 1
 	for elevator := 2; elevator < variables.N_ELEVATORS+1; elevator++ {
-		if CostArray[elevator] <= CostArray[bestElev] {
+		if CostArray[elevator] < CostArray[bestElev] {
 			bestElev = elevator
 			//fmt.Println("Elevator:", elevator)
 			//fmt.Println("Bestelev:", bestElev)
