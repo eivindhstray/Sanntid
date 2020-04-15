@@ -44,7 +44,7 @@ func localQueueGet(floor int, buttonType int) variables.QueueOrderType {
 
 //Pop order in queue.
 func localQueuePop(floor int, buttonType int) {
-	if buttonType != Cab {
+	if buttonType != 2 {
 		queueLocal[floor][buttonType] = variables.NONE
 	} else {
 		if queueLocal[floor][buttonType] == variables.LOCAL {

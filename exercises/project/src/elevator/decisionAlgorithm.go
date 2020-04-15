@@ -34,14 +34,14 @@ func decisionAlgorithm(buttonPush elevio.ButtonEvent) {
 					}
 					correctFloor = floors
 					correctButton = buttons
-
+					/*
 					if correctFloor >= Elev.ElevState[elevator][0] && Elev.ElevState[elevator][1] == -1 {
 						cost = cost + 10
 					}
 					if correctFloor <= Elev.ElevState[elevator][0] && Elev.ElevState[elevator][1] == 1 {
 						cost = cost + 10
 					}
-
+					*/
 					//Added ----------------------------------
 					if Elev.ElevState[elevator][2] > 0 {
 						cost = cost + 1000
@@ -60,7 +60,7 @@ func decisionAlgorithm(buttonPush elevio.ButtonEvent) {
 	var bestElev int
 	bestElev = 1
 	for elevator := 2; elevator < variables.N_ELEVATORS+1; elevator++ {
-		if CostArray[elevator] < CostArray[bestElev] {
+		if CostArray[elevator] <= CostArray[bestElev] {
 			bestElev = elevator
 			//fmt.Println("Elevator:", elevator)
 			//fmt.Println("Bestelev:", bestElev)

@@ -8,7 +8,7 @@ import (
 	"../variables"
 )
 
-func FsmFloor(newFloor int, dir ElevDir, msgID int, cabCall bool) {
+func FsmFloor(newFloor int, dir ElevDir, msgID int) {
 	BackupSyncQueue()
 	if msgID == Elev.ElevID {
 		elevatorSetNewFloor(newFloor)
@@ -17,13 +17,11 @@ func FsmFloor(newFloor int, dir ElevDir, msgID int, cabCall bool) {
 	if localQueueCheckCurrentFloorSameDir(newFloor, Elev.Dir) {
 		fsmStartDoorState(Elev.DoorTimer)
 	}
-	if !cabCall {
-		localQueueRemoveOrder(newFloor, dir)
-		elevatorLightsMatchQueue()
-	}
 	if !Elev.DoorState {
 		elevatorSetDir(localQueueReturnElevDir(newFloor, Elev.Dir))
 	}
+	localQueueRemoveOrder(newFloor, dir)
+	elevatorLightsMatchQueue()
 	remoteQueuePrint()
 	localQueuePrint()
 	ElevatorListUpdate(msgID, newFloor, Elev.Dir, Elev.ElevOnline)
@@ -45,7 +43,7 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 	fmt.Println("Direction: ", Elev.Dir)
 
 	if buttonPush.Floor == Elev.CurrentFloor && elevatorGetDir() == Stop {
-		FsmFloor(Elev.CurrentFloor, Elev.Dir, Elev.ElevID, cabCall)
+		FsmFloor(Elev.CurrentFloor, Elev.Dir, Elev.ElevID)
 	}
 	if !ElevatorGetDoorOpenState() {
 		elevatorSetDir(localQueueReturnElevDir(Elev.CurrentFloor, Elev.Dir))
@@ -84,12 +82,12 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 		for elevio.GetFloor() == -1 {
 		}
 		elevatorSetDir(Stop)
-		FsmFloor(floor, ElevDir(dir), msgID, cabCall)
+		FsmFloor(floor, ElevDir(dir), msgID)
 	case "FAULTY_MOTOR":
 		ElevatorSetConnectionStatus(variables.NEW_FLOOR_TIMEOUT_PENALTY, msgID)
 		if msgID != LocalID && Elev.Dir == Stop {
 			QueueMakeRemoteLocal()
-			FsmFloor(Elev.CurrentFloor, Elev.Dir, LocalID, false)
+			FsmFloor(Elev.CurrentFloor, Elev.Dir, LocalID)
 		}
 	default:
 		fmt.Print("invalid message")
@@ -110,9 +108,7 @@ func FsmExitDoorState(doorTimer *time.Timer) {
 	doorTimer.Stop()
 	ElevatorSetDoorOpenState(false)
 	elevio.SetDoorOpenLamp(false)
-	if !CheckQueueEmpty(variables.LOCAL) {
-		FsmFloor(Elev.CurrentFloor, Elev.Dir, Elev.ElevID, false)
-	}
+	FsmFloor(Elev.CurrentFloor, Elev.Dir, Elev.ElevID)
 }
 
 //From project destription in the course embedded systems

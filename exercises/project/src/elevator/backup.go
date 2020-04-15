@@ -14,10 +14,14 @@ import (
 
 var BackUpQueue [variables.N_FLOORS][variables.N_BUTTON_TYPES]variables.QueueOrderType
 
+func BackUpQueueInit(){
+	BackUpQueue = queueLocal
+}
+
 //Backup queue containing every order; local or remote
 func BackupSyncQueue() {
 	for floor := 0; floor < variables.N_FLOORS; floor++ {
-		for buttons := 0; buttons < variables.N_BUTTON_TYPES; buttons++ {
+		for buttons := 0; buttons < variables.N_BUTTON_TYPES-1; buttons++ {
 			if queueLocal[floor][buttons] == variables.LOCAL || queueLocal[floor][buttons] == variables.REMOTE {
 				BackUpQueue[floor][buttons] = variables.REMOTE
 			}
