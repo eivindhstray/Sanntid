@@ -44,10 +44,10 @@ func localQueueGet(floor int, buttonType int) variables.QueueOrderType {
 
 //Pop order in queue.
 func localQueuePop(floor int, buttonType int) {
-	if buttonType != Cab{
+	if buttonType != Cab {
 		queueLocal[floor][buttonType] = variables.NONE
-	}else{
-		if queueLocal[floor][buttonType] == variables.LOCAL{
+	} else {
+		if queueLocal[floor][buttonType] == variables.LOCAL {
 			queueLocal[floor][buttonType] = variables.NONE
 		}
 	}

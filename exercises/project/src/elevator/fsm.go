@@ -74,6 +74,8 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 			} else {
 				fmt.Println("cabcall other elev")
 			}
+		} else {
+			fsmOnButtonRequest(event, false)
 		}
 	case "FLOOR":
 		if msgID == LocalID {
@@ -108,7 +110,7 @@ func FsmExitDoorState(doorTimer *time.Timer) {
 	doorTimer.Stop()
 	ElevatorSetDoorOpenState(false)
 	elevio.SetDoorOpenLamp(false)
-	if !CheckQueueEmpty(variables.LOCAL){
+	if !CheckQueueEmpty(variables.LOCAL) {
 		FsmFloor(Elev.CurrentFloor, Elev.Dir, Elev.ElevID, false)
 	}
 }
