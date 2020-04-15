@@ -1,9 +1,3 @@
-// New order and remove order on the following form:
-// "NewOrder (1), floor, direction"
-// "RomeveOrder (0), floor, direction"
-
-//Assume queue has handled the newOrder and removeOrder such that queue is up to date.
-
 package elevator
 
 import (
@@ -13,14 +7,15 @@ import (
 	"../variables"
 )
 
-//decisionAlgorithm making a choice every time a new order is stashed into queue remote.
-//The algorithm tuns through the queue to find the remote order.
-//The elevator with the lowest cost makes the order local.
+//decisionAlgorithm making a choice every time a new order is stashed into queue remote (on button push).
 
+//Calculates cost of new order for N_ELEVATORS, finds best elevator (lowest cost).
+//The elevator with the lowest cost makes the order local.
 func decisionAlgorithm(buttonPush elevio.ButtonEvent) {
 	var CostArray [variables.N_ELEVATORS + 1]int
 	var correctFloor int
 	var correctButton int
+
 	//Init cost array
 	for elev := 1; elev < variables.N_ELEVATORS+1; elev++ {
 		CostArray[elev] = 0
