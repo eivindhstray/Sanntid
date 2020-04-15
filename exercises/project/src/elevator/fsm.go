@@ -99,10 +99,10 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 
 }
 
-func FsmQueueReceivedHandler(msg variables.QueueMessage, LocalID int){
-	if LocalID == msg.ElevID{
-		fmt.Printf("yolo")
-	}else{
+func FsmQueueMessageHandler(msg variables.QueueMessage, LocalID int){
+
+	if !CheckQueueEmpty(variables.REMOTE) {
+		fmt.Println(msg.Queue)
 		queueLocal = msg.Queue
 	}
 }

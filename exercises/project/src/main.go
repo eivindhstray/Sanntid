@@ -30,12 +30,11 @@ func main() {
 	}
 	elevio.Init("localhost:"+cmd, variables.N_FLOORS)
 	//go run main.go portnr id
-	QueueSyncNeeded := false
+	
 	if ElevatorID == 1{
 		elevator.LocalQueueInit()
-	}else{
-		QueueSyncNeeded = true
 	}
+	
 	elevator.ElevatorInit(ElevatorID)
 	fmt.Println("Initialized")
 
@@ -93,14 +92,14 @@ func main() {
 			elevator.FsmStop(stop)
 		case elevatorMessageReceived := <-elevRx:
 			elevator.FsmMessageReceivedHandler(elevatorMessageReceived, ElevatorID)
-			if !elevator.CheckLocalQueueEmpty(){
+			if !elevator.CheckQueueEmpty(variables.LOCAL){
 
 				timeOut.Reset(5 * time.Second)
 			} else {
 				timeOut.Stop()
 			}
 		case queueMessageReceived := <- queueRx:
-			elevator.FsmQueueReceivedHandler(queueMessageReceived, ElevatorID)
+			elevator.FsmQueueMessageHandler(queueMessageReceived, ElevatorID)
 		case buttonCall := <-drvButtons:
 			elev := elevator.ElevatorGetElev()
 			msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor, int(elev.Dir), elev.ElevState}
@@ -123,17 +122,20 @@ func main() {
 			fmt.Printf("  New:      %q\n", newPeerEvent.New)
 			fmt.Printf("  Lost:     %q\n", newPeerEvent.Lost)
 
-			if QueueSyncNeeded == true{
-				queue := elevator.GetBackUpQueue()
-				message := variables.QueueMessage{ElevatorID,"QUEUE_UPDATE",queue,true}
-				queueTx<-message
-			}
+			
+			queue := elevator.GetBackUpQueue()
+			fmt.Println(queue)
+			message := variables.QueueMessage{ElevatorID,"QUEUE_UPDATE",queue,true}
+			queueTx<-message
+			fmt.Printf("sending queue")
+			
+		
 
 			/*
 				case DirectionChange := <-drvDir:
 					elevator.ElevatorListUpdate(elevator.Elev.ElevID, elevator.Elev.CurrentFloor, DirectionChange, elevator.Elev.ElevOnline)
 					msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, elevator.Elev.CurrentFloor, int(DirectionChange), elevator.Elev.ElevState}
-					elevTx <- msg
+					elevTx <- msg*/
 
 		}
 	}
