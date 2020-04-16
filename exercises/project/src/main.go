@@ -68,6 +68,7 @@ func main() {
 		case atFloor := <-drvFloors:
 			elevator.ElevatorListUpdate(ElevatorID, atFloor, elevator.Elev.Dir, elevator.Elev.ElevOnline)
 			elev := elevator.ElevatorGetElev()
+			elevator.FsmFloor(atFloor, elev.Dir, elev.ElevID)
 			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, atFloor, int(elev.Dir), elev.ElevState}
 			fmt.Printf("elevstates%q\n", elev.ElevState)
 			elevTx <- msg
