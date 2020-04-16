@@ -42,7 +42,7 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 		QueueRecieveOrderLocal(buttonPush)
 	}
 	elevatorLightsMatchQueue()
-	if buttonPush.Floor == Elev.CurrentFloor && QueueCheckCurrentFloorSameDir(Elev.CurrentFloor,Elev.Dir){
+	if buttonPush.Floor == Elev.CurrentFloor && QueueCheckCurrentFloorSameDir(Elev.CurrentFloor,Elev.Dir)&&Elev.Dir == Stop{
 		FsmFloor(Elev.CurrentFloor, Elev.Dir)
 	}
 	if !ElevatorGetDoorOpenState() {
