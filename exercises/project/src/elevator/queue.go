@@ -129,14 +129,6 @@ func QueueCheckCurrentFloorSameDir(currentFloor int, currentDirection ElevDir) b
 		return true
 	}
 
-	//Check current floor no orders beyond
-	if currentDirection == Up && QueueCheckAbove(currentFloor) == false {
-		return true
-	}
-	if currentDirection == Down && QueueCheckBelow(currentFloor) == false {
-		return true
-	}
-
 	return false
 }
 

@@ -79,8 +79,7 @@ func main() {
 			elevator.FsmStop(stop)
 		case elevatorMessageReceived := <-elevRx:
 			elevator.FsmMessageReceivedHandler(elevatorMessageReceived, ElevatorID)
-			if !elevator.CheckQueueEmpty(variables.LOCAL) {
-
+			if !elevator.CheckQueueEmpty(variables.LOCAL){
 				timeOut.Reset(variables.FAULT_TIME * time.Second)
 			} else {
 				timeOut.Stop()
@@ -104,14 +103,14 @@ func main() {
 
 		case <-DoorTimer.C:
 			elevator.FsmExitDoorState(elevator.Elev.DoorTimer)
-		/*case newPeerEvent := <-peerUpdateCh:
+		case newPeerEvent := <-peerUpdateCh:
 			fmt.Printf("Peer update:\n")
 			fmt.Printf("  Peers:    %q\n", newPeerEvent.Peers)
 			fmt.Printf("  New:      %q\n", newPeerEvent.New)
 			fmt.Printf("  Lost:     %q\n", newPeerEvent.Lost)
 			elevator.ElevatorListUpdate(elevator.Elev.ElevID, elevator.Elev.CurrentFloor, elevator.Elev.Dir, elevator.Elev.ElevOnline)
 			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, elevator.Elev.CurrentFloor, int(elevator.Elev.Dir), elevator.Elev.ElevState}
-			elevTx <- msg/*
+			elevTx <- msg
 
 			/*
 				case DirectionChange := <-drvDir:

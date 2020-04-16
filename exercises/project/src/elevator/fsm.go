@@ -22,14 +22,19 @@ func FsmFloorMessage(newFloor int, dir ElevDir, msgID int) {
 
 func FsmFloor(newFloor int, dir ElevDir){
 	elevatorSetNewFloor(newFloor)
-	QueueRemoveOrder(newFloor,dir)
 	elevatorLightsMatchQueue()
 	if QueueCheckCurrentFloorSameDir(newFloor, Elev.Dir) {
+		fmt.Println("stopping")
+		QueueRemoveOrder(newFloor,dir)
 		fsmStartDoorState(Elev.DoorTimer)
 	}
 	if !Elev.DoorState {
 		elevatorSetDir(QueueReturnElevDir(newFloor, Elev.Dir))
 	}
+	if CheckQueueEmpty(variables.LOCAL){
+		elevatorSetDir(Stop)
+	}
+	
 }
 
 func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
@@ -40,10 +45,8 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 	} else {
 		QueueRecieveOrderLocal(buttonPush)
 	}
-
 	elevatorLightsMatchQueue()
-
-	if buttonPush.Floor == Elev.CurrentFloor && QueueCheckLocalCallOnFloor(Elev.CurrentFloor) && !cabCall{
+	if buttonPush.Floor == Elev.CurrentFloor && QueueCheckCurrentFloorSameDir(Elev.CurrentFloor,Elev.Dir){
 		FsmFloor(Elev.CurrentFloor, Elev.Dir)
 	}
 	if !ElevatorGetDoorOpenState() {
