@@ -68,11 +68,13 @@ func main() {
 			elevator.FsmFloor(atFloor, elev.Dir)
 			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, atFloor, int(elev.Dir), elev.ElevState}
 			fmt.Printf("elevstates%q\n", elev.ElevState)
-			elevTx <- msg
+			elevTx<-msg
+			elevTx<-msg
+			elevTx<-msg
+			elevTx<-msg
 		case stop := <-drvStop:
 			elevator.FsmStop(stop)
 		case elevatorMessageReceived := <-elevRx:
-			
 			elevator.FsmMessageReceivedHandler(elevatorMessageReceived, ElevatorID)
 			if !elevator.CheckQueueEmpty(variables.LOCAL) {
 				timeOut.Reset(variables.FAULT_TIME * time.Second)
@@ -80,9 +82,15 @@ func main() {
 				timeOut.Stop()
 			}
 		case buttonCall := <-drvButtons:
+			if buttonCall.Button == elevator.Cab{
+				elevator.FsmOnButtonRequest(buttonCall, true)
+			}
 			elev := elevator.ElevatorGetElev()
 			msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor, int(elev.Dir), elev.ElevState}
 			elevTx <- msg
+			elevTx<-msg
+			elevTx<-msg
+			elevTx<-msg
 
 		case <-timeOut.C:
 			fmt.Printf("Timer fired")
@@ -90,6 +98,9 @@ func main() {
 			elev := elevator.ElevatorGetElev()
 			msg := variables.ElevatorMessage{ElevatorID, "FAULTY_MOTOR", -1, -1, int(elev.Dir), elev.ElevState}
 			elevTx <- msg
+			elevTx<-msg
+			elevTx<-msg
+			elevTx<-msg
 
 		case <-DoorTimer.C:
 			elevator.FsmExitDoorState(elevator.Elev.DoorTimer)
