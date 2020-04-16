@@ -36,7 +36,6 @@ func decisionAlgorithm() {
 					if Elev.ElevState[elevator][2] > 0 {
 						cost = cost + 1000
 					}
-		
 					CostArray[elevator] = cost
 					fmt.Println("Elevator #: ", elevator, "%n Cost: ", cost)
 				}

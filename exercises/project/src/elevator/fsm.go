@@ -31,10 +31,6 @@ func FsmFloor(newFloor int, dir ElevDir){
 	if !Elev.DoorState {
 		elevatorSetDir(QueueReturnElevDir(newFloor, Elev.Dir))
 	}
-	if CheckQueueEmpty(variables.LOCAL){
-		elevatorSetDir(Stop)
-	}
-	
 }
 
 func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
@@ -83,9 +79,6 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 		if msgID == LocalID {
 			fmt.Print("Floor\v%q", msgID)
 		}
-		for elevio.GetFloor() == -1 {
-		}
-		elevatorSetDir(Stop)
 		FsmFloorMessage(floor, ElevDir(dir), msgID)
 	case "FAULTY_MOTOR":
 		ElevatorSetConnectionStatus(variables.NEW_FLOOR_TIMEOUT_PENALTY, msgID)
