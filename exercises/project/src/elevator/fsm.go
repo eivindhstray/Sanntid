@@ -34,7 +34,7 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 
 	if !cabCall {
 		QueueRecieveOrderRemote(buttonPush)
-		decisionAlgorithm(buttonPush)
+		decisionAlgorithm()
 	} else {
 		QueueRecieveOrderRemote(buttonPush)
 	}

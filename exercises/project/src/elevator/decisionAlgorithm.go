@@ -2,8 +2,6 @@ package elevator
 
 import (
 	"fmt"
-
-	"../elevio"
 	"../variables"
 )
 
@@ -11,7 +9,7 @@ import (
 
 //Calculates cost of new order for N_ELEVATORS, finds best elevator (lowest cost).
 //The elevator with the lowest cost makes the order local.
-func decisionAlgorithm(buttonPush elevio.ButtonEvent) {
+func decisionAlgorithm() {
 	var CostArray [variables.N_ELEVATORS + 1]int
 	var correctFloor int
 	var correctButton int
@@ -34,21 +32,11 @@ func decisionAlgorithm(buttonPush elevio.ButtonEvent) {
 					}
 					correctFloor = floors
 					correctButton = buttons
-					/*
-						if correctFloor >= Elev.ElevState[elevator][0] && Elev.ElevState[elevator][1] == -1 {
-							cost = cost + 10
-						}
-						if correctFloor <= Elev.ElevState[elevator][0] && Elev.ElevState[elevator][1] == 1 {
-							cost = cost + 10
-						}
-					*/
-					//Added ----------------------------------
+				
 					if Elev.ElevState[elevator][2] > 0 {
 						cost = cost + 1000
 					}
-					//cost = cost + Elev.ElevState[elevator][2]
-
-					//----------------------------------------
+		
 					CostArray[elevator] = cost
 					fmt.Println("Elevator #: ", elevator, "%n Cost: ", cost)
 				}
@@ -62,8 +50,6 @@ func decisionAlgorithm(buttonPush elevio.ButtonEvent) {
 	for elevator := 2; elevator < variables.N_ELEVATORS+1; elevator++ {
 		if CostArray[elevator] < CostArray[bestElev] {
 			bestElev = elevator
-			//fmt.Println("Elevator:", elevator)
-			//fmt.Println("Bestelev:", bestElev)
 		}
 
 	}
@@ -72,7 +58,6 @@ func decisionAlgorithm(buttonPush elevio.ButtonEvent) {
 
 	//Set local in queue of best elevator
 	if bestElev == Elev.ElevID {
-		//localQueueRecieveOrder(buttonPush)
 		queue[correctFloor][correctButton] = variables.LOCAL
 	}
 }
