@@ -68,7 +68,7 @@ func main() {
 		case atFloor := <-drvFloors:
 			elevator.ElevatorListUpdate(ElevatorID, atFloor, elevator.Elev.Dir, elevator.Elev.ElevOnline)
 			elev := elevator.ElevatorGetElev()
-			elevator.FsmFloor(atFloor, elev.Dir, elev.ElevID)
+			elevator.FsmFloor(atFloor, elev.Dir)
 			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, atFloor, int(elev.Dir), elev.ElevState}
 			fmt.Printf("elevstates%q\n", elev.ElevState)
 			elevTx <- msg
@@ -89,6 +89,9 @@ func main() {
 			elev := elevator.ElevatorGetElev()
 			msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor, int(elev.Dir), elev.ElevState}
 			elevTx <- msg
+			elevTx<-msg
+			elevTx<-msg
+			elevTx<-msg
 		case <-timeOut.C:
 			fmt.Printf("Timer fired")
 			elevator.ElevatorSetConnectionStatus(variables.NEW_FLOOR_TIMEOUT_PENALTY, ElevatorID)
@@ -101,14 +104,14 @@ func main() {
 
 		case <-DoorTimer.C:
 			elevator.FsmExitDoorState(elevator.Elev.DoorTimer)
-		case newPeerEvent := <-peerUpdateCh:
+		/*case newPeerEvent := <-peerUpdateCh:
 			fmt.Printf("Peer update:\n")
 			fmt.Printf("  Peers:    %q\n", newPeerEvent.Peers)
 			fmt.Printf("  New:      %q\n", newPeerEvent.New)
 			fmt.Printf("  Lost:     %q\n", newPeerEvent.Lost)
 			elevator.ElevatorListUpdate(elevator.Elev.ElevID, elevator.Elev.CurrentFloor, elevator.Elev.Dir, elevator.Elev.ElevOnline)
 			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, elevator.Elev.CurrentFloor, int(elevator.Elev.Dir), elevator.Elev.ElevState}
-			elevTx <- msg
+			elevTx <- msg/*
 
 			/*
 				case DirectionChange := <-drvDir:

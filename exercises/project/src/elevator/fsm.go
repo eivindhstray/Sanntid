@@ -8,24 +8,28 @@ import (
 	"../variables"
 )
 
-func FsmFloor(newFloor int, dir ElevDir, msgID int) {
+func FsmFloorMessage(newFloor int, dir ElevDir, msgID int) {
 	BackupSyncQueue()
-	if msgID == Elev.ElevID {
-		elevatorSetNewFloor(newFloor)
-		elevatorLightsMatchQueue()
+	if msgID != Elev.ElevID{
+		QueueRemoveOrder(newFloor, dir)
 	}
+	elevatorLightsMatchQueue()
+	QueuePrintRemote()
+	QueuePrintLocal()
+	ElevatorListUpdate(msgID, newFloor, Elev.Dir, Elev.ElevOnline)
+
+}
+
+func FsmFloor(newFloor int, dir ElevDir){
+	elevatorSetNewFloor(newFloor)
+	QueueRemoveOrder(newFloor,dir)
+	elevatorLightsMatchQueue()
 	if QueueCheckCurrentFloorSameDir(newFloor, Elev.Dir) {
 		fsmStartDoorState(Elev.DoorTimer)
 	}
 	if !Elev.DoorState {
 		elevatorSetDir(QueueReturnElevDir(newFloor, Elev.Dir))
 	}
-	QueueRemoveOrder(newFloor, dir)
-	elevatorLightsMatchQueue()
-	QueuePrintRemote()
-	QueuePrintLocal()
-	ElevatorListUpdate(msgID, newFloor, Elev.Dir, Elev.ElevOnline)
-
 }
 
 func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
@@ -40,7 +44,7 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 	elevatorLightsMatchQueue()
 
 	if buttonPush.Floor == Elev.CurrentFloor && QueueCheckLocalCallOnFloor(Elev.CurrentFloor) && !cabCall{
-		FsmFloor(Elev.CurrentFloor, Elev.Dir, Elev.ElevID)
+		FsmFloor(Elev.CurrentFloor, Elev.Dir)
 	}
 	if !ElevatorGetDoorOpenState() {
 		elevatorSetDir(QueueReturnElevDir(Elev.CurrentFloor, Elev.Dir))
@@ -79,12 +83,12 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 		for elevio.GetFloor() == -1 {
 		}
 		elevatorSetDir(Stop)
-		FsmFloor(floor, ElevDir(dir), msgID)
+		FsmFloorMessage(floor, ElevDir(dir), msgID)
 	case "FAULTY_MOTOR":
 		ElevatorSetConnectionStatus(variables.NEW_FLOOR_TIMEOUT_PENALTY, msgID)
 		if msgID != LocalID && Elev.Dir == Stop {
 			QueueMakeRemoteLocal()
-			FsmFloor(Elev.CurrentFloor, Elev.Dir, LocalID)
+			FsmFloor(Elev.CurrentFloor, Elev.Dir)
 		}
 	default:
 		fmt.Print("invalid message")
@@ -105,7 +109,7 @@ func FsmExitDoorState(doorTimer *time.Timer) {
 	doorTimer.Stop()
 	ElevatorSetDoorOpenState(false)
 	elevio.SetDoorOpenLamp(false)
-	FsmFloor(Elev.CurrentFloor, Elev.Dir, Elev.ElevID)
+	FsmFloor(Elev.CurrentFloor, Elev.Dir)
 }
 
 //From project destription in the course embedded systems
