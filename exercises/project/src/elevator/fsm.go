@@ -34,12 +34,12 @@ func fsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 		QueueRecieveOrderRemote(buttonPush)
 		decisionAlgorithm()
 	} else {
-		QueueRecieveOrderRemote(buttonPush)
+		QueueRecieveOrderLocal(buttonPush)
 	}
 
 	elevatorLightsMatchQueue()
 
-	if buttonPush.Floor == Elev.CurrentFloor && elevatorGetDir() == Stop {
+	if buttonPush.Floor == Elev.CurrentFloor && QueueCheckLocalCallOnFloor(Elev.CurrentFloor) && !cabCall{
 		FsmFloor(Elev.CurrentFloor, Elev.Dir, Elev.ElevID)
 	}
 	if !ElevatorGetDoorOpenState() {

@@ -38,7 +38,7 @@ func QueueSetLocal(floor int, buttonType int) {
 }
 
 
-//Pop order in queue.
+//Pop order in queue. Only pop cabcall if it is a local order.
 func QueuePop(floor int, buttonType int) {
 	if buttonType != 2 {
 		queue[floor][buttonType] = variables.NONE
@@ -170,15 +170,13 @@ func QueueCheckBelow(currentFloor int) bool {
 		return false
 	}
 	for floor := currentFloor - 1; floor > -1; floor-- {
-		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
-			if queue[floor][button] == variables.LOCAL {
+		if QueueCheckLocalCallOnFloor(floor){
 				return true
-			}
 		}
-
 	}
-	return false
+		return false
 }
+
 
 //Returns true if the exists an order above current floor.
 func QueueCheckAbove(currentFloor int) bool {
@@ -186,10 +184,8 @@ func QueueCheckAbove(currentFloor int) bool {
 		return false
 	}
 	for floor := currentFloor + 1; floor < variables.N_FLOORS; floor++ {
-		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
-			if queue[floor][button] == variables.LOCAL {
-				return true
-			}
+		if QueueCheckLocalCallOnFloor(floor){
+			return true
 		}
 	}
 	return false
@@ -252,4 +248,13 @@ func QueueMakeRemoteLocal() {
 			}
 		}
 	}
+}
+
+func QueueCheckLocalCallOnFloor(floor int)bool{
+	for button:=0;button<variables.N_BUTTON_TYPES;button++{
+		if queue[floor][button] == variables.LOCAL{
+			return true
+		}
+	}
+	return false
 }

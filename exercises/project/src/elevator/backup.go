@@ -18,7 +18,7 @@ func BackUpQueueInit(){
 	BackUpQueue = queue
 }
 
-//Backup queue containing every order; local or remote
+//Backup queue containing every order; local or remote. Not for cab calls, since this should only contain active orders in a functional elevator.
 func BackupSyncQueue() {
 	for floor := 0; floor < variables.N_FLOORS; floor++ {
 		for buttons := 0; buttons < variables.N_BUTTON_TYPES-1; buttons++ {
