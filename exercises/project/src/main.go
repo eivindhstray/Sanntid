@@ -79,7 +79,7 @@ func main() {
 			elevator.FsmStop(stop)
 		case elevatorMessageReceived := <-elevRx:
 			elevator.FsmMessageReceivedHandler(elevatorMessageReceived, ElevatorID)
-			if !elevator.CheckQueueEmpty(variables.LOCAL){
+			if !elevator.CheckQueueEmpty(variables.LOCAL) {
 				timeOut.Reset(variables.FAULT_TIME * time.Second)
 			} else {
 				timeOut.Stop()
@@ -88,9 +88,9 @@ func main() {
 			elev := elevator.ElevatorGetElev()
 			msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor, int(elev.Dir), elev.ElevState}
 			elevTx <- msg
-			elevTx<-msg
-			elevTx<-msg
-			elevTx<-msg
+			elevTx <- msg
+			elevTx <- msg
+			elevTx <- msg
 		case <-timeOut.C:
 			fmt.Printf("Timer fired")
 			elevator.ElevatorSetConnectionStatus(variables.NEW_FLOOR_TIMEOUT_PENALTY, ElevatorID)
@@ -111,12 +111,6 @@ func main() {
 			elevator.ElevatorListUpdate(elevator.Elev.ElevID, elevator.Elev.CurrentFloor, elevator.Elev.Dir, elevator.Elev.ElevOnline)
 			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, elevator.Elev.CurrentFloor, int(elevator.Elev.Dir), elevator.Elev.ElevState}
 			elevTx <- msg
-
-			/*
-				case DirectionChange := <-drvDir:
-					elevator.ElevatorListUpdate(elevator.Elev.ElevID, elevator.Elev.CurrentFloor, DirectionChange, elevator.Elev.ElevOnline)
-					msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, elevator.Elev.CurrentFloor, int(DirectionChange), elevator.Elev.ElevState}
-					elevTx <- msg*/
 
 		}
 	}
