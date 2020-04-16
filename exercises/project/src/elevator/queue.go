@@ -32,11 +32,9 @@ var OrderToButtonTypesMap = map[OrderType]elevio.ButtonType{
 	Cab:      elevio.BT_Cab,
 }
 
-//Set order local in queue.
 func QueueSetLocal(floor int, buttonType int) {
 	queue[floor][buttonType] = variables.LOCAL
 }
-
 
 //Pop order in queue. Only pop cabcall if it is a local order.
 func QueuePop(floor int, buttonType int) {
@@ -49,7 +47,6 @@ func QueuePop(floor int, buttonType int) {
 	}
 }
 
-//Initialize queue.
 func LocalQueueInit() {
 	fmt.Println("Queue initializing")
 	for floor := 0; floor < variables.N_FLOORS; floor++ {
@@ -68,7 +65,6 @@ func QueueRecieveOrderLocal(order elevio.ButtonEvent) {
 	QueuePrintLocal()
 }
 
-//Remove order from queue.
 func QueueRemoveOrder(floor int, currentDirection ElevDir) {
 	QueuePop(floor, int(Cab))
 	if !(QueueCheckBelow(floor) || QueueCheckAbove(floor)) {
@@ -164,27 +160,24 @@ func QueuePrintLocal() {
 	fmt.Print("-"+strings.Repeat("---------", variables.N_BUTTON_TYPES), "\n\n")
 }
 
-//Returns true if there exists an order below current floor.
 func QueueCheckBelow(currentFloor int) bool {
 	if currentFloor == 0 {
 		return false
 	}
 	for floor := currentFloor - 1; floor > -1; floor-- {
-		if QueueCheckLocalCallOnFloor(floor){
-				return true
+		if QueueCheckLocalCallOnFloor(floor) {
+			return true
 		}
 	}
-		return false
+	return false
 }
 
-
-//Returns true if the exists an order above current floor.
 func QueueCheckAbove(currentFloor int) bool {
 	if currentFloor == variables.N_FLOORS-1 {
 		return false
 	}
 	for floor := currentFloor + 1; floor < variables.N_FLOORS; floor++ {
-		if QueueCheckLocalCallOnFloor(floor){
+		if QueueCheckLocalCallOnFloor(floor) {
 			return true
 		}
 	}
@@ -224,7 +217,6 @@ func QueuePrintRemote() {
 	fmt.Print("-"+strings.Repeat("---------", variables.N_BUTTON_TYPES), "\n\n")
 }
 
-//Returns true if queue is empty
 func CheckQueueEmpty(queueType variables.QueueOrderType) bool {
 	empty := true
 	for floor := 0; floor < variables.N_FLOORS-1; floor++ {
@@ -238,7 +230,6 @@ func CheckQueueEmpty(queueType variables.QueueOrderType) bool {
 	return empty
 }
 
-//Make remote order local.
 func QueueMakeRemoteLocal() {
 	for floor := 0; floor < variables.N_FLOORS; floor++ {
 		for button := 0; button < variables.N_BUTTON_TYPES-1; button++ {
@@ -250,9 +241,9 @@ func QueueMakeRemoteLocal() {
 	}
 }
 
-func QueueCheckLocalCallOnFloor(floor int)bool{
-	for button:=0;button<variables.N_BUTTON_TYPES;button++{
-		if queue[floor][button] == variables.LOCAL{
+func QueueCheckLocalCallOnFloor(floor int) bool {
+	for button := 0; button < variables.N_BUTTON_TYPES; button++ {
+		if queue[floor][button] == variables.LOCAL {
 			return true
 		}
 	}
