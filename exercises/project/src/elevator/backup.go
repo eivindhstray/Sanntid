@@ -14,7 +14,7 @@ import (
 
 var BackUpQueue [variables.N_FLOORS][variables.N_BUTTON_TYPES]variables.QueueOrderType
 
-func BackUpQueueInit(){
+func BackUpQueueInit() {
 	BackUpQueue = queue
 }
 
