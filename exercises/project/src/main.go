@@ -84,13 +84,14 @@ func main() {
 		case buttonCall := <-drvButtons:
 			if buttonCall.Button == elevator.Cab{
 				elevator.FsmOnButtonRequest(buttonCall, true)
+			}else{
+				elev := elevator.ElevatorGetElev()
+				msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor, int(elev.Dir), elev.ElevState}
+				elevTx <- msg
+				elevTx<-msg
+				elevTx<-msg
+				elevTx<-msg
 			}
-			elev := elevator.ElevatorGetElev()
-			msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor, int(elev.Dir), elev.ElevState}
-			elevTx <- msg
-			elevTx<-msg
-			elevTx<-msg
-			elevTx<-msg
 
 		case <-timeOut.C:
 			fmt.Printf("Timer fired")
