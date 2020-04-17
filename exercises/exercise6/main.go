@@ -17,6 +17,8 @@ type msg struct {
 	number int
 }
 
+var status alive
+
 type alive struct {
 	id int
 }
@@ -29,6 +31,7 @@ func main() {
 		fmt.Print("panicyo")
 	}
 	message.id = localid
+	status.id = localid
 
 	tx := make(chan msg)
 	rx := make(chan msg)
@@ -48,6 +51,7 @@ func main() {
 		case receivedmsg := <-rx:
 
 			msgid := receivedmsg.id
+
 			fmt.Println("idmsg: ", msgid)
 			num := receivedmsg.number
 			//fmt.Print("msgreceived id:", receivedmsg.id, "\n")
@@ -72,7 +76,7 @@ func main() {
 			localid = 1
 
 		case <-alivemsgtimer.C:
-			msg := alive{message.id}
+			msg := alive{status.id}
 			acktx <- msg
 
 		}
@@ -89,6 +93,7 @@ func main() {
 			msg := msg{"Slave", 2, 0}
 			tx <- msg
 		}
+
 		time.Sleep(1 * time.Second)
 
 	}
