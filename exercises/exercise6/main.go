@@ -44,7 +44,6 @@ func main() {
 	go bcast.Transmitter(15648, tx)
 	go bcast.Receiver(15649, ackrx)
 	go bcast.Transmitter(15649, acktx)
-	alivemsgtimer.Reset(200 * time.Millisecond)
 	for {
 		select {
 		case receivedmsg := <-rx:
@@ -54,12 +53,14 @@ func main() {
 			num := receivedmsg.number
 			if msgid == 1 && localid == 2 {
 					message.number = num
+			}else if msgid != localid{
+				alivemsgtimer.Reset(200 * time.Millisecond)
 			}
 
 		case alivemsg := <-ackrx:
 			fmt.Print(alivemsg.id, "is id\n")
 			if alivemsg.id != localid {
-				timeOut.Reset(1 * time.Second)
+				timeOut.Reset(200 * time.Second)
 			}
 
 		case <-timeOut.C:
