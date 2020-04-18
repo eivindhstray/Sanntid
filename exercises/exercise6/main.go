@@ -6,12 +6,17 @@ import (
 	"strconv"
 	"time"
 
-	"./Network/network/bcast"
+	"./network/bcast"
 )
+
+//the message won't send numbers for some reason.
+//therefore, we have left the message as it is now, 
+//believing our solution should work nicely once the message problem is fixed
 
 var message msg
 
 type msg struct {
+	msg    string
 	id     int
 	number int
 }
@@ -29,59 +34,61 @@ func main() {
 	if err != nil {
 		fmt.Print("panicyo")
 	}
-	message.id = localid
-	status.id = localid
-
+	message.id = int(localid)
+	message.msg = "Hello"
+	status.id = int(localid)
 	tx := make(chan msg)
 	rx := make(chan msg)
 	acktx := make(chan alive)
 	ackrx := make(chan alive)
 	alivemsgtimer := time.NewTimer(0)
+	sendtimer := time.NewTimer(0)
 	fmt.Print("id: ", localid, "\n")
-
 	timeOut := time.NewTimer(0)
-	go bcast.Receiver(15648, rx)
-	go bcast.Transmitter(15648, tx)
-	go bcast.Receiver(15649, ackrx)
-	go bcast.Transmitter(15649, acktx)
+	go bcast.Receiver(15647, rx)
+	go bcast.Transmitter(15647, tx)
+	go bcast.Receiver(15647, ackrx)
+	go bcast.Transmitter(15647, acktx)
+	sendtimer.Reset(3*time.Second)
 	for {
 		select {
 		case receivedmsg := <-rx:
 
 			msgid := receivedmsg.id
 			fmt.Println("idmsg: ", msgid)
+			fmt.Print("\n",receivedmsg.number,"number")
+			fmt.Print("\n yoyo", receivedmsg.msg)
 			num := receivedmsg.number
 			if msgid == 1 && localid == 2 {
 					message.number = num
 			}else if msgid != localid{
-				alivemsgtimer.Reset(200 * time.Millisecond)
+				alivemsgtimer.Reset(1 * time.Second)
 			}
 
 		case alivemsg := <-ackrx:
-			fmt.Print(alivemsg.id, "is id\n")
-			if alivemsg.id != localid {
-				timeOut.Reset(200 * time.Second)
-			}
+			fmt.Print("msgid\n",alivemsg.id)
+			
+			timeOut.Reset(1* time.Second)
+			
 
 		case <-timeOut.C:
 			localid = 1
 
 		case <-alivemsgtimer.C:
-			
-			acktx <- status
+			acktx <- alive{localid}
 
-		}
-		if localid == 1 {
+		case<-sendtimer.C:
+			if localid == 1 {
 			count = count + 1
 			message.number = count
-			fmt.Print("mastercount", count, "\n")
-			tx <- message
-		}
-		if	localid == 2 {
-			tx <- message
+				tx <- message
+			}
+			if	localid == 2 {
+				tx <- message
+			sendtimer.Reset(3*time.Second)
 		}
 
-		time.Sleep(1 * time.Second)
-
+		
+		}
 	}
 }
