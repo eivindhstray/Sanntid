@@ -50,7 +50,6 @@ func main() {
 		case receivedmsg := <-rx:
 
 			msgid := receivedmsg.id
-
 			fmt.Println("idmsg: ", msgid)
 			num := receivedmsg.number
 			if msgid == 1 && localid == 2 {
@@ -67,20 +66,18 @@ func main() {
 			localid = 1
 
 		case <-alivemsgtimer.C:
-			msg := alive{status.id}
-			acktx <- msg
+			
+			acktx <- status
 
 		}
 		if localid == 1 {
 			count = count + 1
 			message.number = count
 			fmt.Print("mastercount", count, "\n")
-			msg := msg{message.id, message.number}
-			tx <- msg
+			tx <- message
 		}
 		if	localid == 2 {
-			msg := msg{message.id, message.number}
-			tx <- msg
+			tx <- message
 		}
 
 		time.Sleep(1 * time.Second)
