@@ -12,7 +12,6 @@ import (
 var message msg
 
 type msg struct {
-	word   string
 	id     int
 	number int
 }
@@ -38,7 +37,7 @@ func main() {
 	acktx := make(chan alive)
 	ackrx := make(chan alive)
 	alivemsgtimer := time.NewTimer(0)
-	//fmt.Print("id: ", localid, "\n")
+	fmt.Print("id: ", localid, "\n")
 
 	timeOut := time.NewTimer(0)
 	go bcast.Receiver(15648, rx)
@@ -54,21 +53,13 @@ func main() {
 
 			fmt.Println("idmsg: ", msgid)
 			num := receivedmsg.number
-			//fmt.Print("msgreceived id:", receivedmsg.id, "\n")
-			switch msgid {
-			case 1:
-				if localid != 1 {
-					count = num
-
-				}
-
-			default:
-
+			if msgid == 1 && localid == 2 {
+					message.number = num
 			}
 
 		case alivemsg := <-ackrx:
 			fmt.Print(alivemsg.id, "is id\n")
-			if alivemsg.id == localid {
+			if alivemsg.id != localid {
 				timeOut.Reset(1 * time.Second)
 			}
 
@@ -80,17 +71,14 @@ func main() {
 			acktx <- msg
 
 		}
-		if message.id == 1 {
-
+		if localid == 1 {
 			count = count + 1
 			fmt.Print("mastercount", count, "\n")
-			msg := msg{"Master", 1, count}
+			msg := msg{message.id, message.number}
 			tx <- msg
-
 		}
-		if message.id == 2 {
-			fmt.Print("slavecount", count, "\n")
-			msg := msg{"Slave", 2, 0}
+		if	localid == 2 {
+			msg := msg{message.id, message.number}
 			tx <- msg
 		}
 
