@@ -73,6 +73,7 @@ func main() {
 		}
 		if localid == 1 {
 			count = count + 1
+			message.number = count
 			fmt.Print("mastercount", count, "\n")
 			msg := msg{message.id, message.number}
 			tx <- msg
