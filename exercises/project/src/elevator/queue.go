@@ -38,7 +38,7 @@ func QueueSetLocal(floor int, buttonType int) {
 
 //Pop order in queue. Only pop cabcall if it is a local order.
 func QueuePop(floor int, buttonType int) {
-	if buttonType != 2 {
+	if buttonType != Cab {
 		queue[floor][buttonType] = variables.NONE
 	} else {
 		if queue[floor][buttonType] == variables.LOCAL {

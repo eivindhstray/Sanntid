@@ -47,7 +47,7 @@ func decisionAlgorithm() {
 	var bestElev int
 	bestElev = 1
 	for elevator := 2; elevator < variables.N_ELEVATORS+1; elevator++ {
-		if CostArray[elevator] < CostArray[bestElev] {
+		if CostArray[elevator] <= CostArray[bestElev] {
 			bestElev = elevator
 		}
 
