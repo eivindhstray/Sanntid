@@ -30,7 +30,7 @@ func FsmFloor(newFloor int, dir ElevDir){
 }
 
 func FsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
-
+	fmt.Print("floor registered", Elev.ElevState,"\n")
 	if !cabCall {
 		QueueRecieveOrderRemote(buttonPush)
 		DecisionAlgorithm()
@@ -41,7 +41,7 @@ func FsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 	if buttonPush.Floor == Elev.CurrentFloor && QueueCheckCurrentFloorSameDir(Elev.CurrentFloor,Elev.Dir)&&Elev.Dir == Stop{
 		FsmFloor(Elev.CurrentFloor, Elev.Dir)
 	}
-	if !ElevatorGetDoorOpenState() {
+	if !Elev.DoorState {
 		elevatorSetDir(QueueReturnElevDir(Elev.CurrentFloor, Elev.Dir))
 	}
 
@@ -63,7 +63,7 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 	switch msgType {
 	case "ORDER":
 		if cabCall {
-			if msgID == LocalID {
+			if button == int(Cab) {
 				FsmOnButtonRequest(event, true)
 			} else {
 				fmt.Println("cabcall other elev")

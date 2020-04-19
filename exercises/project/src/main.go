@@ -59,17 +59,17 @@ func main() {
 	go bcast.Receiver(15648, elevRx)
 	go bcast.Transmitter(15648, elevTx)
 
-	
+	elevTx<-variables.ElevatorMessage{ElevatorID, "FLOOR",-1,elevator.Elev.CurrentFloor, int(elevator.Elev.Dir), elevator.Elev.ElevState}
 
 
 	for {
 		select {
 		case atFloor := <-drvFloors:
 			elevator.ElevatorListUpdate(ElevatorID, atFloor, elevator.Elev.Dir, elevator.Elev.ElevOnline)
-			elev := elevator.ElevatorGetElev()
-			elevator.FsmFloor(atFloor, elev.Dir)
-			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, atFloor, int(elev.Dir), elev.ElevState}
-			fmt.Printf("elevstates%q\n", elev.ElevState)
+			
+			elevator.FsmFloor(atFloor, elevator.Elev.Dir)
+			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, atFloor, int(elevator.Elev.Dir), elevator.Elev.ElevState}
+			fmt.Printf("elevstates%q\n", elevator.Elev.ElevState)
 			elevTx<-msg
 			elevTx<-msg
 			elevTx<-msg
