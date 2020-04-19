@@ -44,7 +44,7 @@ func ElevatorInit(ID int) {
 		ElevatorSetConnectionStatus(variables.ELEV_OFFLINE, id)
 	}
 	if elevio.GetFloor() == -1 {
-		elevatorSetDir(Down)
+	elevatorSetDir(Down)
 	}
 	for elevio.GetFloor() == -1 {
 	}
