@@ -96,14 +96,6 @@ func elevatorSetFloor(newFloor int) {
 	Elev.CurrentFloor = newFloor
 }
 
-func elevatorGetDir() ElevDir {
-	return Elev.Dir
-}
-
-func elevatorGetFloor() int {
-	return Elev.CurrentFloor
-}
-
 func ElevatorSetDoorOpenState(state bool) {
 	Elev.DoorState = state
 }

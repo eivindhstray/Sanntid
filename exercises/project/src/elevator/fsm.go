@@ -30,7 +30,6 @@ func FsmFloor(newFloor int, dir ElevDir){
 func FsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 	fmt.Print("floor registered", Elev.ElevState,"\n")
 	if buttonPush.Floor == Elev.CurrentFloor && QueueCheckCurrentFloorSameDir(Elev.CurrentFloor,Elev.Dir)&&Elev.Dir == Stop{
-		QueueRemoveOrder(Elev.CurrentFloor, Elev.Dir, Elev.ElevID)
 		FsmFloor(Elev.CurrentFloor, Elev.Dir)
 	}else if !cabCall {
 		QueueRecieveOrderRemote(buttonPush)
