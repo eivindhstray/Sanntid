@@ -18,7 +18,7 @@ func FsmFloorMessage(newFloor int, dir ElevDir, msgID int) {
 func FsmFloor(newFloor int, dir ElevDir) {
 	elevatorSetNewFloor(newFloor)
 	elevatorLightsMatchQueue()
-	if QueueCheckCurrentFloorSameDir(newFloor, Elev.Dir) || QueueCheckFloorOpositeDir(newFloor, Elev.Dir) {
+	if QueueCheckCurrentFloorSameDir(newFloor, Elev.Dir)  {
 		QueueRemoveOrder(newFloor, dir, Elev.ElevID)
 		fsmStartDoorState(Elev.DoorTimer)
 	}
@@ -84,7 +84,7 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 
 func fsmStartDoorState(doorTimer *time.Timer) {
 	fmt.Print("door")
-	elevatorSetDir(Stop)
+	elevio.SetMotorDirection(Stop)
 	ElevatorSetDoorOpenState(true)
 	elevio.SetDoorOpenLamp(true)
 	doorTimer.Reset(variables.DOOROPENTIME * time.Second)
