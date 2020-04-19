@@ -44,7 +44,6 @@ type ElevatorList [N_ELEVATORS + 1][3]int //N x 2 array with info on the
 
 //From this array it will be easy to easy to determine orders
 
-
 type CabCalls [N_ELEVATORS][4]int
 
 // 			Floor 0		Floor 1		Floor 2		Floor 3

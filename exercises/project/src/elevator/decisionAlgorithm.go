@@ -19,7 +19,6 @@ func DecisionAlgorithm() {
 	for elev := 1; elev < variables.N_ELEVATORS+1; elev++ {
 		CostArray[elev] = 0
 	}
-	//CostArray[1] = 1
 
 	//Find the remote order and determine cost for every elevator
 	for elevator := 1; elevator < variables.N_ELEVATORS+1; elevator++ {
@@ -48,7 +47,7 @@ func DecisionAlgorithm() {
 	var bestElev int
 	bestElev = 1
 	for elevator := 2; elevator < variables.N_ELEVATORS+1; elevator++ {
-		if CostArray[elevator] <= CostArray[bestElev] {
+		if CostArray[elevator] < CostArray[bestElev] {
 			bestElev = elevator
 		}
 

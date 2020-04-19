@@ -29,7 +29,6 @@ func main() {
 	elevator.ElevatorInit(ElevatorID)
 	fmt.Println("Initialized")
 
-
 	elevator.LocalQueueInit()
 
 	var id string
@@ -59,24 +58,21 @@ func main() {
 	go bcast.Receiver(15648, elevRx)
 	go bcast.Transmitter(15648, elevTx)
 
-
-
-
 	for {
 		select {
 		case atFloor := <-drvFloors:
 			elevator.ElevatorListUpdate(ElevatorID, atFloor, elevator.Elev.Dir, elevator.Elev.ElevOnline)
 			elevator.FsmFloor(atFloor, elevator.Elev.Dir)
 			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, atFloor, int(elevator.Elev.Dir), elevator.Elev.ElevState}
-			fmt.Printf("elevstates%q\n", elevator.Elev.ElevState)
-			elevTx<-msg
-			elevTx<-msg
-			elevTx<-msg
-			elevTx<-msg
+			//fmt.Printf("elevstates%q\n", elevator.Elev.ElevState)
+			elevTx <- msg
+			elevTx <- msg
+			elevTx <- msg
+			elevTx <- msg
 		case stop := <-drvStop:
 			elevator.FsmStop(stop)
 		case elevatorMessageReceived := <-elevRx:
-			fmt.Print("Message nr", elevatorMessageReceived.ElevID)
+			//fmt.Print("Message nr", elevatorMessageReceived.ElevID)
 			elevator.FsmMessageReceivedHandler(elevatorMessageReceived, ElevatorID)
 			if !elevator.CheckQueueEmpty(variables.LOCAL) {
 				timeOut.Reset(variables.FAULT_TIME * time.Second)
@@ -84,15 +80,15 @@ func main() {
 				timeOut.Stop()
 			}
 		case buttonCall := <-drvButtons:
-			if buttonCall.Button == elevator.Cab{
+			if buttonCall.Button == elevator.Cab {
 				elevator.FsmOnButtonRequest(buttonCall, true)
-			}else{
+			} else {
 				elev := elevator.ElevatorGetElev()
 				msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor, int(elev.Dir), elev.ElevState}
-				elevTx<-msg
-				elevTx<-msg
-				elevTx<-msg
-				elevTx<-msg
+				elevTx <- msg
+				elevTx <- msg
+				elevTx <- msg
+				elevTx <- msg
 			}
 
 		case <-timeOut.C:
@@ -101,10 +97,9 @@ func main() {
 			elev := elevator.ElevatorGetElev()
 			msg := variables.ElevatorMessage{ElevatorID, "FAULTY_MOTOR", -1, -1, int(elev.Dir), elev.ElevState}
 			elevTx <- msg
-			elevTx<-msg
-			elevTx<-msg
-			elevTx<-msg
-			
+			elevTx <- msg
+			elevTx <- msg
+			elevTx <- msg
 
 		case <-DoorTimer.C:
 			elevator.FsmExitDoorState(elevator.Elev.DoorTimer)

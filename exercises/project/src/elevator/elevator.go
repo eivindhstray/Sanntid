@@ -43,10 +43,10 @@ func ElevatorInit(ID int) {
 	for id := ID; id < variables.N_ELEVATORS+1; id++ {
 		ElevatorSetConnectionStatus(variables.ELEV_OFFLINE, id)
 	}
-	if elevio.GetFloor() == -1 {
-	elevatorSetDir(Down)
+	if elevio.GetFloor() != 0 {
+		elevatorSetDir(Down)
 	}
-	for elevio.GetFloor() == -1 {
+	for elevio.GetFloor() != 0 {
 	}
 	elevatorSetDir(Stop)
 	elevatorSetFloor(elevio.GetFloor())
