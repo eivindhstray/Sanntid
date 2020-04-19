@@ -2,6 +2,7 @@ package elevator
 
 import (
 	"fmt"
+
 	"../variables"
 )
 
@@ -32,7 +33,7 @@ func DecisionAlgorithm() {
 					}
 					correctFloor = floors
 					correctButton = buttons
-				
+
 					if Elev.ElevState[elevator][2] > 0 {
 						cost = cost + 1000
 					}
@@ -52,8 +53,13 @@ func DecisionAlgorithm() {
 		}
 
 	}
+	fmt.Println("Elevator 1 cost :", CostArray[1])
+	fmt.Println("Elevator 2 cost :", CostArray[2])
 	fmt.Println("Best elevator : ", bestElev)
 	fmt.Println("Elevator ID : ", Elev.ElevID)
+	fmt.Println("*------------------------_*")
+	fmt.Println("Elev 1 at floor: ", Elev.ElevState[1][0])
+	fmt.Println("Elev 2 at floor: ", Elev.ElevState[2][0])
 
 	//Set local in queue of best elevator
 	if bestElev == Elev.ElevID {
