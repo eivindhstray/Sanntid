@@ -74,7 +74,7 @@ func main() {
 		case elevatorMessageReceived := <-elevRx:
 			//fmt.Print("Message nr", elevatorMessageReceived.ElevID)
 			elevator.FsmMessageReceivedHandler(elevatorMessageReceived, ElevatorID)
-			if !elevator.CheckQueueEmpty(variables.LOCAL) {
+			if !elevator.CheckQueueEmpty(variables.LOCAL) || !elevator.CheckQueueEmpty(variables.REMOTE){
 				timeOut.Reset(variables.FAULT_TIME * time.Second)
 			} else {
 				timeOut.Stop()
@@ -94,8 +94,7 @@ func main() {
 		case <-timeOut.C:
 			fmt.Printf("Timer fired")
 			elevator.ElevatorSetConnectionStatus(variables.NEW_FLOOR_TIMEOUT_PENALTY, ElevatorID)
-			elev := elevator.ElevatorGetElev()
-			msg := variables.ElevatorMessage{ElevatorID, "FAULTY_MOTOR", -1, -1, int(elev.Dir), elev.ElevState}
+			msg := variables.ElevatorMessage{ElevatorID, "FAULTY_MOTOR", -1, -1, int(elevator.Elev.Dir), elevator.Elev.ElevState}
 			elevTx <- msg
 			elevTx <- msg
 			elevTx <- msg
