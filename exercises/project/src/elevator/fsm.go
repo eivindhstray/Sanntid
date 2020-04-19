@@ -18,7 +18,7 @@ func FsmFloorMessage(newFloor int, dir ElevDir, msgID int) {
 func FsmFloor(newFloor int, dir ElevDir) {
 	elevatorSetNewFloor(newFloor)
 	elevatorLightsMatchQueue()
-	if QueueCheckCurrentFloorSameDir(newFloor, Elev.Dir)  {
+	if QueueCheckCurrentFloorSameDir(newFloor, Elev.Dir) {
 		fsmStartDoorState(Elev.DoorTimer)
 	}
 	if !Elev.DoorState {
@@ -32,7 +32,7 @@ func FsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 		FsmFloor(Elev.CurrentFloor, Elev.Dir)
 	} else if !cabCall {
 		QueueRecieveOrderRemote(buttonPush)
-		DecisionAlgorithm()
+		DecisionAlgorithm(buttonPush)
 	} else {
 		QueueRecieveOrderLocal(buttonPush)
 	}
@@ -70,7 +70,7 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 		FsmFloorMessage(floor, ElevDir(dir), msgID)
 	case "FAULTY_MOTOR":
 		ElevatorSetConnectionStatus(variables.NEW_FLOOR_TIMEOUT_PENALTY, msgID)
-		
+
 		QueueMakeRemoteLocal()
 		if Elev.Dir == Stop {
 			FsmFloor(Elev.CurrentFloor, Elev.Dir)
