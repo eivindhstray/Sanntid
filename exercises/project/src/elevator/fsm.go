@@ -52,7 +52,7 @@ func FsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 }
 
 func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
-	//sync the new message with queue
+
 	fmt.Println("received a message")
 	msgType := msg.MessageType
 	msgID := msg.ElevID

@@ -71,7 +71,6 @@ func elevatorSetNewFloor(newFloor int) {
 	}
 }
 
-//Syncronizing ligths to match queue.
 func elevatorLightsMatchQueue() {
 	for floor := 0; floor < variables.N_FLOORS; floor++ {
 		for button := 0; button < variables.N_BUTTON_TYPES; button++ {

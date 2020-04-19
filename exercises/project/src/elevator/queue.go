@@ -117,10 +117,8 @@ func QueueReturnElevDir(currentFloor int, currentDirection ElevDir) ElevDir {
 	return Stop
 }
 
-// Returns true if the there exist an order on current floor with same direction or no
-//direction beyond current floor
+
 func QueueCheckCurrentFloorSameDir(currentFloor int, currentDirection ElevDir) bool {
-	//Check current floor same direction
 	if queue[currentFloor][Cab] == variables.LOCAL {
 		return true
 	} else if (currentDirection == Up || currentDirection == Stop) && queue[currentFloor][HallUp] == variables.LOCAL {
@@ -132,7 +130,6 @@ func QueueCheckCurrentFloorSameDir(currentFloor int, currentDirection ElevDir) b
 	return false
 }
 
-//Prints an illustration of queue with local elements to terminal.
 func QueuePrintLocal() {
 	fmt.Println("Local queue")
 	fmt.Println("\n   HallUp   HallDn    Cab  ")
@@ -176,12 +173,11 @@ func QueueCheckAbove(currentFloor int) bool {
 	return false
 }
 
-//Set elements in queue remote.
 func QueueSetOrderRemote(floor int, button int) {
 	queue[floor][button] = variables.REMOTE
 }
 
-//Place new order as remote in queue.
+
 func QueueRecieveOrderRemote(order elevio.ButtonEvent) {
 	orderT := int(order.Button)
 	QueueSetOrderRemote(order.Floor, orderT)
@@ -189,7 +185,7 @@ func QueueRecieveOrderRemote(order elevio.ButtonEvent) {
 	QueuePrintRemote()
 }
 
-//Prints an illustration of queue with remote elements to terminal.
+
 func QueuePrintRemote() {
 	fmt.Println("Remote queue")
 	fmt.Println("\n   HallUp   HallDn    Cab  ")
