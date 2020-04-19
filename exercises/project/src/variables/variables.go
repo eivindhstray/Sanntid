@@ -18,7 +18,7 @@ var ElevatorID string
 type ElevatorMessage struct {
 	ElevID      int
 	MessageType string
-	Button      int //0 = hallup 1= halldown 2 = cab
+	Button      int
 	Floor       int
 	Dir         int
 	Elevators   ElevatorList
@@ -32,22 +32,5 @@ const (
 	LOCAL                 = 2
 )
 
-type ElevatorList [N_ELEVATORS + 1][3]int //N x 2 array with info on the
-//elevators
-//For 2 elev
-
-//			Floor 	Connection Status
-// Elev 1	  x		 	y
-// Elev 2	  x		 	y
-// ...
-// Elev N	  x		 	y
-
-//From this array it will be easy to easy to determine orders
-
-type CabCalls [N_ELEVATORS][4]int
-
-// 			Floor 0		Floor 1		Floor 2		Floor 3
-//Elev 1
-//Elev 2
-//...
-//Elev N
+//N x 2 array with floor, direction and connection status bounded to ID.
+type ElevatorList [N_ELEVATORS + 1][3]int

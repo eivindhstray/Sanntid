@@ -36,6 +36,10 @@ func QueueSetLocal(floor int, buttonType int) {
 	queue[floor][buttonType] = variables.LOCAL
 }
 
+func QueueSetOrderRemote(floor int, button int) {
+	queue[floor][button] = variables.REMOTE
+}
+
 //Pop order in queue. Only pop cabcall if it is a local order.
 func QueuePop(floor int, buttonType int) {
 
@@ -58,6 +62,13 @@ func QueueRecieveOrderLocal(order elevio.ButtonEvent) {
 	QueueSetLocal(order.Floor, orderT)
 	fmt.Println("Order added to queue")
 	QueuePrintLocal()
+}
+
+func QueueRecieveOrderRemote(order elevio.ButtonEvent) {
+	orderT := int(order.Button)
+	QueueSetOrderRemote(order.Floor, orderT)
+	fmt.Println("Order added to queue")
+	QueuePrintRemote()
 }
 
 func QueueRemoveOrder(floor int, currentDirection ElevDir, ID int) {
@@ -117,43 +128,13 @@ func QueueReturnElevDir(currentFloor int, currentDirection ElevDir) ElevDir {
 func QueueCheckCurrentFloorSameDir(currentFloor int, currentDirection ElevDir) bool {
 	if queue[currentFloor][Cab] == variables.LOCAL {
 		return true
-	} else if (currentDirection == Up || currentDirection == Stop || QueueCheckBelow(currentFloor) == false ) && queue[currentFloor][HallUp] == variables.LOCAL {
+	} else if (currentDirection == Up || currentDirection == Stop || QueueCheckBelow(currentFloor) == false) && queue[currentFloor][HallUp] == variables.LOCAL {
 		return true
 	} else if (currentDirection == Down || currentDirection == Stop || QueueCheckAbove(currentFloor) == false) && queue[currentFloor][HallDown] == variables.LOCAL {
 		return true
 	}
 
 	return false
-}
-
-func QueueCheckCurrentFloorOpositeDir(currentFloor int, currentDirection ElevDir) bool {
-	if queue[currentFloor][Cab] == variables.LOCAL {
-		return true
-	} else if (currentDirection == Up || currentDirection == Stop) && queue[currentFloor][HallDown] == variables.LOCAL {
-		return true
-	} else if (currentDirection == Down || currentDirection == Stop) && queue[currentFloor][HallUp] == variables.LOCAL {
-		return true
-	}
-	return false
-}
-
-func QueuePrintLocal() {
-	fmt.Println("Local queue")
-	fmt.Println("\n   HallUp   HallDn    Cab  ")
-	fmt.Println("-" + strings.Repeat("|-------|", variables.N_BUTTON_TYPES))
-	for floor := variables.N_FLOORS - 1; floor > -1; floor-- {
-		fmt.Print(floor)
-		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
-			queuePos := queue[floor][button]
-			if queuePos == variables.LOCAL {
-				fmt.Print("| ", "true ", " |")
-			} else {
-				fmt.Print("| ", "_____", " |")
-			}
-		}
-		fmt.Println()
-	}
-	fmt.Print("-"+strings.Repeat("---------", variables.N_BUTTON_TYPES), "\n\n")
 }
 
 func QueueCheckBelow(currentFloor int) bool {
@@ -178,36 +159,6 @@ func QueueCheckAbove(currentFloor int) bool {
 		}
 	}
 	return false
-}
-
-func QueueSetOrderRemote(floor int, button int) {
-	queue[floor][button] = variables.REMOTE
-}
-
-func QueueRecieveOrderRemote(order elevio.ButtonEvent) {
-	orderT := int(order.Button)
-	QueueSetOrderRemote(order.Floor, orderT)
-	fmt.Println("Order added to queue")
-	QueuePrintRemote()
-}
-
-func QueuePrintRemote() {
-	fmt.Println("Remote queue")
-	fmt.Println("\n   HallUp   HallDn    Cab  ")
-	fmt.Println("-" + strings.Repeat("|-------|", variables.N_BUTTON_TYPES))
-	for floor := variables.N_FLOORS - 1; floor > -1; floor-- {
-		fmt.Print(floor)
-		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
-			queuePos := queue[floor][button]
-			if queuePos == variables.REMOTE {
-				fmt.Print("| ", "true ", " |")
-			} else {
-				fmt.Print("| ", "_____", " |")
-			}
-		}
-		fmt.Println()
-	}
-	fmt.Print("-"+strings.Repeat("---------", variables.N_BUTTON_TYPES), "\n\n")
 }
 
 func CheckQueueEmpty(queueType variables.QueueOrderType) bool {
@@ -241,4 +192,42 @@ func QueueCheckLocalCallOnFloor(floor int) bool {
 		}
 	}
 	return false
+}
+
+func QueuePrintRemote() {
+	fmt.Println("Remote queue")
+	fmt.Println("\n   HallUp   HallDn    Cab  ")
+	fmt.Println("-" + strings.Repeat("|-------|", variables.N_BUTTON_TYPES))
+	for floor := variables.N_FLOORS - 1; floor > -1; floor-- {
+		fmt.Print(floor)
+		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
+			queuePos := queue[floor][button]
+			if queuePos == variables.REMOTE {
+				fmt.Print("| ", "true ", " |")
+			} else {
+				fmt.Print("| ", "_____", " |")
+			}
+		}
+		fmt.Println()
+	}
+	fmt.Print("-"+strings.Repeat("---------", variables.N_BUTTON_TYPES), "\n\n")
+}
+
+func QueuePrintLocal() {
+	fmt.Println("Local queue")
+	fmt.Println("\n   HallUp   HallDn    Cab  ")
+	fmt.Println("-" + strings.Repeat("|-------|", variables.N_BUTTON_TYPES))
+	for floor := variables.N_FLOORS - 1; floor > -1; floor-- {
+		fmt.Print(floor)
+		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
+			queuePos := queue[floor][button]
+			if queuePos == variables.LOCAL {
+				fmt.Print("| ", "true ", " |")
+			} else {
+				fmt.Print("| ", "_____", " |")
+			}
+		}
+		fmt.Println()
+	}
+	fmt.Print("-"+strings.Repeat("---------", variables.N_BUTTON_TYPES), "\n\n")
 }

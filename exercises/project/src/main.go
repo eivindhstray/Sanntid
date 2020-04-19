@@ -1,7 +1,6 @@
 package main
 
 import (
-	
 	"fmt"
 	"os"
 	"strconv"
@@ -15,7 +14,7 @@ import (
 
 //sudo iptables -A INPUT -p udp --dport 15648 -m statistic --mode random --probability 0.2 -j DROP
 
-
+//go run main.go portnr id
 func main() {
 
 	cmd := os.Args[1]
@@ -27,13 +26,12 @@ func main() {
 		panic(err)
 	}
 	elevio.Init("localhost:"+cmd, variables.N_FLOORS)
-	//go run main.go portnr id
+
 	elevator.ElevatorInit(ElevatorID)
 	fmt.Println("Initialized")
 
 	elevator.LocalQueueInit()
 
-	
 	// Channels
 	drvButtons := make(chan elevio.ButtonEvent)
 	drvFloors := make(chan int)
@@ -54,7 +52,6 @@ func main() {
 			elevator.ElevatorListUpdate(ElevatorID, atFloor, elevator.Elev.Dir, elevator.Elev.ElevOnline)
 			elevator.FsmFloor(atFloor, elevator.Elev.Dir)
 			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, atFloor, int(elevator.Elev.Dir), elevator.Elev.ElevState}
-			//fmt.Printf("elevstates%q\n", elevator.Elev.ElevState)
 			elevTx <- msg
 			elevTx <- msg
 			elevTx <- msg
@@ -62,9 +59,8 @@ func main() {
 		case stop := <-drvStop:
 			elevator.FsmStop(stop)
 		case elevatorMessageReceived := <-elevRx:
-			//fmt.Print("Message nr", elevatorMessageReceived.ElevID)
 			elevator.FsmMessageReceivedHandler(elevatorMessageReceived, ElevatorID)
-			if !elevator.CheckQueueEmpty(variables.LOCAL) || !elevator.CheckQueueEmpty(variables.REMOTE){
+			if !elevator.CheckQueueEmpty(variables.LOCAL) || !elevator.CheckQueueEmpty(variables.REMOTE) {
 				timeOut.Reset(variables.FAULT_TIME * time.Second)
 			} else {
 				timeOut.Stop()
@@ -98,6 +94,3 @@ func main() {
 }
 
 // chmod +x ElevatorServer
-
-// cant just run main. correct command:
-// go run *.go

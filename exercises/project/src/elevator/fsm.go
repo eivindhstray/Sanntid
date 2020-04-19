@@ -27,7 +27,6 @@ func FsmFloor(newFloor int, dir ElevDir) {
 }
 
 func FsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
-	//fmt.Print("floor registered", Elev.ElevState,"\n")
 	if buttonPush.Floor == Elev.CurrentFloor && QueueCheckCurrentFloorSameDir(Elev.CurrentFloor, Elev.Dir) && Elev.Dir == Stop {
 		FsmFloor(Elev.CurrentFloor, Elev.Dir)
 	} else if !cabCall {
@@ -69,7 +68,6 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 			FsmOnButtonRequest(event, false)
 		}
 	case "FLOOR":
-		//fmt.Print(LocalID, "-floor", Elev.ElevState)
 		FsmFloorMessage(floor, ElevDir(dir), msgID)
 	case "FAULTY_MOTOR":
 		ElevatorSetConnectionStatus(variables.NEW_FLOOR_TIMEOUT_PENALTY, msgID)

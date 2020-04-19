@@ -43,14 +43,15 @@ func DecisionAlgorithm(buttonPush elevio.ButtonEvent) int {
 		}
 
 	}
-	fmt.Println("Elevator 1 cost :", CostArray[1])
-	fmt.Println("Elevator 2 cost :", CostArray[2])
-	fmt.Println("Best elevator : ", bestElev)
-	fmt.Println("Elevator ID : ", Elev.ElevID)
-	fmt.Println("*------------------------_*")
-	fmt.Println("Elev 1 at floor: ", Elev.ElevState[1][0])
-	fmt.Println("Elev 2 at floor: ", Elev.ElevState[2][0])
-
+	/*
+		fmt.Println("Elevator 1 cost :", CostArray[1])
+		fmt.Println("Elevator 2 cost :", CostArray[2])
+		fmt.Println("Best elevator : ", bestElev)
+		fmt.Println("Elevator ID : ", Elev.ElevID)
+		fmt.Println("*------------------------_*")
+		fmt.Println("Elev 1 at floor: ", Elev.ElevState[1][0])
+		fmt.Println("Elev 2 at floor: ", Elev.ElevState[2][0])
+	*/
 	return bestElev
 
 }
