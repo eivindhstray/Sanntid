@@ -9,7 +9,7 @@ import (
 
 //Calculates cost of new order for N_ELEVATORS, finds best elevator (lowest cost).
 //The elevator with the lowest cost makes the order local.
-func decisionAlgorithm() {
+func DecisionAlgorithm() {
 	var CostArray [variables.N_ELEVATORS + 1]int
 	var correctFloor int
 	var correctButton int

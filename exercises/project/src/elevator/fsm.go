@@ -9,10 +9,7 @@ import (
 )
 
 func FsmFloorMessage(newFloor int, dir ElevDir, msgID int) {
-	BackupSyncQueue()
-	if msgID != Elev.ElevID{
-		QueueRemoveOrder(newFloor, dir)
-	}
+	QueueRemoveOrder(newFloor, dir, msgID)
 	elevatorLightsMatchQueue()
 	QueuePrintRemote()
 	QueuePrintLocal()
@@ -24,8 +21,7 @@ func FsmFloor(newFloor int, dir ElevDir){
 	elevatorSetNewFloor(newFloor)
 	elevatorLightsMatchQueue()
 	if QueueCheckCurrentFloorSameDir(newFloor, Elev.Dir) {
-		fmt.Println("stopping")
-		QueueRemoveOrder(newFloor,dir)
+		QueueRemoveOrder(newFloor,dir, Elev.ElevID)
 		fsmStartDoorState(Elev.DoorTimer)
 	}
 	if !Elev.DoorState {
@@ -37,7 +33,7 @@ func FsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 
 	if !cabCall {
 		QueueRecieveOrderRemote(buttonPush)
-		decisionAlgorithm()
+		DecisionAlgorithm()
 	} else {
 		QueueRecieveOrderLocal(buttonPush)
 	}

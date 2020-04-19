@@ -26,10 +26,11 @@ func main() {
 	}
 	elevio.Init("localhost:"+cmd, variables.N_FLOORS)
 	//go run main.go portnr id
-
-	elevator.LocalQueueInit()
 	elevator.ElevatorInit(ElevatorID)
 	fmt.Println("Initialized")
+
+
+	elevator.LocalQueueInit()
 
 	var id string
 	flag.StringVar(&id, "id", "", "id of this peer")
@@ -58,6 +59,7 @@ func main() {
 	go bcast.Receiver(15648, elevRx)
 	go bcast.Transmitter(15648, elevTx)
 
+	
 
 
 	for {
@@ -103,6 +105,7 @@ func main() {
 			elevTx<-msg
 			elevTx<-msg
 			elevTx<-msg
+			
 
 		case <-DoorTimer.C:
 			elevator.FsmExitDoorState(elevator.Elev.DoorTimer)

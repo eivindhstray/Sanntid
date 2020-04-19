@@ -38,13 +38,8 @@ func QueueSetLocal(floor int, buttonType int) {
 
 //Pop order in queue. Only pop cabcall if it is a local order.
 func QueuePop(floor int, buttonType int) {
-	if buttonType != Cab {
-		queue[floor][buttonType] = variables.NONE
-	} else {
-		if queue[floor][buttonType] == variables.LOCAL {
-			queue[floor][buttonType] = variables.NONE
-		}
-	}
+	
+	queue[floor][buttonType] = variables.NONE
 }
 
 func LocalQueueInit() {
@@ -65,8 +60,10 @@ func QueueRecieveOrderLocal(order elevio.ButtonEvent) {
 	QueuePrintLocal()
 }
 
-func QueueRemoveOrder(floor int, currentDirection ElevDir) {
-	QueuePop(floor, int(Cab))
+func QueueRemoveOrder(floor int, currentDirection ElevDir, ID int) {
+	if ID == Elev.ElevID{
+		QueuePop(floor, int(Cab))
+	}
 	if !(QueueCheckBelow(floor) || QueueCheckAbove(floor)) {
 		QueuePop(floor, int(HallUp))
 		QueuePop(floor, int(HallDown))
