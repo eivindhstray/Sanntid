@@ -9,8 +9,7 @@ import (
 
 //decisionAlgorithm making a choice every time a new order is stashed into queue remote (on button push).
 
-//Calculates cost of new order for N_ELEVATORS, finds best elevator (lowest cost).
-//The elevator with the lowest cost makes the order local.
+//Calculates cost of new order for N_ELEVATORS, finds best elevator (lowest cost). Returns best elevator
 func DecisionAlgorithm(buttonPush elevio.ButtonEvent) int {
 	var CostArray [variables.N_ELEVATORS + 1]int
 
@@ -19,7 +18,7 @@ func DecisionAlgorithm(buttonPush elevio.ButtonEvent) int {
 		CostArray[elev] = 0
 	}
 
-	//Find the remote order and determine cost for every elevator
+	//Calculate cost
 	for elevator := 1; elevator < variables.N_ELEVATORS+1; elevator++ {
 
 		cost := buttonPush.Floor - Elev.ElevState[elevator][0]
