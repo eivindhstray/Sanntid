@@ -34,7 +34,7 @@ func DecisionAlgorithm() {
 					correctButton = buttons
 
 					if Elev.ElevState[elevator][2] > 0 {
-						cost = cost + 1000
+						cost = cost + variables.ELEV_OFFLINE
 					}
 					CostArray[elevator] = cost
 					fmt.Println("Elevator #: ", elevator, "%n Cost: ", cost)
