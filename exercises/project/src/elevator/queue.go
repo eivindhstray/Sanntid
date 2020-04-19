@@ -117,9 +117,9 @@ func QueueReturnElevDir(currentFloor int, currentDirection ElevDir) ElevDir {
 func QueueCheckCurrentFloorSameDir(currentFloor int, currentDirection ElevDir) bool {
 	if queue[currentFloor][Cab] == variables.LOCAL {
 		return true
-	} else if (currentDirection == Up || currentDirection == Stop) && queue[currentFloor][HallUp] == variables.LOCAL {
+	} else if (currentDirection == Up || currentDirection == Stop || QueueCheckBelow(currentFloor) == false ) && queue[currentFloor][HallUp] == variables.LOCAL {
 		return true
-	} else if (currentDirection == Down || currentDirection == Stop) && queue[currentFloor][HallDown] == variables.LOCAL {
+	} else if (currentDirection == Down || currentDirection == Stop || QueueCheckAbove(currentFloor) == false) && queue[currentFloor][HallDown] == variables.LOCAL {
 		return true
 	}
 
