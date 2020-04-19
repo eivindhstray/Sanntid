@@ -126,7 +126,7 @@ func QueueCheckCurrentFloorSameDir(currentFloor int, currentDirection ElevDir) b
 	return false
 }
 
-func QueueCheckFloorOpositeDir(currentFloor int, currentDirection ElevDir) bool {
+func QueueCheckCurrentFloorOpositeDir(currentFloor int, currentDirection ElevDir) bool {
 	if queue[currentFloor][Cab] == variables.LOCAL {
 		return true
 	} else if (currentDirection == Up || currentDirection == Stop) && queue[currentFloor][HallDown] == variables.LOCAL {
