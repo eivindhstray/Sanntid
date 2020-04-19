@@ -32,7 +32,10 @@ func FsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 		FsmFloor(Elev.CurrentFloor, Elev.Dir)
 	} else if !cabCall {
 		QueueRecieveOrderRemote(buttonPush)
-		DecisionAlgorithm(buttonPush)
+		bestElev := DecisionAlgorithm(buttonPush)
+		if bestElev == Elev.ElevID {
+			QueueRecieveOrderLocal(buttonPush)
+		}
 	} else {
 		QueueRecieveOrderLocal(buttonPush)
 	}

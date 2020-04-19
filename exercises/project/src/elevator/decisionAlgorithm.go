@@ -11,10 +11,8 @@ import (
 
 //Calculates cost of new order for N_ELEVATORS, finds best elevator (lowest cost).
 //The elevator with the lowest cost makes the order local.
-func DecisionAlgorithm(buttonPush elevio.ButtonEvent) {
+func DecisionAlgorithm(buttonPush elevio.ButtonEvent) int {
 	var CostArray [variables.N_ELEVATORS + 1]int
-	var correctFloor int
-	var correctButton int
 
 	//Init cost array
 	for elev := 1; elev < variables.N_ELEVATORS+1; elev++ {
@@ -23,15 +21,11 @@ func DecisionAlgorithm(buttonPush elevio.ButtonEvent) {
 
 	//Find the remote order and determine cost for every elevator
 	for elevator := 1; elevator < variables.N_ELEVATORS+1; elevator++ {
-		//cost := 0
 
 		cost := buttonPush.Floor - Elev.ElevState[elevator][0]
 		if cost < 0 {
 			cost = -cost
 		}
-
-		correctFloor = buttonPush.Floor
-		correctButton = int(buttonPush.Button)
 
 		if Elev.ElevState[elevator][2] > 0 {
 			cost = cost + variables.ELEV_OFFLINE
@@ -58,9 +52,6 @@ func DecisionAlgorithm(buttonPush elevio.ButtonEvent) {
 	fmt.Println("Elev 1 at floor: ", Elev.ElevState[1][0])
 	fmt.Println("Elev 2 at floor: ", Elev.ElevState[2][0])
 
-	//Set local in queue of best elevator
-	if bestElev == Elev.ElevID {
-		queue[correctFloor][correctButton] = variables.LOCAL
-	}
+	return bestElev
 
 }
