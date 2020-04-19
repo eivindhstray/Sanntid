@@ -46,7 +46,7 @@ func ElevatorInit(ID int) {
 	if elevio.GetFloor() != 0 {
 		elevatorSetDir(Down)
 	}
-	for elevio.GetFloor() != 0 {
+	for elevio.GetFloor() != -0 {
 	}
 	elevatorSetDir(Stop)
 	elevatorSetFloor(elevio.GetFloor())

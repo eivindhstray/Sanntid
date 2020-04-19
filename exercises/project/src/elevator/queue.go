@@ -38,7 +38,7 @@ func QueueSetLocal(floor int, buttonType int) {
 
 //Pop order in queue. Only pop cabcall if it is a local order.
 func QueuePop(floor int, buttonType int) {
-	
+
 	queue[floor][buttonType] = variables.NONE
 }
 
@@ -61,7 +61,7 @@ func QueueRecieveOrderLocal(order elevio.ButtonEvent) {
 }
 
 func QueueRemoveOrder(floor int, currentDirection ElevDir, ID int) {
-	if ID == Elev.ElevID{
+	if ID == Elev.ElevID {
 		QueuePop(floor, int(Cab))
 	}
 	if !(QueueCheckBelow(floor) || QueueCheckAbove(floor)) {
@@ -114,7 +114,6 @@ func QueueReturnElevDir(currentFloor int, currentDirection ElevDir) ElevDir {
 	return Stop
 }
 
-
 func QueueCheckCurrentFloorSameDir(currentFloor int, currentDirection ElevDir) bool {
 	if queue[currentFloor][Cab] == variables.LOCAL {
 		return true
@@ -124,6 +123,17 @@ func QueueCheckCurrentFloorSameDir(currentFloor int, currentDirection ElevDir) b
 		return true
 	}
 
+	return false
+}
+
+func QueueCheckFloorOpositeDir(currentFloor int, currentDirection ElevDir) bool {
+	if queue[currentFloor][Cab] == variables.LOCAL {
+		return true
+	} else if (currentDirection == Up || currentDirection == Stop) && queue[currentFloor][HallDown] == variables.LOCAL {
+		return true
+	} else if (currentDirection == Down || currentDirection == Stop) && queue[currentFloor][HallUp] == variables.LOCAL {
+		return true
+	}
 	return false
 }
 
@@ -174,14 +184,12 @@ func QueueSetOrderRemote(floor int, button int) {
 	queue[floor][button] = variables.REMOTE
 }
 
-
 func QueueRecieveOrderRemote(order elevio.ButtonEvent) {
 	orderT := int(order.Button)
 	QueueSetOrderRemote(order.Floor, orderT)
 	fmt.Println("Order added to queue")
 	QueuePrintRemote()
 }
-
 
 func QueuePrintRemote() {
 	fmt.Println("Remote queue")
