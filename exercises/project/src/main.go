@@ -13,6 +13,9 @@ import (
 	"./variables"
 )
 
+//sudo iptables -A INPUT -p udp --dport 15648 -m statistic --mode random --probability 0.2 -j DROP
+
+
 func main() {
 
 	cmd := os.Args[1]
