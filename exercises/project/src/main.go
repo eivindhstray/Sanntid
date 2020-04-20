@@ -58,7 +58,7 @@ func main() {
 			elevator.FsmStop(stop)
 		case elevatorMessageReceived := <-elevRx:
 			elevator.FsmMessageReceivedHandler(elevatorMessageReceived, ElevatorID)
-			if !elevator.CheckQueueEmpty(variables.LOCAL) || !elevator.CheckQueueEmpty(variables.REMOTE) {
+			if !elevator.QueueCheckEmpty(variables.LOCAL) || !elevator.QueueCheckEmpty(variables.REMOTE) {
 				timeOut.Reset(variables.FAULT_TIME * time.Second)
 			} else {
 				timeOut.Stop()
@@ -67,8 +67,7 @@ func main() {
 			if buttonCall.Button == elevator.Cab {
 				elevator.FsmOnButtonRequest(buttonCall, true)
 			} else {
-				elev := elevator.ElevatorGetElev()
-				msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor, int(elev.Dir), elev.ElevState}
+				msg := variables.ElevatorMessage{ElevatorID, "ORDER", int(buttonCall.Button), buttonCall.Floor, int(elevator.Elev.Dir), elevator.Elev.ElevState}
 				elevTx <- msg
 				elevTx <- msg
 				elevTx <- msg

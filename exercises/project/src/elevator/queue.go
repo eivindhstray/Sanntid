@@ -36,38 +36,34 @@ func QueueSetLocal(floor int, buttonType int) {
 	queue[floor][buttonType] = variables.LOCAL
 }
 
-func QueueSetOrderRemote(floor int, button int) {
+func QueueSetRemote(floor int, button int) {
 	queue[floor][button] = variables.REMOTE
 }
 
-//Pop order in queue. Only pop cabcall if it is a local order.
 func QueuePop(floor int, buttonType int) {
-
 	queue[floor][buttonType] = variables.NONE
 }
 
 func LocalQueueInit() {
-	fmt.Println("Queue initializing")
 	for floor := 0; floor < variables.N_FLOORS; floor++ {
 		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
 			QueuePop(floor, button)
 		}
 	}
-	fmt.Println("Local Queue initialized!")
 }
 
 //Place new order in queue as local.
 func QueueRecieveOrderLocal(order elevio.ButtonEvent) {
 	orderT := int(order.Button)
 	QueueSetLocal(order.Floor, orderT)
-	fmt.Println("Order added to queue")
+	fmt.Println("Order added to local queue")
 	QueuePrintLocal()
 }
 
 func QueueRecieveOrderRemote(order elevio.ButtonEvent) {
 	orderT := int(order.Button)
-	QueueSetOrderRemote(order.Floor, orderT)
-	fmt.Println("Order added to queue")
+	QueueSetRemote(order.Floor, orderT)
+	fmt.Println("Order added to remote queue")
 	QueuePrintRemote()
 }
 
@@ -75,7 +71,7 @@ func QueueRemoveOrder(floor int, currentDirection ElevDir, ID int) {
 	if ID == Elev.ElevID {
 		QueuePop(floor, int(Cab))
 	}
-	if !(QueueCheckBelow(floor) || QueueCheckAbove(floor)) {
+	if !(queueCheckBelow(floor) || queueCheckAbove(floor)) {
 		QueuePop(floor, int(HallUp))
 		QueuePop(floor, int(HallDown))
 		return
@@ -83,13 +79,13 @@ func QueueRemoveOrder(floor int, currentDirection ElevDir, ID int) {
 	switch currentDirection {
 	case Up:
 		QueuePop(floor, int(HallUp))
-		if QueueCheckAbove(floor) == false {
+		if queueCheckAbove(floor) == false {
 			QueuePop(floor, int(HallDown))
 		}
 		break
 	case Down:
 		QueuePop(floor, int(HallDown))
-		if QueueCheckBelow(floor) == false {
+		if queueCheckBelow(floor) == false {
 			QueuePop(floor, int(HallUp))
 		}
 		break
@@ -101,72 +97,71 @@ func QueueRemoveOrder(floor int, currentDirection ElevDir, ID int) {
 }
 
 //Return elevator direciton after searching through queue for orders.
-func QueueReturnElevDir(currentFloor int, currentDirection ElevDir) ElevDir {
+func queueReturnElevDir(currentFloor int, currentDirection ElevDir) ElevDir {
 	switch currentDirection {
 	case Up:
-		if QueueCheckAbove(currentFloor) == true {
+		if queueCheckAbove(currentFloor) == true {
 			return currentDirection
-		} else if QueueCheckBelow(currentFloor) == true && QueueCheckAbove(currentFloor) == false {
+		} else if queueCheckBelow(currentFloor) == true {
 			return Down
 		}
 	case Down:
-		if QueueCheckBelow(currentFloor) == true {
+		if queueCheckBelow(currentFloor) == true {
 			return currentDirection
-		} else if QueueCheckAbove(currentFloor) == true && QueueCheckBelow(currentFloor) == false {
+		} else if queueCheckAbove(currentFloor) == true {
 			return Up
 		}
 	case Stop:
-		if QueueCheckAbove(currentFloor) == true {
+		if queueCheckAbove(currentFloor) == true {
 			return Up
-		} else if QueueCheckBelow(currentFloor) == true {
+		} else if queueCheckBelow(currentFloor) == true {
 			return Down
 		}
 	}
 	return Stop
 }
 
-func QueueCheckCurrentFloorSameDir(currentFloor int, currentDirection ElevDir) bool {
+func queueCheckCurrentFloorSameDir(currentFloor int, currentDirection ElevDir) bool {
 	if queue[currentFloor][Cab] == variables.LOCAL {
 		return true
-	} else if (currentDirection == Up || currentDirection == Stop || QueueCheckBelow(currentFloor) == false) && queue[currentFloor][HallUp] == variables.LOCAL {
+	} else if (currentDirection == Up || currentDirection == Stop || queueCheckBelow(currentFloor) == false) && queue[currentFloor][HallUp] == variables.LOCAL {
 		return true
-	} else if (currentDirection == Down || currentDirection == Stop || QueueCheckAbove(currentFloor) == false) && queue[currentFloor][HallDown] == variables.LOCAL {
+	} else if (currentDirection == Down || currentDirection == Stop || queueCheckAbove(currentFloor) == false) && queue[currentFloor][HallDown] == variables.LOCAL {
 		return true
 	}
 
 	return false
 }
 
-func QueueCheckBelow(currentFloor int) bool {
+func queueCheckBelow(currentFloor int) bool {
 	if currentFloor == 0 {
 		return false
 	}
 	for floor := currentFloor - 1; floor > -1; floor-- {
-		if QueueCheckLocalCallOnFloor(floor) {
+		if queueCheckLocalCallOnFloor(floor) {
 			return true
 		}
 	}
 	return false
 }
 
-func QueueCheckAbove(currentFloor int) bool {
+func queueCheckAbove(currentFloor int) bool {
 	if currentFloor == variables.N_FLOORS-1 {
 		return false
 	}
 	for floor := currentFloor + 1; floor < variables.N_FLOORS; floor++ {
-		if QueueCheckLocalCallOnFloor(floor) {
+		if queueCheckLocalCallOnFloor(floor) {
 			return true
 		}
 	}
 	return false
 }
 
-func CheckQueueEmpty(queueType variables.QueueOrderType) bool {
+func QueueCheckEmpty(queueType variables.QueueOrderType) bool {
 	empty := true
 	for floor := 0; floor < variables.N_FLOORS-1; floor++ {
 		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
-			queuePos := queue[floor][button]
-			if queuePos == queueType {
+			if queue[floor][button] == queueType {
 				return false
 			}
 		}
@@ -174,18 +169,17 @@ func CheckQueueEmpty(queueType variables.QueueOrderType) bool {
 	return empty
 }
 
-func QueueMakeRemoteLocal() {
+func queueMakeRemoteLocal() {
 	for floor := 0; floor < variables.N_FLOORS; floor++ {
 		for button := 0; button < variables.N_BUTTON_TYPES-1; button++ {
-			queuePos := queue[floor][button]
-			if queuePos == variables.REMOTE {
+			if queue[floor][button] == variables.REMOTE {
 				queue[floor][button] = variables.LOCAL
 			}
 		}
 	}
 }
 
-func QueueCheckLocalCallOnFloor(floor int) bool {
+func queueCheckLocalCallOnFloor(floor int) bool {
 	for button := 0; button < variables.N_BUTTON_TYPES; button++ {
 		if queue[floor][button] == variables.LOCAL {
 			return true
@@ -194,6 +188,7 @@ func QueueCheckLocalCallOnFloor(floor int) bool {
 	return false
 }
 
+//----------------Debugging tools--------------------
 func QueuePrintRemote() {
 	fmt.Println("Remote queue")
 	fmt.Println("\n   HallUp   HallDn    Cab  ")
@@ -231,3 +226,5 @@ func QueuePrintLocal() {
 	}
 	fmt.Print("-"+strings.Repeat("---------", variables.N_BUTTON_TYPES), "\n\n")
 }
+
+//-----------------------------------------------------

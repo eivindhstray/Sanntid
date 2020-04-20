@@ -23,7 +23,7 @@ type Elevator struct {
 	CurrentFloor int
 	Dir          ElevDir
 	DoorTimer    *time.Timer
-	DoorState    bool
+	DoorOpen     bool
 	ElevState    variables.ElevatorList
 	ElevOnline   int
 }
@@ -50,7 +50,7 @@ func ElevatorInit(ID int) {
 	elevatorSetFloor(elevio.GetFloor())
 	Elev.ElevID = ID
 	Elev.DoorTimer = time.NewTimer(0)
-	ElevatorSetDoorOpenState(false)
+	Elev.DoorOpen = true
 	elevio.SetDoorOpenLamp(false)
 	ElevatorFloorUpdate(Elev.ElevID, Elev.CurrentFloor)
 	ElevatorSetConnectionStatus(Elev.ElevID, Elev.ElevOnline)
@@ -93,17 +93,4 @@ func elevatorSetMotorDir(newDirection ElevDir) {
 
 func elevatorSetFloor(newFloor int) {
 	Elev.CurrentFloor = newFloor
-}
-
-func ElevatorSetDoorOpenState(state bool) {
-	Elev.DoorState = state
-}
-
-func ElevatorGetDoorOpenState() bool {
-	return Elev.DoorState
-}
-
-//Return elevator struct.
-func ElevatorGetElev() Elevator {
-	return Elev
 }
