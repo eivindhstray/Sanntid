@@ -11,8 +11,8 @@ import (
 func FsmFloorMessage(newFloor int, dir ElevDir, msgID int) {
 	QueueRemoveOrder(newFloor, dir, msgID)
 	elevatorLightsMatchQueue()
-	ElevatorListUpdate(msgID, newFloor, Elev.Dir, Elev.ElevOnline)
-
+	ElevatorFloorUpdate(msgID, newFloor)
+	ElevatorSetConnectionStatus(msgID, Elev.ElevOnline)
 }
 
 func FsmFloor(newFloor int, dir ElevDir) {
@@ -31,7 +31,7 @@ func FsmOnButtonRequest(buttonPush elevio.ButtonEvent, cabCall bool) {
 		FsmFloor(Elev.CurrentFloor, Elev.Dir)
 	} else if !cabCall {
 		QueueRecieveOrderRemote(buttonPush)
-		bestElev := DecisionAlgorithm(buttonPush)
+		bestElev := DecisionChooseElevator(buttonPush)
 		if bestElev == Elev.ElevID {
 			QueueRecieveOrderLocal(buttonPush)
 		}
@@ -61,17 +61,14 @@ func FsmMessageReceivedHandler(msg variables.ElevatorMessage, LocalID int) {
 		if cabCall {
 			if button == int(Cab) {
 				FsmOnButtonRequest(event, true)
-			} else {
-				fmt.Println("cabcall other elev")
 			}
 		} else {
 			FsmOnButtonRequest(event, false)
 		}
 	case "FLOOR":
 		FsmFloorMessage(floor, ElevDir(dir), msgID)
-	case "FAULTY_MOTOR":
-		ElevatorSetConnectionStatus(variables.NEW_FLOOR_TIMEOUT_PENALTY, msgID)
-
+	case "NOT_RESPONDING":
+		ElevatorSetConnectionStatus(msgID, variables.ELEV_OFFLINE)
 		QueueMakeRemoteLocal()
 		if Elev.Dir == Stop {
 			FsmFloor(Elev.CurrentFloor, Elev.Dir)

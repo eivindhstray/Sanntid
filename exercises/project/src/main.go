@@ -25,14 +25,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	elevio.Init("localhost:"+cmd, variables.N_FLOORS)
 
+	elevio.Init("localhost:"+cmd, variables.N_FLOORS)
 	elevator.ElevatorInit(ElevatorID)
+	elevator.LocalQueueInit()
 	fmt.Println("Initialized")
 
-	elevator.LocalQueueInit()
-
-	// Channels
 	drvButtons := make(chan elevio.ButtonEvent)
 	drvFloors := make(chan int)
 	drvStop := make(chan bool)
@@ -49,7 +47,7 @@ func main() {
 	for {
 		select {
 		case atFloor := <-drvFloors:
-			elevator.ElevatorListUpdate(ElevatorID, atFloor, elevator.Elev.Dir, elevator.Elev.ElevOnline)
+			elevator.ElevatorFloorUpdate(ElevatorID, atFloor)
 			elevator.FsmFloor(atFloor, elevator.Elev.Dir)
 			msg := variables.ElevatorMessage{ElevatorID, "FLOOR", -1, atFloor, int(elevator.Elev.Dir), elevator.Elev.ElevState}
 			elevTx <- msg
@@ -78,9 +76,8 @@ func main() {
 			}
 
 		case <-timeOut.C:
-			fmt.Printf("Timer fired")
-			elevator.ElevatorSetConnectionStatus(variables.NEW_FLOOR_TIMEOUT_PENALTY, ElevatorID)
-			msg := variables.ElevatorMessage{ElevatorID, "FAULTY_MOTOR", -1, -1, int(elevator.Elev.Dir), elevator.Elev.ElevState}
+			elevator.ElevatorSetConnectionStatus(ElevatorID, variables.ELEV_OFFLINE)
+			msg := variables.ElevatorMessage{ElevatorID, "NOT_RESPONDING", -1, -1, int(elevator.Elev.Dir), elevator.Elev.ElevState}
 			elevTx <- msg
 			elevTx <- msg
 			elevTx <- msg
@@ -92,5 +89,3 @@ func main() {
 	}
 
 }
-
-// chmod +x ElevatorServer

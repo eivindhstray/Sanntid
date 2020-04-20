@@ -29,19 +29,17 @@ type Elevator struct {
 }
 
 //Update list containing info of elevator. Important to determine cost
-func ElevatorListUpdate(ID int, floor int, newDirection ElevDir, connectionStatus int) {
+func ElevatorFloorUpdate(ID int, floor int) {
 	Elev.ElevState[ID][0] = floor
-	Elev.ElevState[ID][1] = int(newDirection)
-	Elev.ElevState[ID][2] = connectionStatus
 }
 
-func ElevatorSetConnectionStatus(connectionStatus int, ID int) {
-	Elev.ElevState[ID][2] = connectionStatus
+func ElevatorSetConnectionStatus(ID int, connectionStatus int) {
+	Elev.ElevState[ID][1] = connectionStatus
 }
 
 func ElevatorInit(ID int) {
 	for id := ID; id < variables.N_ELEVATORS+1; id++ {
-		ElevatorSetConnectionStatus(variables.ELEV_OFFLINE, id)
+		ElevatorSetConnectionStatus(id, variables.ELEV_OFFLINE)
 	}
 	if elevio.GetFloor() != 0 {
 		elevatorSetDir(Down)
@@ -54,7 +52,8 @@ func ElevatorInit(ID int) {
 	Elev.DoorTimer = time.NewTimer(0)
 	ElevatorSetDoorOpenState(false)
 	elevio.SetDoorOpenLamp(false)
-	ElevatorListUpdate(Elev.ElevID, Elev.CurrentFloor, Elev.Dir, Elev.ElevOnline)
+	ElevatorFloorUpdate(Elev.ElevID, Elev.CurrentFloor)
+	ElevatorSetConnectionStatus(Elev.ElevID, Elev.ElevOnline)
 	fmt.Println("Elevator initialized")
 }
 
