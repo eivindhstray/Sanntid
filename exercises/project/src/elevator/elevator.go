@@ -73,7 +73,7 @@ func elevatorSetNewFloor(newFloor int) {
 func elevatorLightsMatchQueue() {
 	for floor := 0; floor < variables.N_FLOORS; floor++ {
 		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
-			if queue[floor][button] == variables.LOCAL { //|| queueLocal[floor][button] == variables.REMOTE {
+			if queue[floor][button] == variables.LOCAL { //|| queue[floor][button] == variables.REMOTE {
 				elevio.SetButtonLamp(elevio.ButtonType(button), floor, true)
 			} else {
 				elevio.SetButtonLamp(elevio.ButtonType(button), floor, false)

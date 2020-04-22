@@ -159,8 +159,8 @@ func queueCheckAbove(currentFloor int) bool {
 
 func QueueCheckEmpty(queueType variables.QueueOrderType) bool {
 	empty := true
-	for floor := 0; floor < variables.N_FLOORS-1; floor++ {
-		for button := 0; button < variables.N_BUTTON_TYPES; button++ {
+	for floor := 0; floor < variables.N_FLOORS; floor++ {
+		for button := 0; button < variables.N_BUTTON_TYPES-1; button++ {
 			if queue[floor][button] == queueType {
 				return false
 			}

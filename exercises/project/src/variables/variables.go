@@ -1,7 +1,7 @@
 package variables
 
 //global variables
-const N_FLOORS = 8
+const N_FLOORS = 4
 const N_BUTTON_TYPES = 3
 const N_ELEVATORS = 2
 
